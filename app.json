@@ -1,4 +1,11 @@
 {
   "name": "senghiapmanagement",
-  "displayName": "senghiapmanagement"
+  "displayName": "senghiapmanagement",
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "c8d79de7-fab1-4324-8dc3-a7cf78f1af8b"
+      }
+    }
+  }
 }

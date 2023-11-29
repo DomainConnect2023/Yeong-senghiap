@@ -33,7 +33,7 @@ const ProfileScreen = () => {
             <View style={[css.container]}>
                 <Image
                     source={ImagesAssets.comingSoon}
-                    style={{width: Dimensions.get("window").width/100*95, height: 250}}
+                    style={{width: Dimensions.get("window").width/100*80, height: 250}}
                 />
             </View>
         </MainContainer>

@@ -84,10 +84,13 @@ const SearchScreen = () => {
             tonggleFromDatePicker();
         }
     }
-    const confirmIOSFromDate = () => {
+    const confirmIOSFromDate = async() => {
         setFromDate(date.toDateString());
         setKeepFromDateData(date.toISOString().split('T')[0])
         tonggleFromDatePicker();
+        setDummyFromMonthData(date.toISOString().substring(5,7));
+        const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
+        await fetchCustomerApi(typeCatch, dummyDate, keepToDateData);
     }
     const tonggleFromDatePicker = () => {
         setShowFDPicker(!showFDPicker);
@@ -115,10 +118,13 @@ const SearchScreen = () => {
             tonggleToDatePicker();
         }
     }
-    const confirmIOSToDate = () => {
+    const confirmIOSToDate = async() => {
         setToDate(date.toDateString());
         setKeepToDateData(date.toISOString().split('T')[0])
         tonggleToDatePicker();
+        setDummyToMonthData(date.toISOString().substring(5,7));
+        const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
+        await fetchCustomerApi(typeCatch, keepFromDateData, dummyDate);
     }
     const tonggleToDatePicker = () => {
         setShowTDPicker(!showTDPicker);
@@ -326,7 +332,7 @@ const SearchScreen = () => {
                      {/* To Date */}
                      <View style={css.row}>
                         <Text style={css.Title}>To Date: </Text>
-                        {showTDPicker && <DateTimePicker 
+                        {showTDPicker && Platform.OS === "android" && <DateTimePicker 
                             mode="date"
                             display="calendar"
                             value={date}

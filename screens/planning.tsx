@@ -37,7 +37,8 @@ const PlanningScreen = () => {
                 </View>
             </View>
 
-            <WebView source={{ uri: 'https://reactnative.dev/' }} style={{ flex: 1 }} />
+            {/* <WebView source={{ uri: 'https://reactnative.dev/' }} style={{ flex: 1 }} /> */}
+            <WebView source={{uri: 'https://senghiap.com/' }} style={{ flex: 1 }} />
             
         </MainContainer>
     );

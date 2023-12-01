@@ -4,6 +4,7 @@ export const URLAccess = {
 
     getIPAddress: `https://domainconnect.my/domain_app/senghiap/getVPN.php`,
     reportFunction: `https://domainconnect.my/domain_app/senghiap/livesite/report.php`,
-    getDataFunction: `https://domainconnect.my/domain_app/senghiap/livesite/getData.php`,
-
+    getDataFunction: `https://domainconnect.my/domain_app/senghiap/livesite/getData.php`,   
+    
+    getLiveSiteIP: `domainconnect.my/domain_app`
 }

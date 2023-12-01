@@ -32,18 +32,18 @@ const SearchCustomerDetail = () => {
 
     useEffect(()=> {
         (async()=> {
-            const getFromDate = await AsyncStorage.getItem('fromDate');
-            var dummyfromMonth = await AsyncStorage.getItem('dummyfromMonth');
-            const dummyFromDate = getFromDate?.substring(0,4)+"-"+dummyfromMonth+"-"+getFromDate?.substring(8,10);
-            setFromDate(dummyFromDate);
+            // const getFromDate = await AsyncStorage.getItem('fromDate');
+            // var dummyfromMonth = await AsyncStorage.getItem('dummyfromMonth');
+            // const dummyFromDate = getFromDate?.substring(0,4)+"-"+dummyfromMonth+"-"+getFromDate?.substring(8,10);
+            // setFromDate(dummyFromDate);
 
-            const getToDate = await AsyncStorage.getItem('toDate');
-            var dummytoMonth = await AsyncStorage.getItem('dummytoMonth');
-            const dummyToDate = getToDate?.substring(0,4)+"-"+dummytoMonth+"-"+getToDate?.substring(8,10);
-            setToDate(dummyToDate);
-
-            // setFromDate(await AsyncStorage.getItem('fromDate'));
-            // setToDate(await AsyncStorage.getItem('toDate'));
+            // const getToDate = await AsyncStorage.getItem('toDate');
+            // var dummytoMonth = await AsyncStorage.getItem('dummytoMonth');
+            // const dummyToDate = getToDate?.substring(0,4)+"-"+dummytoMonth+"-"+getToDate?.substring(8,10);
+            // setToDate(dummyToDate);
+            
+            setFromDate(await AsyncStorage.getItem('fromDate'));
+            setToDate(await AsyncStorage.getItem('toDate'));
             setDataProcess(true);
             await fetchDataApi();
         })();
@@ -68,11 +68,11 @@ const SearchCustomerDetail = () => {
             passData = "";
         }
 
-        axios.post(URLAccess.reportFunction, {
-        // axios.post("http://"+getIPaddress+"/senghiap/mobile/report.php", {
+        // axios.post(URLAccess.reportFunction, {
+        axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
             "generateReport":"1", 
-            "fromDate":dummyFromDate,
-            "toDate":dummyToDate,
+            "fromDate":fromDate,
+            "toDate":toDate,
             "typeCatch":type,
             "typeData":passData
         })
@@ -175,7 +175,7 @@ const SearchCustomerDetail = () => {
                             backgroundColor: "#e26a00",
                             backgroundGradientFrom: "#fb8c00",
                             backgroundGradientTo: "#ffa726",
-                            decimalPlaces: 2,
+                            decimalPlaces: 0,
                             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                             labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                             style: {

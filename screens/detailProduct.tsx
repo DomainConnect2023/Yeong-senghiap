@@ -107,8 +107,8 @@ const DetailScreen = () => {
         var fromDate = await AsyncStorage.getItem('fromDate');
         var toDate = await AsyncStorage.getItem('toDate');
 
-        await axios.post(URLAccess.reportFunction, {
-        // axios.post("http://"+getIPaddress+"/senghiap/mobile/report.php", {
+        // await axios.post(URLAccess.reportFunction, {
+        axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
             "readDetail":"1", 
             "fromDate":fromDate,
             "toDate":toDate,
@@ -159,7 +159,7 @@ const DetailScreen = () => {
         })
         .catch(error => {
             Snackbar.show({
-                text: error,
+                text: error.message,
                 duration: Snackbar.LENGTH_SHORT,
             });
         });
@@ -243,7 +243,7 @@ const DetailScreen = () => {
                 </View>
             </View>
 
-            {isHidden==false ? (
+            {/* {isHidden==false ? (
                 <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
                     <Text>{showDate}</Text>
                 </View>
@@ -251,7 +251,7 @@ const DetailScreen = () => {
                 <View style={[css.row]}>
                     <Text>{showDate}</Text>
                 </View>
-            )}
+            )} */}
 
             {/* Set Date */}
             {/* {isHidden==false ? (
@@ -363,7 +363,7 @@ const DetailScreen = () => {
                                     backgroundColor: "#e26a00",
                                     backgroundGradientFrom: "#fb8c00",
                                     backgroundGradientTo: "#ffa726",
-                                    decimalPlaces: 2,
+                                    decimalPlaces: 0,
                                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     style: {
@@ -394,7 +394,7 @@ const DetailScreen = () => {
                                         backgroundColor: '#1cc910',
                                         backgroundGradientFrom: '#eff3ff',
                                         backgroundGradientTo: '#efefef',
-                                        decimalPlaces: 2,
+                                        decimalPlaces: 0,
                                         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                                         style: {
                                             borderRadius: 16,
@@ -436,7 +436,7 @@ const DetailScreen = () => {
                                     backgroundColor: "#e26a00",
                                     backgroundGradientFrom: "#fb8c00",
                                     backgroundGradientTo: "#ffa726",
-                                    decimalPlaces: 2, 
+                                    decimalPlaces: 0, 
                                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     style: {
@@ -468,7 +468,7 @@ const DetailScreen = () => {
                                         backgroundColor: '#1cc910',
                                         backgroundGradientFrom: '#eff3ff',
                                         backgroundGradientTo: '#efefef',
-                                        decimalPlaces: 2,
+                                        decimalPlaces: 0,
                                         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                                         style: {
                                             borderRadius: 16,

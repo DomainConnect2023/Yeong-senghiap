@@ -49,8 +49,13 @@ const LoginScreen = () => {
             setFetchedSelectionData([]);
             getSelection();
             // changeVPN(industrial);
+            if (IPaddress.length === 0) {
+                setIPadress(URLAccess.getLiveSiteIP);
+            }
         })();
     }, [])
+    
+    
 
     const loginAPI = async() => {
         const formData = new FormData();
@@ -64,9 +69,9 @@ const LoginScreen = () => {
         for (const key in jsonData) {
             formData.append(key, jsonData[key]);
         }
-        
-        await axios.post(URLAccess.getDataFunction, 
-        // await axios.post("http://"+IPaddress+"/senghiap/mobile/getData.php", 
+
+        // await axios.post(URLAccess.getDataFunction, 
+        await axios.post("https://"+IPaddress+"/senghiap/mobile/getData.php", 
         jsonData).then(async response => {
             // console.log(response.data.level);
             if(response.data.status=="1"){

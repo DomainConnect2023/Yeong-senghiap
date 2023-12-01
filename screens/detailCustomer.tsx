@@ -105,8 +105,8 @@ const DetailCustomerScreen = () => {
         var toDate = await AsyncStorage.getItem('toDate');
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
 
-        await axios.post(URLAccess.reportFunction, {
-        // await axios.post("http://"+getIPaddress+"/senghiap/mobile/report.php", {
+        // await axios.post(URLAccess.reportFunction, {
+        await axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
             "readCustomerDetail":"1", 
             "fromDate":fromDate,
             "toDate":toDate,
@@ -159,7 +159,7 @@ const DetailCustomerScreen = () => {
         })
         .catch(error => {
             Snackbar.show({
-                text: error,
+                text: error.message,
                 duration: Snackbar.LENGTH_SHORT,
             });
         });
@@ -237,7 +237,7 @@ const DetailCustomerScreen = () => {
                 </View>
             </View>
 
-            {isHidden==false ? (
+            {/* {isHidden==false ? (
                 <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
                     <Text>{showDate}</Text>
                 </View>
@@ -245,7 +245,7 @@ const DetailCustomerScreen = () => {
                 <View style={[css.row]}>
                     <Text>{showDate}</Text>
                 </View>
-            )}
+            )} */}
 
             {/* Set Date */}
             {/* {isHidden==false ? (
@@ -357,7 +357,7 @@ const DetailCustomerScreen = () => {
                                     backgroundColor: "#e26a00",
                                     backgroundGradientFrom: "#fb8c00",
                                     backgroundGradientTo: "#ffa726",
-                                    decimalPlaces: 2,
+                                    decimalPlaces: 0,
                                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     style: {
@@ -388,7 +388,7 @@ const DetailCustomerScreen = () => {
                                         backgroundColor: '#1cc910',
                                         backgroundGradientFrom: '#eff3ff',
                                         backgroundGradientTo: '#efefef',
-                                        decimalPlaces: 2,
+                                        decimalPlaces: 0,
                                         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                                         style: {
                                             borderRadius: 16,
@@ -431,7 +431,7 @@ const DetailCustomerScreen = () => {
                                     backgroundColor: "#e26a00",
                                     backgroundGradientFrom: "#fb8c00",
                                     backgroundGradientTo: "#ffa726",
-                                    decimalPlaces: 2, 
+                                    decimalPlaces: 0, 
                                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                     style: {
@@ -464,7 +464,7 @@ const DetailCustomerScreen = () => {
                                         backgroundColor: '#1cc910',
                                         backgroundGradientFrom: '#eff3ff',
                                         backgroundGradientTo: '#efefef',
-                                        decimalPlaces: 2,
+                                        decimalPlaces: 0,
                                         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                                         style: {
                                             borderRadius: 16,

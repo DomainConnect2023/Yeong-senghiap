@@ -31,7 +31,7 @@ const TabNavigation = () => {
       >
         <Tab.Screen options={{ unmountOnBlur: true, }} name="Dashboard" component={DashboardScreen} />
         <Tab.Screen options={{ unmountOnBlur: true, }} name="Planning" component={PlanningScreen} />
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Profile" component={ProfileScreen} />
+        {/* <Tab.Screen options={{ unmountOnBlur: true, }} name="Profile" component={ProfileScreen} /> */}
       </Tab.Navigator>
   );
 }

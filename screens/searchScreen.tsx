@@ -88,9 +88,10 @@ const SearchScreen = () => {
         setFromDate(date.toDateString());
         setKeepFromDateData(date.toISOString().split('T')[0])
         tonggleFromDatePicker();
-        setDummyFromMonthData(date.toISOString().substring(5,7));
-        const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
-        await fetchCustomerApi(typeCatch, dummyDate, keepToDateData);
+        // setDummyFromMonthData(date.toISOString().substring(5,7));
+        // const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
+        // await fetchCustomerApi(typeCatch, dummyDate, keepToDateData);
+        await fetchCustomerApi(typeCatch, date, keepToDateData);
     }
     const tonggleFromDatePicker = () => {
         setShowFDPicker(!showFDPicker);
@@ -122,9 +123,10 @@ const SearchScreen = () => {
         setToDate(date.toDateString());
         setKeepToDateData(date.toISOString().split('T')[0])
         tonggleToDatePicker();
-        setDummyToMonthData(date.toISOString().substring(5,7));
-        const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
-        await fetchCustomerApi(typeCatch, keepFromDateData, dummyDate);
+        // setDummyToMonthData(date.toISOString().substring(5,7));
+        // const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
+        // await fetchCustomerApi(typeCatch, keepFromDateData, dummyDate);
+        await fetchCustomerApi(typeCatch, keepFromDateData, date);
     }
     const tonggleToDatePicker = () => {
         setShowTDPicker(!showTDPicker);
@@ -146,8 +148,8 @@ const SearchScreen = () => {
         if(getToDate!="" && getFromDate!=""){
             setHideItem(false);
             typeCatch=="customer" ?
-                await axios.post(URLAccess.getDataFunction, {
-                // await axios.post("http://"+getIPaddress+"/senghiap/mobile/getData.php", {
+                // await axios.post(URLAccess.getDataFunction, {
+                await axios.post("https://"+getIPaddress+"/senghiap/mobile/getData.php", {
                     "readCustomer":"1",
                     "fromDate": getFromDate,
                     "toDate": getToDate
@@ -180,8 +182,8 @@ const SearchScreen = () => {
                     });
                 }) 
                 //----------------------------------------------------
-                :   await axios.post(URLAccess.getDataFunction, { 
-                    // :   await axios.post("http://"+getIPaddress+"/senghiap/mobile/getData.php", { 
+                // :   await axios.post(URLAccess.getDataFunction, { 
+                    :   await axios.post("https://"+getIPaddress+"/senghiap/mobile/getData.php", { 
                             "readProduct2":"1",
                     "fromDate": getFromDate,
                     "toDate": getToDate

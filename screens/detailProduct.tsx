@@ -24,6 +24,8 @@ const DetailScreen = () => {
     const getDate = new Date;
     const [todayDate, setTodayDate] = useState<string | "">(getDate.toISOString().split('T')[0]+" 00:00:00"); // for API
     const [showDate, setShowDate] = useState<string | "">(""); // show the date
+    const [selectedIOSDate, setSelectedIOSDate] = useState(new Date());
+
 
     const [showPicker, setShowPicker] = useState(false);
 
@@ -49,8 +51,8 @@ const DetailScreen = () => {
             setDataProcess(true);
             if(await AsyncStorage.getItem('fromDate')!=""){
                 setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-                // setShowDate(await AsyncStorage.getItem('fromDate') ?? "");
-                setShowDate(await AsyncStorage.getItem('dummyDate') ?? "");
+                setShowDate(await AsyncStorage.getItem('fromDate') ?? "");
+                // setShowDate(await AsyncStorage.getItem('dummyDate') ?? "");
             }
             setProductCode(await AsyncStorage.getItem('productCode'));
             setProductName(await AsyncStorage.getItem('productName'));
@@ -76,13 +78,14 @@ const DetailScreen = () => {
     // Date Picker
     const onChangeDate = async ({type}: any, selectedDate: any) => {
         if(type=="set"){
-            setShowPicker(false);
             const currentDate=selectedDate;
-            setTodayDate(currentDate);
+            setSelectedIOSDate(currentDate);
             if(Platform.OS==="android"){
                 // tonggleDatePicker();
+                setShowPicker(false);
                 setDataProcess(true);
                 setIsHidden(true);
+                setTodayDate(currentDate);
                 setShowDate(currentDate.toISOString().split('T')[0]);
                 AsyncStorage.setItem('fromDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
                 AsyncStorage.setItem('toDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
@@ -92,9 +95,16 @@ const DetailScreen = () => {
             tonggleDatePicker();
         }
     }
-    const confirmIOSDate = () => {
-        setShowDate(getDate.toISOString().split('T')[0]);
+
+    const confirmIOSDate = async() => {
+        const currentDate=selectedIOSDate;
+        setShowDate(currentDate.toISOString().split('T')[0]);
+        setTodayDate(currentDate.toISOString().split('T')[0]);
+        AsyncStorage.setItem('fromDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
+        AsyncStorage.setItem('toDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
+        setDataProcess(true);
         tonggleDatePicker();
+        await fetchDataApi();
     }
     const tonggleDatePicker = () => {
         setShowPicker(!showPicker);
@@ -173,7 +183,7 @@ const DetailScreen = () => {
                 AsyncStorage.setItem('customerName', item.name);
                 AsyncStorage.setItem('fromDate', todayDate ?? "");
                 AsyncStorage.setItem('toDate', todayDate ?? "");
-                AsyncStorage.setItem('dummyDate', showDate ?? "");
+                // AsyncStorage.setItem('dummyDate', showDate ?? "");
                 navigation.navigate(DetailCustomerScreen as never);
             }}>
                 <View style={css.listItem} key={parseInt(item.accode)}>
@@ -196,20 +206,20 @@ const DetailScreen = () => {
     const barChartItem = ({ item }: { item: CustomerData }) => {
         return (
             <TouchableOpacity onPress={() => {
-                // if(item.value!="0"){
-                //     setDataProcess(true);
-                //     setIsHidden(true);
-                //     setTodayDate(item.value);
-                //     setShowDate(item.value);
-                //     AsyncStorage.setItem('fromDate', item.value);
-                //     AsyncStorage.setItem('toDate', item.value);
-                //     fetchDataApi();
-                // }else{
-                //     Snackbar.show({
-                //         text: "Can't choose the zero value on that day.",
-                //         duration: Snackbar.LENGTH_SHORT,
-                //     });
-                // }
+                if(item.value!="0"){
+                    setDataProcess(true);
+                    setIsHidden(true);
+                    setTodayDate(item.value);
+                    setShowDate(item.value);
+                    AsyncStorage.setItem('fromDate', item.value);
+                    AsyncStorage.setItem('toDate', item.value);
+                    fetchDataApi();
+                }else{
+                    Snackbar.show({
+                        text: "Can't choose the zero value on that day.",
+                        duration: Snackbar.LENGTH_SHORT,
+                    });
+                }
             }}>
                 <View style={css.listItem} key={parseInt(item.accode)}>
                     <View style={[css.cardBody]}>
@@ -254,35 +264,15 @@ const DetailScreen = () => {
             )} */}
 
             {/* Set Date */}
-            {/* {isHidden==false ? (
+            {isHidden==false ? (
             <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
-                {showPicker && <DateTimePicker 
+                {showPicker && Platform.OS === 'android' && <DateTimePicker 
                     mode="date"
                     display="calendar"
                     value={getDate}
                     onChange={onChangeDate}
                     style={datepickerCSS.datePicker}
                 />}
-
-                {showPicker && Platform.OS==="ios" &&(
-                <View
-                    style={{flexDirection:"row",justifyContent:"space-around"}}
-                >
-                    <TouchableOpacity 
-                        style={[datepickerCSS.cancelButton,{backgroundColor:"#11182711",paddingHorizontal:20}]}
-                        onPress={tonggleDatePicker}
-                    >
-                        <Text style={[datepickerCSS.cancelButtonText,{color:"#075985"}]}>Cancel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={[datepickerCSS.cancelButton,{paddingHorizontal:20}]}
-                        onPress={confirmIOSDate}
-                    >
-                        <Text style={[datepickerCSS.cancelButtonText]}>Confirm</Text>
-                    </TouchableOpacity>
-                </View>
-                )}
-            
                 <Pressable style={css.pressableCSS} onPress={tonggleDatePicker}>
                 <TextInput
                     style={{color: "#000", textAlign: "center", fontSize:18}}
@@ -297,32 +287,13 @@ const DetailScreen = () => {
             </View>
             ) : (
                 <View style={css.row}>
-                {showPicker && <DateTimePicker 
+                {showPicker && Platform.OS === 'android' &&<DateTimePicker 
                     mode="date"
                     display="calendar"
                     value={getDate}
                     onChange={onChangeDate}
                     style={datepickerCSS.datePicker}
                 />}
-
-                {showPicker && Platform.OS==="ios" &&(
-                <View
-                    style={{flexDirection:"row",justifyContent:"space-around"}}
-                >
-                    <TouchableOpacity 
-                        style={[datepickerCSS.cancelButton,{backgroundColor:"#11182711",paddingHorizontal:20}]}
-                        onPress={tonggleDatePicker}
-                    >
-                        <Text style={[datepickerCSS.cancelButtonText,{color:"#075985"}]}>Cancel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={[datepickerCSS.cancelButton,{paddingHorizontal:20}]}
-                        onPress={confirmIOSDate}
-                    >
-                        <Text style={[datepickerCSS.cancelButtonText]}>Confirm</Text>
-                    </TouchableOpacity>
-                </View>
-                )}
             
                 <Pressable style={css.pressableCSS} onPress={tonggleDatePicker}>
                 <TextInput
@@ -336,7 +307,34 @@ const DetailScreen = () => {
                 />
                 </Pressable>
             </View>    
-            )} */}
+            )}
+                <View>
+                    {showPicker && Platform.OS === "ios" && <DateTimePicker
+                        mode="date"
+                        display="spinner"
+                        value={selectedIOSDate}
+                        onChange={onChangeDate}
+                        style={datepickerCSS.datePicker}
+                    />}
+                    {showPicker && Platform.OS === "ios" && (
+                        <View
+                            style={{ flexDirection: "row", justifyContent: "space-around" }}
+                        >
+                            <TouchableOpacity
+                                style={[datepickerCSS.cancelButton, { backgroundColor: "#11182711", paddingHorizontal: 20 }]}
+                                onPress={tonggleDatePicker}
+                            >
+                                <Text style={[datepickerCSS.cancelButtonText, { color: "#075985" }]}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[datepickerCSS.cancelButton, { paddingHorizontal: 20 }]}
+                                onPress={confirmIOSDate}
+                            >
+                                <Text style={[datepickerCSS.cancelButtonText]}>Confirm</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
             {/* End Select Date */}
 
             {dataProcess== true ? (

@@ -215,21 +215,21 @@ const DashboardScreen = () => {
     const barChartItem = ({ item }: { item: ProductData }) => {
         return (
             <TouchableOpacity onPress={() => {
-                // if(item.value!="0"){
-                //     setDataProcess(true);
-                //     setIsHidden(true);
-                //     setSelectedDate(item.value);
-                //     setTodayDate(item.value);
-                //     setShowDate(item.value);
-                //     AsyncStorage.setItem('fromDate', item.value),
-                //     AsyncStorage.setItem('toDate', item.value),
-                //     fetchDataApi(item.value);
-                // }else{
-                //     Snackbar.show({
-                //         text: "Can't choose the zero value on that day.",
-                //         duration: Snackbar.LENGTH_SHORT,
-                //     });
-                // }
+                if(item.value!="0"){
+                    setDataProcess(true);
+                    setIsHidden(true);
+                    setSelectedDate(item.value);
+                    setTodayDate(item.value);
+                    setShowDate(item.value);
+                    AsyncStorage.setItem('fromDate', item.value),
+                    AsyncStorage.setItem('toDate', item.value),
+                    fetchDataApi(item.value);
+                }else{
+                    Snackbar.show({
+                        text: "Can't choose the zero value on that day.",
+                        duration: Snackbar.LENGTH_SHORT,
+                    });
+                }
             }}>
                 <View style={css.listItem} key={parseInt(item.key)}>
                     <View style={[css.cardBody]}>
@@ -320,8 +320,8 @@ const DashboardScreen = () => {
             )}
             {/* End Select Date */}
 
-            <View>
-                    
+                <View>
+
                     {showPicker && Platform.OS === "ios" && <DateTimePicker
                         mode="date"
                         display="spinner"
@@ -348,7 +348,7 @@ const DashboardScreen = () => {
                             </TouchableOpacity>
                         </View>
                     )}
-                    </View>
+                </View>
             
             {dataProcess== true ? (
                 <View style={[css.container]}>

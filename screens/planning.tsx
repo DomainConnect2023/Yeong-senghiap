@@ -18,52 +18,51 @@ import RNFetchBlob from 'rn-fetch-blob'
 const PlanningScreen = () => {
     const navigation = useNavigation();
 
+    const [showURL, setShowURL] = useState('');
+    const [dataProcess, setDataProcess] = useState(false); // check when loading data
+
     useEffect(()=> {
         (async()=> {
-            // postAPI();
+            setDataProcess(true);
+            await postAPI();
         })();
     }, [])
 
-    const headers = {
-        'Content-Type': 'application/json',
-    }
-
     const postAPI = async() =>
     {
-        // await axios.post("https://192.168.0.168:54321/App/Login", {
-        //     headers: headers,
-        //     "Code": "Abu",
-        //     "Password": "12345",
-        //     })
-        //         .then(response => {
-        //             console.log(response.data)
-        //         }).catch(error => {
-        //             Snackbar.show({
-        //                 text: error.message,
-        //                 duration: Snackbar.LENGTH_SHORT,
-        //             });
-        //         });
+        var getIPaddress=await AsyncStorage.getItem('IPaddress');
+        var userCode=await AsyncStorage.getItem('userCode');
+        var password=await AsyncStorage.getItem('password');
+
         await RNFetchBlob.config({
             trusty: true
+        }).fetch('POST', 'http://192.168.1.123:43210/App/LoginGrading',{
+                "Content-Type": "application/json",
+            },
+            JSON.stringify({
+                "Code": userCode,
+                "Password": password,
+            }),
+        )
+        .then(async (response) => {
+            if(response.json().isSuccess==true){
+                // http://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true
+                setShowURL("http://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true");
+            }else{
+                Snackbar.show({
+                    text: 'Wrong!',
+                    duration: Snackbar.LENGTH_SHORT,
+                });
+            }
         })
-            .fetch('POST', 'https://192.168.1.197:9981/senghiap/mobile/getData.php',
-                {
-                    "Content-Type": "application/json",
-                    
-                },
-                JSON.stringify({
-                    "login": "1",
-                    "username": "lai",
-                    "password": "0907",
-                }),
-                
-            )
-            .then((response) => {
-                console.log(response.json());
-            })
-            .catch(error => {
-                console.error(error);
+        .catch(error => {
+            console.error(error);
+            Snackbar.show({
+                text: error.message,
+                duration: Snackbar.LENGTH_SHORT,
             });
+        });
+        setDataProcess(false);
     }
 
     return (
@@ -78,17 +77,13 @@ const PlanningScreen = () => {
                     </View>
                 </View>
             </View>
-
-            {/* <Pressable
-                style={[css.typeButton,{backgroundColor:"dimgray"}]} 
-                onPress={async ()=>[
-                await postAPI()
-            ]}>
-                <Text> test me here</Text>
-            </Pressable> */}
-            {/* <WebView source={{ uri: 'https://reactnative.dev/' }} style={{ flex: 1 }} /> */}
-            <WebView source={{uri: 'https://senghiap.com/' }} style={{ flex: 1 }} />
-            {/* <WebView source={{uri: 'https://192.168.0.168:54321' }} style={{ flex: 1 }} /> */}
+            {(dataProcess==true && showURL=="") ? (
+                <View style={[css.container]}>
+                    <ActivityIndicator size="large" />
+                </View>
+            ) : (
+                <WebView source={{uri: showURL }} style={{ flex: 1 }} />
+            )}
             
         </MainContainer>
     );

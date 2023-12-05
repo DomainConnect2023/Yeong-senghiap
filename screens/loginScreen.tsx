@@ -72,6 +72,7 @@ const LoginScreen = () => {
         ).then((response) => {
             if(response.json().status=="1"){
                 AsyncStorage.setItem('userCode', username);
+                AsyncStorage.setItem('password', password);
                 AsyncStorage.setItem('IPaddress', IPaddress);
                 AsyncStorage.setItem('fromDate', todayDate);
                 AsyncStorage.setItem('toDate', todayDate);
@@ -80,7 +81,6 @@ const LoginScreen = () => {
                 setPassword("");
                 navigation.navigate(TabNavigation as never);
             }else{
-
                 Snackbar.show({
                     text: 'Login Failed, Please try again!',
                     duration: Snackbar.LENGTH_SHORT,

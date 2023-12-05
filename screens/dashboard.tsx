@@ -24,14 +24,6 @@ const DashboardScreen = () => {
     const navigation = useNavigation();
 
     const getDate = new Date;
-
-    // const currYear = new Date().getFullYear();
-    // const currDay = new Date().getDate();
-    // const setDate = currYear+"-09-"+currDay;
-    // const dummyDate = getDate.toISOString().split('T')[0];
-
-    // const [todayDate, setTodayDate] = useState<string | "">(setDate+" 00:00:00");
-    // const [showDate, setShowDate] = useState<string | "">(dummyDate);
     const [todayDate, setTodayDate] = useState<string | "">(getDate.toISOString().split('T')[0]+" 00:00:00"); // for API
     const [showDate, setShowDate] = useState<string | "">(getDate.toISOString().split('T')[0]); // For show Text only
 
@@ -203,7 +195,6 @@ const DashboardScreen = () => {
                 AsyncStorage.setItem('productName', item.name);
                 AsyncStorage.setItem('fromDate', todayDate ?? "");
                 AsyncStorage.setItem('toDate', todayDate ?? "");
-                // AsyncStorage.setItem('dummyDate', showDate ?? "");
                 navigation.navigate(DetailScreen as never);
             }}>
                 <View style={css.listItem} key={parseInt(item.key)}>

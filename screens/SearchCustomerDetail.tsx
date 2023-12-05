@@ -32,17 +32,7 @@ const SearchCustomerDetail = () => {
     let colorSelected = 0;
 
     useEffect(()=> {
-        (async()=> {
-            // const getFromDate = await AsyncStorage.getItem('fromDate');
-            // var dummyfromMonth = await AsyncStorage.getItem('dummyfromMonth');
-            // const dummyFromDate = getFromDate?.substring(0,4)+"-"+dummyfromMonth+"-"+getFromDate?.substring(8,10);
-            // setFromDate(dummyFromDate);
-
-            // const getToDate = await AsyncStorage.getItem('toDate');
-            // var dummytoMonth = await AsyncStorage.getItem('dummytoMonth');
-            // const dummyToDate = getToDate?.substring(0,4)+"-"+dummytoMonth+"-"+getToDate?.substring(8,10);
-            // setToDate(dummyToDate);
-            
+        (async()=> { 
             setFromDate(await AsyncStorage.getItem('fromDate'));
             setToDate(await AsyncStorage.getItem('toDate'));
             setDataProcess(true);
@@ -54,9 +44,6 @@ const SearchCustomerDetail = () => {
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
         var fromDate = await AsyncStorage.getItem('fromDate');
         var toDate = await AsyncStorage.getItem('toDate');
-
-        const dummyFromDate = fromDate?.substring(0,4)+"-09-"+fromDate?.substring(8,10)+" 00:00:00";
-        const dummyToDate = toDate?.substring(0,4)+"-09-"+toDate?.substring(8,10)+" 00:00:00";
 
         var type = await AsyncStorage.getItem('type');
         let passData;

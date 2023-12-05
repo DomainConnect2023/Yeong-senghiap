@@ -72,14 +72,10 @@ const SearchScreen = () => {
                 tonggleFromDatePicker();
                 setFromDate(currentDate.toDateString());
 
-                const dummyDate = currentDate.toISOString().substring(0,4)+"-09-"+currentDate.toISOString().substring(8,10);
-
-                // setKeepFromDateData(currentDate.toISOString().split('T')[0]);
-                setKeepFromDateData(dummyDate);
+                setKeepFromDateData(currentDate.toISOString().split('T')[0]);
                 setDummyFromMonthData(currentDate.toISOString().substring(5,7));
 
-                // await fetchCustomerApi(typeCatch, currentDate.toISOString().split('T')[0], keepToDateData);
-                await fetchCustomerApi(typeCatch, dummyDate, keepToDateData);
+                await fetchCustomerApi(typeCatch, currentDate.toISOString().split('T')[0], keepToDateData);
             }
         }else{
             tonggleFromDatePicker();
@@ -89,9 +85,6 @@ const SearchScreen = () => {
         setFromDate(date.toDateString());
         setKeepFromDateData(date.toISOString().split('T')[0])
         tonggleFromDatePicker();
-        // setDummyFromMonthData(date.toISOString().substring(5,7));
-        // const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
-        // await fetchCustomerApi(typeCatch, dummyDate, keepToDateData);
         await fetchCustomerApi(typeCatch, date, keepToDateData);
     }
     const tonggleFromDatePicker = () => {
@@ -107,14 +100,10 @@ const SearchScreen = () => {
                 tonggleToDatePicker();
                 setToDate(currentDate.toDateString());
 
-                const dummyDate = currentDate.toISOString().substring(0,4)+"-09-"+currentDate.toISOString().substring(8,10);
-
-                // setKeepToDateData(currentDate.toISOString().split('T')[0]);
-                setKeepToDateData(dummyDate);
+                setKeepToDateData(currentDate.toISOString().split('T')[0]);
                 setDummyToMonthData(currentDate.toISOString().substring(5,7));
 
-                // await fetchCustomerApi(typeCatch, keepFromDateData, currentDate.toISOString().split('T')[0]);
-                await fetchCustomerApi(typeCatch, keepFromDateData, dummyDate);
+                await fetchCustomerApi(typeCatch, keepFromDateData, currentDate.toISOString().split('T')[0]);
             }
         }else{
             tonggleToDatePicker();
@@ -124,9 +113,6 @@ const SearchScreen = () => {
         setToDate(date.toDateString());
         setKeepToDateData(date.toISOString().split('T')[0])
         tonggleToDatePicker();
-        // setDummyToMonthData(date.toISOString().substring(5,7));
-        // const dummyDate = date.toISOString().substring(0,4)+"-09-"+date.toISOString().substring(8,10);
-        // await fetchCustomerApi(typeCatch, keepFromDateData, dummyDate);
         await fetchCustomerApi(typeCatch, keepFromDateData, date);
     }
     const tonggleToDatePicker = () => {

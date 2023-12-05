@@ -196,7 +196,6 @@ const DetailScreen = () => {
                 AsyncStorage.setItem('customerName', item.name);
                 AsyncStorage.setItem('fromDate', todayDate ?? "");
                 AsyncStorage.setItem('toDate', todayDate ?? "");
-                // AsyncStorage.setItem('dummyDate', showDate ?? "");
                 navigation.navigate(DetailCustomerScreen as never);
             }}>
                 <View style={css.listItem} key={parseInt(item.accode)}>
@@ -265,16 +264,6 @@ const DetailScreen = () => {
                     <Text numberOfLines={2} style={css.PageName}> Product Detail: {productName!="" ? "("+productName+")" : ""}</Text>
                 </View>
             </View>
-
-            {/* {isHidden==false ? (
-                <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
-                    <Text>{showDate}</Text>
-                </View>
-            ):(
-                <View style={[css.row]}>
-                    <Text>{showDate}</Text>
-                </View>
-            )} */}
 
             {/* Set Date */}
             {isHidden==false ? (

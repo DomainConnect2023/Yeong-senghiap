@@ -50,7 +50,6 @@ const DetailCustomerScreen = () => {
             if(await AsyncStorage.getItem('fromDate')!=""){
                 setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
                 setShowDate(await AsyncStorage.getItem('fromDate') ?? "");
-                // setShowDate(await AsyncStorage.getItem('dummyDate') ?? "");
             }
             AsyncStorage.getItem('accode').then( (value) => setCustomerCode(value), );
             AsyncStorage.getItem('customerName').then( (value) => setCustomerName(value), );
@@ -257,16 +256,6 @@ const DetailCustomerScreen = () => {
                     <Text numberOfLines={2} style={css.PageName}>Customer: {customerName}</Text>
                 </View>
             </View>
-
-            {/* {isHidden==false ? (
-                <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
-                    <Text>{showDate}</Text>
-                </View>
-            ):(
-                <View style={[css.row]}>
-                    <Text>{showDate}</Text>
-                </View>
-            )} */}
 
             {/* Set Date */}
             {isHidden==false ? (

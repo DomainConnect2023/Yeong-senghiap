@@ -14,6 +14,7 @@ import axios from 'axios';
 import { URLAccess } from '../objects/URLAccess';
 import SerachProductDetail from './SearchProductDetail';
 import { css, dropdownCSS, datepickerCSS } from '../objects/commonCSS';
+import RNFetchBlob from 'rn-fetch-blob';
 
 interface CustomerData {
     label: string;
@@ -149,20 +150,31 @@ const SearchScreen = () => {
             setHideItem(false);
             typeCatch=="customer" ?
                 // await axios.post(URLAccess.getDataFunction, {
-                await axios.post("https://"+getIPaddress+"/senghiap/mobile/getData.php", {
-                    "readCustomer":"1",
-                    "fromDate": getFromDate,
-                    "toDate": getToDate
-                }).then(response => {
-                    if(response.data.status=="1"){
+                // await axios.post("https://"+getIPaddress+"/senghiap/mobile/getData.php", {
+                //     "readCustomer":"1",
+                //     "fromDate": getFromDate,
+                //     "toDate": getToDate
+                // }).then(response => {
+                await RNFetchBlob.config({
+                    trusty: true
+                })
+                .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/getData.php",{
+                        "Content-Type": "application/json",  
+                    }, JSON.stringify({
+                        "readCustomer":"1",
+                        "fromDate": getFromDate,
+                        "toDate": getToDate
+                    }),
+                ).then((response) => {
+                    if(response.json().status=="1"){
                         setFetchedCustomerData([{"label": "All Customer", "value": "all"}]);
-                        setFetchedCustomerData((prevData) => [...prevData, ...response.data.customerData.map((item: { accode: string; customer: any; }) => ({
+                        setFetchedCustomerData((prevData) => [...prevData, ...response.json().customerData.map((item: { accode: string; customer: any; }) => ({
                             label: item.customer,
                             value: item.accode,
                         }))]);
                         setNoCustomerDataList(false);
                         setDataProcess(false);
-                    }else if(response.data.status=="2"){
+                    }else if(response.json().status=="2"){
                         setNoCustomerDataList(true);
                         Snackbar.show({
                         text: 'You do not have customer in these days!',
@@ -183,15 +195,25 @@ const SearchScreen = () => {
                 }) 
                 //----------------------------------------------------
                 // :   await axios.post(URLAccess.getDataFunction, { 
-                    :   await axios.post("https://"+getIPaddress+"/senghiap/mobile/getData.php", { 
-                            "readProduct2":"1",
-                    "fromDate": getFromDate,
-                    "toDate": getToDate
-                }).then(response => {
-            // :   await axios.post(URLAccess.getDataFunction, { "readProduct":"1" }).then(response => {
-                    if(response.data.status=="1"){
+                //     :   await axios.post("https://"+getIPaddress+"/senghiap/mobile/getData.php", { 
+                //             "readProduct2":"1",
+                //     "fromDate": getFromDate,
+                //     "toDate": getToDate
+                // }).then(response => {
+                : await RNFetchBlob.config({
+                    trusty: true
+                })
+                .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/getData.php",{
+                        "Content-Type": "application/json",  
+                    }, JSON.stringify({
+                        "readProduct2":"1",
+                        "fromDate": getFromDate,
+                        "toDate": getToDate
+                    }),
+                ).then((response) => {
+                    if(response.json().status=="1"){
                         setFetchedProductData([{"label": "All Product", "value": "all"}]);
-                        setFetchedProductData((prevData) => [...prevData, ...response.data.productData.map((item: {itemCode: string; product: any; }) => ({
+                        setFetchedProductData((prevData) => [...prevData, ...response.json().productData.map((item: {itemCode: string; product: any; }) => ({
                             // label: item.product,
                             label: item.itemCode,
                             value: item.itemCode,

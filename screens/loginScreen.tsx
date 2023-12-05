@@ -12,6 +12,7 @@ import Snackbar from 'react-native-snackbar';
 import { URLAccess } from '../objects/URLAccess';
 import { ImagesAssets } from '../objects/images';
 import { Dropdown } from 'react-native-searchable-dropdown-kj';
+import RNFetchBlob from 'rn-fetch-blob';
 
 type UserData = {
     username: string;
@@ -58,39 +59,36 @@ const LoginScreen = () => {
     
 
     const loginAPI = async() => {
-        const formData = new FormData();
-        
-        const jsonData: UserData = {
-            "login": "1",
-            "username": username as string,
-            "password": password as string,
-        };
-
-        for (const key in jsonData) {
-            formData.append(key, jsonData[key]);
-        }
-
-        // await axios.post(URLAccess.getDataFunction, 
-        await axios.post("https://"+IPaddress+"/senghiap/mobile/getData.php", 
-        jsonData).then(async response => {
-            // console.log(response.data.level);
-            if(response.data.status=="1"){
+        await RNFetchBlob.config({
+            trusty: true
+        })
+        .fetch('POST', "https://"+IPaddress+"/senghiap/mobile/getData.php",{
+                "Content-Type": "application/json",  
+            }, JSON.stringify({
+                "login": "1",
+                "username": username as string,
+                "password": password as string,
+            }),
+        ).then((response) => {
+            if(response.json().status=="1"){
                 AsyncStorage.setItem('userCode', username);
                 AsyncStorage.setItem('IPaddress', IPaddress);
-                // AsyncStorage.setItem('IPaddress', "192.168.1.121:8080");
                 AsyncStorage.setItem('fromDate', todayDate);
                 AsyncStorage.setItem('toDate', todayDate);
-                AsyncStorage.setItem('level', response.data.level);
+                AsyncStorage.setItem('level', response.json().level);
                 setUserName("");
                 setPassword("");
                 navigation.navigate(TabNavigation as never);
             }else{
+
                 Snackbar.show({
                     text: 'Login Failed, Please try again!',
                     duration: Snackbar.LENGTH_SHORT,
                 });
             }
-        }).catch(error => {
+        })
+        .catch(error => {
+            console.log(error.message);
             Snackbar.show({
                 text: error.message,
                 duration: Snackbar.LENGTH_SHORT,

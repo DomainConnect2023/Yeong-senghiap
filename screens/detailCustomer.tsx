@@ -15,6 +15,7 @@ import { css, datepickerCSS } from '../objects/commonCSS';
 import { CircleColorText, ProductData, BarData, PieData, currencyFormat } from '../objects/objects';
 import { ImagesAssets } from '../objects/images';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const DetailCustomerScreen = () => {
     const navigation = useNavigation();
@@ -114,15 +115,27 @@ const DetailCustomerScreen = () => {
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
 
         // await axios.post(URLAccess.reportFunction, {
-        await axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
-            "readCustomerDetail":"1", 
-            "fromDate":fromDate,
-            "toDate":toDate,
-            "accode":customerCode,
+        // await axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
+        //     "readCustomerDetail":"1", 
+        //     "fromDate":fromDate,
+        //     "toDate":toDate,
+        //     "accode":customerCode,
+        // })
+        // .then(async response => {
+        await RNFetchBlob.config({
+            trusty: true
         })
-        .then(async response => {
-            if(response.data.status=="1"){
-                setFetchedData(response.data.data.map((item: { weight: string; productCode: any; productName: any;}) => ({
+        .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
+                "Content-Type": "application/json",  
+            }, JSON.stringify({
+                "readCustomerDetail":"1", 
+                "fromDate":fromDate,
+                "toDate":toDate,
+                "accode":customerCode,
+            }),
+        ).then((response) => {
+            if(response.json().status=="1"){
+                setFetchedData(response.json().data.map((item: { weight: string; productCode: any; productName: any;}) => ({
                     value: parseInt(item.weight, 10),
                     key: item.productCode,
                     name: item.productName,
@@ -131,24 +144,24 @@ const DetailCustomerScreen = () => {
                 })));
                 
                 colorSelected=0;
-                setPieData(response.data.pieData.map((item: { weight: any; productCode: any; }) => ({
-                    value: Math.round(item.weight/response.data.totalWeight*100*100)/100,
+                setPieData(response.json().pieData.map((item: { weight: any; productCode: any; }) => ({
+                    value: Math.round(item.weight/response.json().totalWeight*100*100)/100,
                     name: "%",
                     color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
                     legendFontSize: 14,
                 })));
 
                 const convertedData: BarData = {
-                    labels: response.data.barData.map((item: { days: any; }) => item.days),
+                    labels: response.json().barData.map((item: { days: any; }) => item.days),
                     datasets: [
                         {
-                        data: response.data.barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
+                        data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
                         },
                     ],
                 };
                 setBarData(convertedData);
 
-                setFetchedBarData(response.data.barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any}) => ({
+                setFetchedBarData(response.json().barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any}) => ({
                     accode: item.key,
                     value: item.dateValue,
                     name: item.days,
@@ -156,7 +169,7 @@ const DetailCustomerScreen = () => {
                     color: "",
                 })));
 
-                setTotalWeight(response.data.totalWeight);
+                setTotalWeight(response.json().totalWeight);
                 setDataProcess(false);
             }else{
                 Snackbar.show({

@@ -14,6 +14,7 @@ import { colorDB } from '../objects/colors';
 import { css } from '../objects/commonCSS';
 
 import { ProductData, PieData, CircleColorText, currencyFormat } from '../objects/objects';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const SearchCustomerDetail = () => {
 
@@ -69,16 +70,29 @@ const SearchCustomerDetail = () => {
         }
 
         // axios.post(URLAccess.reportFunction, {
-        axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
-            "generateReport":"1", 
-            "fromDate":fromDate,
-            "toDate":toDate,
-            "typeCatch":type,
-            "typeData":passData
+        // axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
+        //     "generateReport":"1", 
+        //     "fromDate":fromDate,
+        //     "toDate":toDate,
+        //     "typeCatch":type,
+        //     "typeData":passData
+        // })
+        // .then(async response => {
+        await RNFetchBlob.config({
+            trusty: true
         })
-        .then(async response => {
-            if(response.data.status=="1"){
-                setFetchedData(response.data.data.map((item: { weight: string; productCode: any; productName: any; }) => ({
+        .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
+                "Content-Type": "application/json",  
+            }, JSON.stringify({
+                "generateReport":"1", 
+                "fromDate":fromDate,
+                "toDate":toDate,
+                "typeCatch":type,
+                "typeData":passData
+            }),
+        ).then((response) => {
+            if(response.json().status=="1"){
+                setFetchedData(response.json().data.map((item: { weight: string; productCode: any; productName: any; }) => ({
                     value: parseInt(item.weight, 10),
                     key: item.productCode,
                     name: item.productName,
@@ -87,14 +101,14 @@ const SearchCustomerDetail = () => {
                 })));
                 
                 colorSelected=0;
-                setPieData(response.data.pieData.map((item: { weight: any; productCode: any; }) => ({
-                    value: Math.round(item.weight/response.data.totalWeight*100*100)/100,
+                setPieData(response.json().pieData.map((item: { weight: any; productCode: any; }) => ({
+                    value: Math.round(item.weight/response.json().totalWeight*100*100)/100,
                     name: "%",
                     color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
                     legendFontSize: 14,
                 })));
 
-                setTotalWeight(response.data.totalWeight);
+                setTotalWeight(response.json().totalWeight);
                 setDataProcess(false);
             }else{
                 Snackbar.show({

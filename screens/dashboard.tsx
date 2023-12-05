@@ -18,6 +18,7 @@ import { URLAccess } from '../objects/URLAccess';
 import { css, datepickerCSS } from '../objects/commonCSS';
 import { CircleColorText, ProductData, PieData, BarData, currencyFormat } from '../objects/objects';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const DashboardScreen = () => {
     const navigation = useNavigation();
@@ -128,12 +129,21 @@ const DashboardScreen = () => {
     // get data from database
     const fetchDataApi = async(todayDate: any) => {
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-        // await axios.post(URLAccess.reportFunction, 
-        await axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", 
-            { "read":"1", "todayDate":todayDate, })
-        .then(async response => {
-            if(response.data.status=="1"){
-                setFetchedListData(response.data.data.map((item: { totalWeight: string; key: any; name: any; }) => ({
+        
+        // await axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", 
+        //     { "read":"1", "todayDate":todayDate, })
+        // .then(async response => {
+        await RNFetchBlob.config({
+            trusty: true
+        })
+        .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
+                "Content-Type": "application/json",  
+            }, JSON.stringify({
+                "read":"1", "todayDate":todayDate,
+            }),
+        ).then((response) => {
+            if(response.json().status=="1"){
+                setFetchedListData(response.json().data.map((item: { totalWeight: string; key: any; name: any; }) => ({
                     key: item.key,
                     name: item.name,
                     totalWeight: item.totalWeight,
@@ -141,25 +151,25 @@ const DashboardScreen = () => {
                 })));
 
                 colorSelected=0;
-                setPieData(response.data.pieData.map(
+                setPieData(response.json().pieData.map(
                     (item: { value: number; key: any; totalWeight: any;}) => ({
-                        value: Math.round(item.totalWeight/response.data.totalWeight*100*100)/100,
+                        value: Math.round(item.totalWeight/response.json().totalWeight*100*100)/100,
                         name: "%",
                         totalWeight: item.totalWeight,
-                        percentage: item.totalWeight/response.data.totalWeight*100,
+                        percentage: item.totalWeight/response.json().totalWeight*100,
                         color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
                     })
                 ));
 
                 const convertedData: BarData = {
-                    labels: response.data.barData.map((item: { days: any; }) => item.days),
+                    labels: response.json().barData.map((item: { days: any; }) => item.days),
                     datasets: [{
-                        data: response.data.barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
+                        data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
                     },],
                 };
                 setBarData(convertedData);
 
-                setFetchedBarData(response.data.barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any }) => ({
+                setFetchedBarData(response.json().barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any }) => ({
                     key: item.key,
                     name: item.days,
                     value: item.dateValue,
@@ -167,7 +177,7 @@ const DashboardScreen = () => {
                     color: "",
                 })));
 
-                setTotalWeight(response.data.totalWeight);
+                setTotalWeight(response.json().totalWeight);
                 setDataProcess(false);
             }else{
                 Snackbar.show({
@@ -177,6 +187,7 @@ const DashboardScreen = () => {
             }
         })
         .catch(error => {
+            console.log(error.message);
             Snackbar.show({
                 text: error.message,
                 duration: Snackbar.LENGTH_SHORT,

@@ -17,6 +17,7 @@ import { CircleColorText, CustomerData, BarData, PieData, currencyFormat } from 
 import { ImagesAssets } from '../objects/images';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DashboardScreen from './dashboard';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const DetailScreen = () => {
     const navigation = useNavigation();
@@ -118,15 +119,27 @@ const DetailScreen = () => {
         var toDate = await AsyncStorage.getItem('toDate');
 
         // await axios.post(URLAccess.reportFunction, {
-        axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
-            "readDetail":"1", 
-            "fromDate":fromDate,
-            "toDate":toDate,
-            "productCode":productCode,
+        // axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", {
+        //     "readDetail":"1", 
+        //     "fromDate":fromDate,
+        //     "toDate":toDate,
+        //     "productCode":productCode,
+        // })
+        // .then(async response => {
+        await RNFetchBlob.config({
+            trusty: true
         })
-        .then(async response => {
-            if(response.data.status=="1"){
-                setFetchedData(response.data.data.map((item: { weight: string; accode: any; customer: any; }) => ({
+        .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
+                "Content-Type": "application/json",  
+            }, JSON.stringify({
+                "readDetail":"1", 
+                "fromDate":fromDate,
+                "toDate":toDate,
+                "productCode":productCode,
+            }),
+        ).then((response) => {
+            if(response.json().status=="1"){
+                setFetchedData(response.json().data.map((item: { weight: string; accode: any; customer: any; }) => ({
                     accode: item.accode,
                     value: parseInt(item.weight, 10),
                     name: item.customer,
@@ -135,22 +148,22 @@ const DetailScreen = () => {
                 })));
 
                 colorSelected=0;
-                setPieData(response.data.pieData.map((item: { weight: any; accode: any; customer: any; }) => ({
-                    value: Math.round(item.weight/response.data.totalWeight*100*100)/100,
+                setPieData(response.json().pieData.map((item: { weight: any; accode: any; customer: any; }) => ({
+                    value: Math.round(item.weight/response.json().totalWeight*100*100)/100,
                     name: "%",
                     color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
                     legendFontSize: 14,
                 })));
 
                 const convertedData: BarData = {
-                    labels: response.data.barData.map((item: { days: any; }) => item.days),
+                    labels: response.json().barData.map((item: { days: any; }) => item.days),
                     datasets: [{
-                        data: response.data.barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
+                        data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
                     },],
                 };
                 setBarData(convertedData);
 
-                setFetchedBarData(response.data.barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any }) => ({
+                setFetchedBarData(response.json().barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any }) => ({
                     accode: item.key,
                     value: item.dateValue,
                     name: item.days,
@@ -158,7 +171,7 @@ const DetailScreen = () => {
                     color: "",
                 })));
 
-                setTotalWeight(response.data.totalWeight);
+                setTotalWeight(response.json().totalWeight);
                 setDataProcess(false);
             }else{
                 Snackbar.show({

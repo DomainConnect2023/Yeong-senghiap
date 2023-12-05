@@ -20,7 +20,7 @@ const PlanningScreen = () => {
 
     useEffect(()=> {
         (async()=> {
-            
+            // postAPI();
         })();
     }, [])
 
@@ -46,14 +46,15 @@ const PlanningScreen = () => {
         await RNFetchBlob.config({
             trusty: true
         })
-            .fetch('POST', 'https://192.168.0.168:54321/App/Login',
+            .fetch('POST', 'https://192.168.1.197:9981/senghiap/mobile/getData.php',
                 {
                     "Content-Type": "application/json",
                     
                 },
                 JSON.stringify({
-                    "Code": "ALI",
-                    "Password": "1234",
+                    "login": "1",
+                    "username": "lai",
+                    "password": "0907",
                 }),
                 
             )

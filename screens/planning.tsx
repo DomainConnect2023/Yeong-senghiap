@@ -1,19 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Image, ActivityIndicator, FlatList, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import Snackbar from 'react-native-snackbar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MainContainer from '../components/MainContainer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ImagesAssets } from '../objects/images';
-import SearchScreen from './searchScreen';
 import LoginScreen from './loginScreen';
-import { PieChart } from 'react-native-chart-kit';
 import { css } from '../objects/commonCSS';
+import RNFetchBlob from 'rn-fetch-blob';
 import { WebView } from 'react-native-webview';
-import RNFetchBlob from 'rn-fetch-blob'
 
 const PlanningScreen = () => {
     const navigation = useNavigation();
@@ -36,7 +32,7 @@ const PlanningScreen = () => {
 
         await RNFetchBlob.config({
             trusty: true
-        }).fetch('POST', 'http://192.168.1.123:43210/App/LoginGrading',{
+        }).fetch('POST', 'https://192.168.1.123:43210/App/LoginGrading',{
                 "Content-Type": "application/json",
             },
             JSON.stringify({
@@ -46,8 +42,8 @@ const PlanningScreen = () => {
         )
         .then(async (response) => {
             if(response.json().isSuccess==true){
-                // http://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true
-                setShowURL("http://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true");
+                // console.log("done load url");
+                setShowURL("https://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true");
             }else{
                 Snackbar.show({
                     text: 'Wrong!',
@@ -82,7 +78,10 @@ const PlanningScreen = () => {
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-                <WebView source={{uri: showURL }} style={{ flex: 1 }} />
+                <WebView
+                    source={{ uri: showURL }}
+                    style={{ flex: 1 }}
+                />
             )}
             
         </MainContainer>

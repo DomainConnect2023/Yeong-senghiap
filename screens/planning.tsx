@@ -29,10 +29,20 @@ const PlanningScreen = () => {
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
         var userCode=await AsyncStorage.getItem('userCode');
         var password=await AsyncStorage.getItem('password');
+        var loginGradingURL, loadGradingPageURL: any;
+
+        // console.log(getIPaddress);
+        if(getIPaddress="domainconnect.my/domain_app"){
+            loginGradingURL="https://192.168.1.123:43210/App/LoginGrading";
+            loadGradingPageURL="https://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true";
+        }else{
+            loginGradingURL="https://"+getIPaddress+"/App/LoginGrading";
+            loadGradingPageURL="https://"+getIPaddress+"/Receive/Index?OnlyPendingApprove=true";
+        }
 
         await RNFetchBlob.config({
             trusty: true
-        }).fetch('POST', 'https://192.168.1.123:43210/App/LoginGrading',{
+        }).fetch('POST', loginGradingURL,{
                 "Content-Type": "application/json",
             },
             JSON.stringify({
@@ -43,7 +53,7 @@ const PlanningScreen = () => {
         .then(async (response) => {
             if(response.json().isSuccess==true){
                 // console.log("done load url");
-                setShowURL("https://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true");
+                setShowURL(loadGradingPageURL);
             }else{
                 Snackbar.show({
                     text: 'Wrong!',

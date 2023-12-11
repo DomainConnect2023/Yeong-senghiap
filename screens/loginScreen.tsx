@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Image, Pressable } from 'react-native';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
@@ -13,6 +13,7 @@ import { URLAccess } from '../objects/URLAccess';
 import { ImagesAssets } from '../objects/images';
 import { Dropdown } from 'react-native-searchable-dropdown-kj';
 import RNFetchBlob from 'rn-fetch-blob';
+import { useAuth } from '../components/Auth_Provider/Auth_Context';
 
 type UserData = {
     username: string;
@@ -30,6 +31,8 @@ interface selectedData {
     value: string;
 }
 
+export const [isLoginSuccess, setLoginStatus] = useState<String | null>("");
+
 const LoginScreen = () => {
     const navigation = useNavigation();
 
@@ -45,6 +48,9 @@ const LoginScreen = () => {
 
     const [fetchedSelectionData, setFetchedSelectionData] = useState<selectedData[]>([]);
 
+    const { setIsSignedIn } = useAuth();
+    // const { isSignedIn } = useAuth();
+
     useEffect(()=> {
         (async()=> {
             setFetchedSelectionData([]);
@@ -56,8 +62,6 @@ const LoginScreen = () => {
         })();
     }, [])
     
-    
-
     const loginAPI = async() => {
         await RNFetchBlob.config({
             trusty: true
@@ -77,9 +81,10 @@ const LoginScreen = () => {
                 AsyncStorage.setItem('fromDate', todayDate);
                 AsyncStorage.setItem('toDate', todayDate);
                 AsyncStorage.setItem('level', response.json().level);
+                AsyncStorage.setItem('isLoginSuccess', response.json().status)
                 setUserName("");
                 setPassword("");
-                navigation.navigate(TabNavigation as never);
+                setIsSignedIn(true);
             }else{
                 Snackbar.show({
                     text: 'Login Failed, Please try again!',

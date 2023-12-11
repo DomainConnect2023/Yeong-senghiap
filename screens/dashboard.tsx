@@ -19,6 +19,7 @@ import { css, datepickerCSS } from '../objects/commonCSS';
 import { CircleColorText, ProductData, PieData, BarData, currencyFormat } from '../objects/objects';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNFetchBlob from 'rn-fetch-blob';
+import 'react-native-gesture-handler';
 
 const DashboardScreen = () => {
     const navigation = useNavigation();
@@ -252,7 +253,7 @@ const DashboardScreen = () => {
     return (
         <MainContainer>
             <KeyboardAvoidWrapper>
-            <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
+            {/* <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
                 <View style={css.HeaderView}>
                     <Text style={css.PageName}>Dashboard</Text>
                 </View>
@@ -264,7 +265,7 @@ const DashboardScreen = () => {
                         <Ionicons name="log-out-outline" size={40} color="#FFF" onPress={()=>{[navigation.navigate(LoginScreen as never)]}} />
                     </View>
                 </View>
-            </View>
+            </View> */}
 
             {/* {isHidden==false ? (
                 <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>

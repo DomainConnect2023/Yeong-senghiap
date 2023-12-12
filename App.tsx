@@ -6,13 +6,15 @@ import TabNavigationScreen from './screens/TabNavigation';
 import ProfileScreen from './screens/profile';
 import DetailScreen from './screens/detailProduct';
 import SettingScreen from './screens/setting';
-import DashboardScreen from './screens/dashboard';
 import PlanningScreen from './screens/planning';
 import SearchScreen from './screens/searchScreen';
 import SearchCustomerDetail from './screens/SearchCustomerDetail';
 import SerachProductDetail from './screens/SearchProductDetail';
 import LoginScreen from './screens/loginScreen';
 import DetailCustomerScreen from './screens/detailCustomer';
+import DashboardScreen2 from './screens/dashboard2';
+import DashboardScreen from './screens/dashboard';
+import DashboardScreen3 from './screens/dashboard3';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,8 @@ function App(): JSX.Element {
           <Stack.Screen name="Setting" component={SettingScreen} />
           <Stack.Screen name="Planning" component={PlanningScreen} />
           <Stack.Screen name="Dashboard" component={DashboardScreen} />
+          <Stack.Screen name="Dashboard2" component={DashboardScreen2} />
+          <Stack.Screen name="Dashboard3" component={DashboardScreen3} />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
           <Stack.Screen name="SearchCustomerDetail" component={SearchCustomerDetail} />
           <Stack.Screen name="SerachProductDetail" component={SerachProductDetail} />

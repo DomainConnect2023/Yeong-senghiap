@@ -247,14 +247,12 @@ const DashboardScreen = () => {
         );
     };
 
-    
-
     return (
         <MainContainer>
             <KeyboardAvoidWrapper>
             <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
                 <View style={css.HeaderView}>
-                    <Text style={css.PageName}>Dashboard</Text>
+                    <Text style={css.PageName}>Dashboard (Daily Receiving)</Text>
                 </View>
                 <View style={{flexDirection: 'row',}}>
                     <View style={css.listThing}>
@@ -265,16 +263,6 @@ const DashboardScreen = () => {
                     </View>
                 </View>
             </View>
-
-            {/* {isHidden==false ? (
-                <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
-                    <Text>{showDate}</Text>
-                </View>
-            ):(
-                <View style={[css.row]}>
-                    <Text>{showDate}</Text>
-                </View>
-            )} */}
 
             {/* Set Date */}
             {isHidden==false ? (
@@ -299,7 +287,7 @@ const DashboardScreen = () => {
                 </Pressable>
             </View>
             ) : (
-                <View style={css.row}>
+            <View style={css.row}>
                 {showPicker && Platform.OS === 'android' && <DateTimePicker 
                     mode="date"
                     display="calendar"

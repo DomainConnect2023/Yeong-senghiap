@@ -42,7 +42,7 @@ const PlanningScreen = () => {
 
         await RNFetchBlob.config({
             trusty: true
-        }).fetch('POST', loginGradingURL,{
+            }).fetch('POST', loginGradingURL,{
                 "Content-Type": "application/json",
             },
             JSON.stringify({

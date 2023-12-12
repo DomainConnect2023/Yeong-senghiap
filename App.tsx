@@ -1,26 +1,16 @@
-import React, { useEffect } from 'react';
+import React, {  } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox, SafeAreaView } from 'react-native';
-import TabNavigationScreen from './screens/TabNavigation';
-import ProfileScreen from './screens/profile';
-import DetailScreen from './screens/detailProduct';
-import SettingScreen from './screens/setting';
-import PlanningScreen from './screens/planning';
-import SearchScreen from './screens/searchScreen';
-import SearchCustomerDetail from './screens/SearchCustomerDetail';
-import SerachProductDetail from './screens/SearchProductDetail';
-import LoginScreen from './screens/loginScreen';
-import DetailCustomerScreen from './screens/detailCustomer';
-import DashboardScreen2 from './screens/dashboard2';
-import DashboardScreen from './screens/dashboard';
-import DashboardScreen3 from './screens/dashboard3';
+import 'react-native-gesture-handler';
+import { AuthProvider } from './components/Auth_Provider/Auth_Context';
+import { StackNavigator } from './components/Navigator/StackNavigator';
 
 const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
   LogBox.ignoreAllLogs();
-  
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer>
@@ -33,8 +23,6 @@ function App(): JSX.Element {
           <Stack.Screen name="Setting" component={SettingScreen} />
           <Stack.Screen name="Planning" component={PlanningScreen} />
           <Stack.Screen name="Dashboard" component={DashboardScreen} />
-          <Stack.Screen name="Dashboard2" component={DashboardScreen2} />
-          <Stack.Screen name="Dashboard3" component={DashboardScreen3} />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
           <Stack.Screen name="SearchCustomerDetail" component={SearchCustomerDetail} />
           <Stack.Screen name="SerachProductDetail" component={SerachProductDetail} />

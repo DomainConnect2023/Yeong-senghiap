@@ -19,10 +19,11 @@ export function CustomDrawer() {
       headerShown: true,
       headerStyle: {
         // backgroundColor: "#f44336"
-        backgroundColor: "#666699"
+        backgroundColor: "#666699",
       },
       headerTitleStyle: {color: "#FFF"},
       headerTintColor: '#fff', 
+      headerTitleAlign: 'center',
     }}
     >
       <Drawer.Screen name="Dashboard" component={DashboardScreen} options={{

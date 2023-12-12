@@ -11,7 +11,6 @@ import { DashboardStack } from './DashboardStack';
 export function StackNavigator() {
     const Stack = createNativeStackNavigator();
     const { isSignedIn } = useAuth();
-    // const isSignedIn = useState(false);
 
     const signedInUserScreen =
         (

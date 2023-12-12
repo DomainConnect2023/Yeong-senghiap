@@ -20,6 +20,8 @@ import { CircleColorText, ProductData, PieData, BarData, currencyFormat } from '
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNFetchBlob from 'rn-fetch-blob';
 import 'react-native-gesture-handler';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
 
 const DashboardScreen = () => {
     const navigation = useNavigation();
@@ -41,6 +43,13 @@ const DashboardScreen = () => {
 
     const [dataProcess, setDataProcess] = useState(false); // check when loading data
     let colorSelected = 0; // set color use
+
+    // IOS Date picker modal setup
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const hideIOSDatePicker = () => {
+        setDatePickerVisible(false);
+    };
+    // END IOS Date Picker modal setup
 
     // when clicking pie / bar chart use
     const [chooseChart, setChooseChart] = useState("pie");
@@ -105,17 +114,24 @@ const DashboardScreen = () => {
 
     const confirmIOSDate = async() => {
         const currentDate=selectedIOSDate;
+        console.log(selectedIOSDate)
         setShowDate(currentDate.toISOString().split('T')[0]);
         setTodayDate(currentDate.toISOString().split('T')[0]);
         setSelectedDate(currentDate.toISOString().split('T')[0]);
         AsyncStorage.setItem('fromDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
         AsyncStorage.setItem('toDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
         setDataProcess(true);
-        tonggleDatePicker();
+        // tonggleDatePicker();
+        setDatePickerVisible(false);
         await fetchDataApi(currentDate.toISOString().split('T')[0]);
     }
     const tonggleDatePicker = () => {
-        setShowPicker(!showPicker);
+        if (Platform.OS === 'android') {
+            setShowPicker(!showPicker);
+        }
+        else if (Platform.OS === 'ios') {
+            setDatePickerVisible(true);
+        }
     }
     // End Date Picker
 
@@ -253,30 +269,6 @@ const DashboardScreen = () => {
     return (
         <MainContainer>
             <KeyboardAvoidWrapper>
-            {/* <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
-                <View style={css.HeaderView}>
-                    <Text style={css.PageName}>Dashboard</Text>
-                </View>
-                <View style={{flexDirection: 'row',}}>
-                    <View style={css.listThing}>
-                        <Ionicons name="search-circle-sharp" size={40} color="#FFF" onPress={()=>navigation.navigate(SearchScreen as never)} />
-                    </View>
-                    <View style={css.listThing}>
-                        <Ionicons name="log-out-outline" size={40} color="#FFF" onPress={()=>{[navigation.navigate(LoginScreen as never)]}} />
-                    </View>
-                </View>
-            </View> */}
-
-            {/* {isHidden==false ? (
-                <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
-                    <Text>{showDate}</Text>
-                </View>
-            ):(
-                <View style={[css.row]}>
-                    <Text>{showDate}</Text>
-                </View>
-            )} */}
-
             {/* Set Date */}
             {isHidden==false ? (
             <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
@@ -322,36 +314,14 @@ const DashboardScreen = () => {
             </View>    
             )}
             {/* End Select Date */}
-
-                <View>
-
-                    {showPicker && Platform.OS === "ios" && <DateTimePicker
-                        mode="date"
-                        display="spinner"
-                        value={selectedIOSDate}
-                        onChange={onChangeDate}
-                        style={datepickerCSS.datePicker}
-                    />}
-
-                    {showPicker && Platform.OS === "ios" && (
-                        <View
-                            style={{ flexDirection: "row", justifyContent: "space-around" }}
-                        >
-                            <TouchableOpacity
-                                style={[datepickerCSS.cancelButton, { backgroundColor: "#11182711", paddingHorizontal: 20 }]}
-                                onPress={tonggleDatePicker}
-                            >
-                                <Text style={[datepickerCSS.cancelButtonText, { color: "#075985" }]}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[datepickerCSS.cancelButton, { paddingHorizontal: 20 }]}
-                                onPress={confirmIOSDate}
-                            >
-                                <Text style={[datepickerCSS.cancelButtonText]}>Confirm</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </View>
+                {Platform.OS === "ios" && (<DateTimePickerModal
+                    date={selectedIOSDate}
+                    isVisible={datePickerVisible}
+                    mode="date"
+                    display='inline'
+                    onConfirm={confirmIOSDate}
+                    onCancel={hideIOSDatePicker}
+                />)}
             
             {dataProcess== true ? (
                 <View style={[css.container]}>

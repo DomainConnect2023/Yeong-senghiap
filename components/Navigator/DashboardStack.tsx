@@ -22,8 +22,8 @@ import { CustomDrawer } from './CustomDrawer';
   
   export function DashboardStack() {
     return (
-      <Stack.Navigator initialRouteName="Dashboard" screenOptions={{headerShown: false}}>
-      <Stack.Screen name = "Dashboard" component={CustomDrawer}/>
+      <Stack.Navigator initialRouteName="CustomDrawer" screenOptions={{headerShown: false}}>
+      <Stack.Screen name = "CustomDrawer" component={CustomDrawer}/>
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="DetailScreen" component={DetailScreen} />
       <Stack.Screen name="DetailCustomerScreen" component={DetailCustomerScreen} />

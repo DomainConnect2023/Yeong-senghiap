@@ -264,11 +264,10 @@ const DashboardScreen = () => {
         );
     };
 
-    
-
     return (
         <MainContainer>
             <KeyboardAvoidWrapper>
+
             {/* Set Date */}
             {isHidden==false ? (
             <View style={[css.row,{backgroundColor:'rgba(0, 0, 0, 0.3)',zIndex: 100}]}>
@@ -292,7 +291,7 @@ const DashboardScreen = () => {
                 </Pressable>
             </View>
             ) : (
-                <View style={css.row}>
+            <View style={css.row}>
                 {showPicker && Platform.OS === 'android' && <DateTimePicker 
                     mode="date"
                     display="calendar"

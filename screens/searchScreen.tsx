@@ -254,7 +254,7 @@ const SearchScreen = () => {
                 <View style={css.mainView}>
                     <View style={{ flexDirection: 'row', }}>
                         <View style={css.listThing}>
-                            <Ionicons name="arrow-back-circle-outline" size={40} color="#FFF" onPress={() => navigation.goBack()} />
+                            <Ionicons name="arrow-back-circle-outline" size={30} color="#FFF" onPress={() => navigation.goBack()} />
                         </View>
                     </View>
                     <View style={css.HeaderView}>

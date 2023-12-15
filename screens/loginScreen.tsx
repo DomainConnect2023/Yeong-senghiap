@@ -39,8 +39,8 @@ const LoginScreen = () => {
     const getDate = new Date;
     const [todayDate, setTodayDate] = useState<string | "">(getDate.toISOString().split('T')[0]+" 00:00:00");
         
-    const [username, setUserName] = useState('lai');
-    const [password, setPassword] = useState('0907');
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
 
     const inputRef = React.createRef<TextInput>();
     const [industrial, setIndustrial] = useState("");
@@ -63,18 +63,17 @@ const LoginScreen = () => {
     }, [])
     
     const loginAPI = async() => {
-        // console.log(IPaddress);
+        // console.log("https://"+IPaddress+"/senghiap/mobile/getData.php");
         
         await RNFetchBlob.config({
             trusty: true
-        })
-        .fetch('POST', "https://"+IPaddress+"/senghiap/mobile/getData.php",{
+        }).fetch('POST', "https://"+IPaddress+"/senghiap/mobile/getData.php",{
                 "Content-Type": "application/json",  
-            }, JSON.stringify({
+        }, JSON.stringify({
                 "login": "1",
                 "username": username as string,
                 "password": password as string,
-            }),
+        }),
         ).then((response) => {
             if(response.json().status=="1"){
                 AsyncStorage.setItem('userCode', username);

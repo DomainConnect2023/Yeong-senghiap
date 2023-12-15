@@ -9,7 +9,7 @@ export const css = StyleSheet.create({
     },
     mainView:{
         width: '100%',
-        height: 80, 
+        height: 60, 
         flexDirection: 'row',
         alignItems: 'center', 
         backgroundColor: "#666699",
@@ -24,27 +24,28 @@ export const css = StyleSheet.create({
     },
     PageName: {
         color: "#FFFFFF",
-        fontSize: 22,
+        fontSize: 18,
+        fontWeight: "bold",
     },
     listThing: {
-        width: 40,
+        width: 30,
         height: 40, 
         backgroundColor: '#666699', 
         justifyContent: 'center', 
         alignItems: 'center',
         borderRadius: 20,
-        marginRight: 10,
-        marginLeft: 10,
+        margin: 10,
     },
     listItem: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#e0e0eb',
+        backgroundColor: '#E6E8EA',
         padding: 10,
         borderRadius: 10,
         marginVertical: 2,
         marginHorizontal: 5,
+        height: 80,
     },
     cardBody: {
         flexGrow: 1,
@@ -52,16 +53,20 @@ export const css = StyleSheet.create({
         width: "95%",
     },
     textHeader: { 
+        fontStyle: "italic",
         flex: 1,
-        fontSize: 14,
+        fontSize: 16,
         color: '#000000',
         fontWeight: 'bold',
         marginBottom: 4,
-        width: "95%",
+        width: "60%",
     },
     textDescription: {
+        fontStyle: "italic",
         fontSize: 12,
         marginBottom: 6,
+        width: "30%",
+        textAlign: "center",
     },
     circle: {
         width: 20,
@@ -94,7 +99,7 @@ export const css = StyleSheet.create({
     },
     typeButton: {
         margin:5,
-        width:"60%",
+        width:"50%",
         height:30,
         alignItems: 'center',
         justifyContent: 'center',
@@ -139,17 +144,14 @@ export const css = StyleSheet.create({
         flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        paddingLeft:20,
-        paddingRight:20,
     },
     pressableCSS: {
-        width: '80%',
-        marginBottom: 10,
+        width: '40%',
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 8,
-        marginTop: 5
-    }
+        marginTop: 10,
+    },
 });
 
 
@@ -172,6 +174,14 @@ export const datepickerCSS = StyleSheet.create({
         height: 120,
         marginTop: -10,
     },
+    textInput: {
+        color: "#000", 
+        textAlign: "center", 
+        fontSize:14, 
+        fontWeight:"bold", 
+        height:25,
+        padding:0,
+    }
 });
 
 

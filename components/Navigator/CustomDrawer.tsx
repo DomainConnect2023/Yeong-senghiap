@@ -8,12 +8,21 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SearchScreen from '../../screens/searchScreen';
+import DashboardScreen2 from '../../screens/dashboard2';
+import DashboardScreen3 from '../../screens/dashboard3';
+import TabNavigation from '../../screens/TabNavigation';
+import DetailScreen from '../../screens/detailProduct';
+import GradingScreen from '../../screens/grading';
+import { css } from '../../objects/commonCSS';
+import LoginScreen from '../../screens/loginScreen';
+import { useAuth } from '../Auth_Provider/Auth_Context';
 
 const Drawer = createDrawerNavigator();
 
 export function CustomDrawer() {
 
   const navigation = useNavigation();
+  const { setIsSignedIn } = useAuth();
   return (
     <Drawer.Navigator initialRouteName="Dashboard" screenOptions={{
       headerShown: true,
@@ -26,17 +35,38 @@ export function CustomDrawer() {
       headerTitleAlign: 'center',
     }}
     >
-      <Drawer.Screen name="Dashboard" component={DashboardScreen} options={{
+      <Drawer.Screen name="Dashboard" component={TabNavigation} options={{
+        headerTitle: 'Dashboard',
+        headerRight: () => (
+          <View style={css.row}>
+            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchScreen as never)} />
+            <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} />
+          </View>
+        ),
+      }} />
+      <Drawer.Screen name="Grading" component={GradingScreen} options={{
+        headerTitle: 'Grading',
+        headerRight: () => (
+          <View style={css.row}>
+            {/* <Ionicons name="refresh-circle-sharp" size={30} color="#FFF" onPress={() => {}} /> */}
+            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchScreen as never)} />
+            <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} />
+          </View>
+        ),
+      }} />
+      {/* <Drawer.Screen name="Profile" component={ProfileScreen} />
+      <Drawer.Screen name="Setting" component={SettingScreen} />
+      <Drawer.Screen name="Planning" component={PlanningScreen} />
+      <Drawer.Screen name="Dashboard2" component={DashboardScreen2} />
+      <Drawer.Screen name="ProductDetail" component={DetailScreen} /> */}
+      {/* <Drawer.Screen name="PreviosDashboard" component={DashboardScreen} options={{
         headerTitle: 'Dashboard',
         headerRight: () => (
           <View>
             <Ionicons name="search-circle-sharp" size={40} color="#FFF" onPress={() => navigation.navigate(SearchScreen as never)} />
           </View>
         ),
-      }} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} />
-      <Drawer.Screen name="Setting" component={SettingScreen} />
-      <Drawer.Screen name="Planning" component={PlanningScreen} />
+      }} /> */}
     </Drawer.Navigator>
   );
 }

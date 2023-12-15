@@ -7,4 +7,5 @@ export const URLAccess = {
     getDataFunction: `https://domainconnect.my/domain_app/senghiap/livesite/getData.php`,   
     
     getLiveSiteIP: `domainconnect.my/domain_app`
+    // getLiveSiteIP: `192.168.1.121:8080`
 }

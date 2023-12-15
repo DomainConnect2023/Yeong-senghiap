@@ -1,11 +1,10 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Image, Animated, BackHandler, ToastAndroid, Platform, Pressable, TextInput, ProgressBarAndroid } from "react-native";
-import { useEffect, useState } from 'react';
 import { BarChart, LineChart, PieChart,} from "react-native-chart-kit";
 import Snackbar from 'react-native-snackbar';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import DetailScreen from './detailProduct';
 import MainContainer from '../components/MainContainer';
 import SearchScreen from './searchScreen';
@@ -15,11 +14,11 @@ import { ImagesAssets } from '../objects/images';
 import LoginScreen from './loginScreen';
 import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
 import { URLAccess } from '../objects/URLAccess';
-import { css, datepickerCSS } from '../objects/commonCSS';
-import { CircleColorText, ProductData, PieData, BarData, currencyFormat } from '../objects/objects';
+import { css, datepickerCSS, dropdownCSS } from '../objects/commonCSS';
+import { CircleColorText, showData, PieData, BarData, currencyFormat } from '../objects/objects';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNFetchBlob from 'rn-fetch-blob';
-import {testdata} from './data';
+import { Dropdown } from 'react-native-searchable-dropdown-kj';
 
 const DashboardScreen3 = () => {
     const navigation = useNavigation();
@@ -33,16 +32,18 @@ const DashboardScreen3 = () => {
     const [selectedDate, setSelectedDate] = useState(getDate.toDateString());
     const [selectedIOSDate, setSelectedIOSDate] = useState(new Date());
 
-    const [fetchedListData, setFetchedListData] = useState<ProductData[]>([]); // Flatlist with Pie
+    const [fetchedListData, setFetchedListData] = useState<showData[]>([]); // Flatlist with Pie
     const [PieData, setPieData] = useState<PieData[]>([]);
-    const [fetchedBarData, setFetchedBarData] = useState<ProductData[]>([]); // Flatlist with Bar
+    const [fetchedBarData, setFetchedBarData] = useState<showData[]>([]); // Flatlist with Bar
     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
     const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
 
     const [dataProcess, setDataProcess] = useState(false); // check when loading data
     let colorSelected = 0; // set color use
 
-    const [chooseType, setChooseType] = useState("Overall");
+    const [viewItem, setViewItem] = useState("all");
+    const [itemID, setItemID] = useState("");
+    const [itemName, setItemName] = useState("");
 
     // when clicking pie / bar chart use
     const [chooseChart, setChooseChart] = useState("pie");
@@ -66,15 +67,12 @@ const DashboardScreen3 = () => {
                 await fetchDataApi(todayDate);
             }
         })();
-    }, [])
+    }, []);
 
     // get data from database
     const fetchDataApi = async(todayDate: any) => {
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-        
-        // await axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", 
-        //     { "read":"1", "todayDate":todayDate, })
-        // .then(async response => {
+
         await RNFetchBlob.config({
             trusty: true
         })
@@ -137,16 +135,96 @@ const DashboardScreen3 = () => {
         });
     };
 
-    const pieChartItem = ({ item }: { item: ProductData }) => {
+    const fetchProductDataApi = async() => {
+        var getIPaddress=await AsyncStorage.getItem('IPaddress');
+        var productCode = await AsyncStorage.getItem('productCode');
+        var fromDate = await AsyncStorage.getItem('fromDate');
+        var toDate = await AsyncStorage.getItem('toDate');
+        
+        await RNFetchBlob.config({
+            trusty: true
+        })
+        .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
+                "Content-Type": "application/json",  
+            }, JSON.stringify({
+                "readDetail":"1", 
+                "fromDate":fromDate,
+                "toDate":toDate,
+                "productCode":productCode,
+            }),
+        ).then((response) => {
+            if(response.json().status=="1"){
+                setFetchedListData(response.json().data.map((item: { weight: string; accode: any; customer: any; }) => ({
+                    accode: item.accode,
+                    value: parseInt(item.weight, 10),
+                    name: item.customer,
+                    weight: item.weight,
+                    color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
+                })));
+
+                colorSelected=0;
+                setPieData(response.json().pieData.map((item: { weight: any; accode: any; customer: any; }) => ({
+                    value: Math.round(item.weight/response.json().totalWeight*100*100)/100,
+                    name: "%",
+                    color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
+                    legendFontSize: 14,
+                })));
+
+                const convertedData: BarData = {
+                    labels: response.json().barData.map((item: { days: any; }) => item.days),
+                    datasets: [{
+                        data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
+                    },],
+                };
+                setBarData(convertedData);
+
+                setFetchedBarData(response.json().barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any }) => ({
+                    accode: item.key,
+                    value: item.dateValue,
+                    name: item.days,
+                    weight: item.dayTotalWeight,
+                    color: "",
+                })));
+
+                setTotalWeight(response.json().totalWeight);
+                setDataProcess(false);
+            }else{
+                Snackbar.show({
+                    text: 'Something is wrong. Can not get the data from server!',
+                    duration: Snackbar.LENGTH_SHORT,
+                });
+            }
+        })
+        .catch(error => {
+            Snackbar.show({
+                text: error.message,
+                duration: Snackbar.LENGTH_SHORT,
+            });
+        });
+    };
+
+
+    const pieChartItem = ({ item }: { item: showData }) => {
         return (
-            <TouchableOpacity onPress={() => {}}>
-                <View style={css.listItem} key={parseInt(item.key)}>
-                    <View style={[css.cardBody]}>
+            <TouchableOpacity onPress={() => {
+                setIsHidden(!isHidden);
+                AsyncStorage.setItem('productCode', item.key);
+                AsyncStorage.setItem('productName', item.name);
+                AsyncStorage.setItem('fromDate', todayDate ?? "");
+                AsyncStorage.setItem('toDate', todayDate ?? "");
+                setViewItem("product");
+                setItemName(item.name);
+                setItemID(item.key);
+                fetchProductDataApi();
+                // navigation.navigate('Customer' as never);
+            }}>
+                <View style={dash.listItem} key={parseInt(item.key)}>
+                    <View style={[dash.cardBody]}>
                         <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
                             <View style={{flexDirection: 'row',}}>
-                                <Text style={css.textHeader}>Product: {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
-                                <Text style={css.textDescription}>
-                                    Weight: {currencyFormat(parseInt(item.totalWeight))}
+                                <Text style={dash.textHeader}>Product: {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
+                                <Text style={dash.textDescription}>
+                                    Weight: {currencyFormat(parseInt(item.weight))}
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'row',}}>
@@ -154,13 +232,13 @@ const DashboardScreen3 = () => {
                                     style={{width:"70%"}}
                                     styleAttr="Horizontal"
                                     indeterminate={false}
-                                    progress={Math.round(parseInt(item.totalWeight)/totalWeight*100)/100}
+                                    progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
                                 />
-                                <Text style={[css.textDescription,{width:"30%", textAlign:"center"}]}>
-                                    {Math.round(parseInt(item.totalWeight)/totalWeight*100)}%
+                                <Text style={[dash.textDescription,{textAlign:"center"}]}>
+                                    {Math.round(parseInt(item.weight)/totalWeight*100)}%
                                 </Text>
                             </View>
-                            {/* <Text style={css.textHeader}></Text> */}
+                            {/* <Text style={dash.textHeader}></Text> */}
                         </View>
                     </View>
                 </View>
@@ -168,37 +246,9 @@ const DashboardScreen3 = () => {
         );
     };
 
-    type ItemProps = {title: string};
-    const testing = ({ item }: { item: ItemProps }) => {
-        return (
-            <View style={[css.listItem,{backgroundColor:"pink"}]} key={parseInt(item.title)}>
-                    <View style={[css.cardBody,{height:60}]}>
-                        <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
-                            <View style={{flexDirection: 'row',}}>
-                                <Text style={[css.textHeader,{fontSize:24}]}>(Icon) : {item.title}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-        );
-    };
-
     return (
         <MainContainer>
-            {/* <KeyboardAvoidWrapper> */}
-            <View style={[dash.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
-                <View style={dash.HeaderView}>
-                    <Text style={dash.PageName}>Dashboard (Daily Receiving)</Text>
-                </View>
-                <View style={{flexDirection: 'row',}}>
-                    <View style={dash.listThing}>
-                        <Ionicons name="search-circle-sharp" size={32} color="#FFF" onPress={()=>navigation.navigate(SearchScreen as never)} />
-                    </View>
-                    <View style={dash.listThing}>
-                        <Ionicons name="log-out-outline" size={32} color="#FFF" onPress={()=>{[navigation.navigate(LoginScreen as never)]}} />
-                    </View>
-                </View>
-            </View>
+            <KeyboardAvoidWrapper>
             {dataProcess== true ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
@@ -214,7 +264,7 @@ const DashboardScreen3 = () => {
                                 textAlign: "center", 
                                 fontSize:14, 
                                 fontWeight:"bold", 
-                                height:20,
+                                height:25,
                                 padding:0,
                             }}
                             placeholder="Select Date"
@@ -224,12 +274,36 @@ const DashboardScreen3 = () => {
                             editable={false}
                         />
                         </Pressable>
+                    </View>  
+
+                    {/* <View style={[dash.row,{margin:10,}]}>              
+                        <View style={[dash.selectType, {flex: 1, backgroundColor:"#c8c8dc"}]}>
+                            <TouchableOpacity onPress={() => {setChooseType("Product");}}>
+                                <Text style={dash.selectText}>Product</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={[dash.selectType, {flex: 1}]}>
+                            <TouchableOpacity onPress={() => {setChooseType("Customer");}}>
+                                <Text style={dash.selectText}>Customer</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={[dash.selectType, {flex: 1}]}>
+                            <TouchableOpacity onPress={() => {setChooseType("Salesman");}}>
+                                <Text style={dash.selectText}>Salesman</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View> */}
+
+                    <View style={[dash.row,{marginTop:15,marginBottom:10}]}>
+                        <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
+                            {viewItem=="all" ? ("All Product") : (itemName)}
+                        </Text>
                     </View>
 
-                    <View style={{alignItems: 'center',justifyContent: 'center'}}>
+                    <View style={[dash.row]}>
                         <BarChart
                             data={BarData}
-                            width={Dimensions.get("window").width}
+                            width={Dimensions.get("window").width/100*90}
                             height={250}
                             yAxisSuffix=""
                             yAxisLabel=""
@@ -245,39 +319,30 @@ const DashboardScreen3 = () => {
                             }}
                             style={{
                                 marginVertical: 8,
-                                borderRadius: 16,
+                                borderRadius: 16, 
                             }}
                         />
                     </View>
 
-                    {/* <View style={dash.row}>
-                        <View style={[dash.selectType,{flexDirection:"row",}]}>
-                            <Text>Overall</Text>
-                            <Text>Product</Text>
-                            <Text>Customer</Text>
-                            <Text>Salesman</Text>
-                        </View>
-                    </View> */}
-
-                    <View style={dash.row}>
-                        <Text style={{fontSize:16,fontWeight:'bold',textAlign:"center",padding:10}}>
-                            Total Weight: {totalWeight}
+                    <View style={[dash.row,{marginTop:15,marginBottom:10}]}>
+                        <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
+                            Total Weight: {currencyFormat(totalWeight)}
                         </Text>
                     </View>
                     
-                    <View style={{alignItems: 'center',justifyContent: 'center'}}>
-                        <View style={{height:Dimensions.get("screen").height/100*33}}>
+                    <View style={{alignItems: 'center',justifyContent: 'center',}}>
+                        <View>
+                        {/* <View style={{height:Dimensions.get("screen").height/100*40}}> */}
                             <FlatList
-                                data={testdata}
-                                renderItem={testing}
-                                keyExtractor={(item) => item.id}
+                                data={fetchedListData}
+                                renderItem={pieChartItem}
+                                keyExtractor={(item) => item.key}
                             />
                         </View>
                     </View>
-                    
                 </View>
             )}
-            {/* </KeyboardAvoidWrapper> */}
+            </KeyboardAvoidWrapper>
         </MainContainer>
     );
 }
@@ -322,8 +387,7 @@ export const dash = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 8,
-        marginTop: 5,
-        marginBottom: 20,
+        marginTop: 10,
     },
     selectType: {
         width: '100%',
@@ -335,6 +399,38 @@ export const dash = StyleSheet.create({
     selectText: {
         textAlign: "center",
         padding: 5,
+    },
+    listItem: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#E6E8EA',
+        padding: 10,
+        borderRadius: 10,
+        marginVertical: 2,
+        marginHorizontal: 5,
+        height: 80,
+    },
+    cardBody: {
+        flexGrow: 1,
+        paddingHorizontal: 12,
+        width: "95%",
+    },
+    textHeader: { 
+        fontStyle: "italic",
+        flex: 1,
+        fontSize: 16,
+        color: '#000000',
+        fontWeight: 'bold',
+        marginBottom: 4,
+        width: "60%",
+    },
+    textDescription: {
+        fontStyle: "italic",
+        fontSize: 12,
+        marginBottom: 6,
+        width: "30%",
+        textAlign: "center",
     },
 });
 

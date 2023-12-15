@@ -14,6 +14,7 @@ import SerachProductDetail from '../../screens/SearchProductDetail';
 import DetailCustomerScreen from '../../screens/detailCustomer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CustomDrawer } from './CustomDrawer';
+import GradingScreen from '../../screens/grading';
 
   const Drawer = createDrawerNavigator();
 
@@ -32,6 +33,7 @@ import { CustomDrawer } from './CustomDrawer';
       <Stack.Screen name="SearchScreen" component={SearchScreen} />
       <Stack.Screen name="SearchCustomerDetail" component={SearchCustomerDetail} />
       <Stack.Screen name="SerachProductDetail" component={SerachProductDetail} />
+      <Stack.Screen name="Grading" component={GradingScreen} />
     </Stack.Navigator>
     );
   }

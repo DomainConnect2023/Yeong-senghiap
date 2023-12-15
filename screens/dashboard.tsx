@@ -16,7 +16,7 @@ import LoginScreen from './loginScreen';
 import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
 import { URLAccess } from '../objects/URLAccess';
 import { css, datepickerCSS } from '../objects/commonCSS';
-import { CircleColorText, ProductData, PieData, BarData, currencyFormat } from '../objects/objects';
+import { CircleColorText, showData, PieData, BarData, currencyFormat } from '../objects/objects';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNFetchBlob from 'rn-fetch-blob';
 import 'react-native-gesture-handler';
@@ -35,9 +35,9 @@ const DashboardScreen = () => {
     const [selectedDate, setSelectedDate] = useState(getDate.toDateString());
     const [selectedIOSDate, setSelectedIOSDate] = useState(new Date());
 
-    const [fetchedListData, setFetchedListData] = useState<ProductData[]>([]); // Flatlist with Pie
+    const [fetchedListData, setFetchedListData] = useState<showData[]>([]); // Flatlist with Pie
     const [PieData, setPieData] = useState<PieData[]>([]);
-    const [fetchedBarData, setFetchedBarData] = useState<ProductData[]>([]); // Flatlist with Bar
+    const [fetchedBarData, setFetchedBarData] = useState<showData[]>([]); // Flatlist with Bar
     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
     const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
 
@@ -155,7 +155,7 @@ const DashboardScreen = () => {
                 setFetchedListData(response.json().data.map((item: { totalWeight: string; key: any; name: any; }) => ({
                     key: item.key,
                     name: item.name,
-                    totalWeight: item.totalWeight,
+                    weight: item.totalWeight,
                     color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
                 })));
 
@@ -204,7 +204,7 @@ const DashboardScreen = () => {
         });
     };
 
-    const pieChartItem = ({ item }: { item: ProductData }) => {
+    const pieChartItem = ({ item }: { item: showData }) => {
         return (
             <TouchableOpacity onPress={() => {
                 setIsHidden(!isHidden);
@@ -223,7 +223,7 @@ const DashboardScreen = () => {
                                     <CircleColorText color={item.color} />
                                 </Text>
                             </View>
-                            <Text style={css.textHeader}>Weight: {currencyFormat(parseInt(item.totalWeight))}</Text>
+                            <Text style={css.textHeader}>Weight: {currencyFormat(parseInt(item.weight))}</Text>
                             </View>
                     </View>
                 </View>
@@ -231,7 +231,7 @@ const DashboardScreen = () => {
         );
     };
 
-    const barChartItem = ({ item }: { item: ProductData }) => {
+    const barChartItem = ({ item }: { item: showData }) => {
         return (
             <TouchableOpacity onPress={() => {
                 if(item.value!="0"){
@@ -256,7 +256,7 @@ const DashboardScreen = () => {
                             <View style={{flexDirection: 'row',}}>
                                 <Text style={css.textHeader}>{item.name}</Text>
                             </View>
-                            <Text style={css.textHeader}>Day of Total Weight: {currencyFormat(parseInt(item.totalWeight))}</Text>
+                            <Text style={css.textHeader}>Day of Total Weight: {currencyFormat(parseInt(item.weight))}</Text>
                         </View>
                     </View>
                 </View>
@@ -313,14 +313,14 @@ const DashboardScreen = () => {
             </View>    
             )}
             {/* End Select Date */}
-                {Platform.OS === "ios" && (<DateTimePickerModal
-                    date={selectedIOSDate}
-                    isVisible={datePickerVisible}
-                    mode="date"
-                    display='inline'
-                    onConfirm={confirmIOSDate}
-                    onCancel={hideIOSDatePicker}
-                />)}
+            {Platform.OS === "ios" && (<DateTimePickerModal
+                date={selectedIOSDate}
+                isVisible={datePickerVisible}
+                mode="date"
+                display='inline'
+                onConfirm={confirmIOSDate}
+                onCancel={hideIOSDatePicker}
+            />)}
             
             {dataProcess== true ? (
                 <View style={[css.container]}>

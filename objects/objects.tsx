@@ -1,21 +1,21 @@
 import { Text, View } from "react-native";
 import { css } from "./commonCSS";
 
-export interface ProductData {
+export interface showData {
     key: string;
     value: string;
     name: string;
-    totalWeight: string;
-    color: string;
-}
-
-export interface CustomerData {
-    accode: string;
-    name: string;
-    value: string;
     weight: string;
     color: string;
 }
+
+// export interface CustomerData {
+//     key: string; //accode
+//     value: string;
+//     name: string;
+//     weight: string;
+//     color: string;
+// }
 
 export interface PieData {
     name: string;

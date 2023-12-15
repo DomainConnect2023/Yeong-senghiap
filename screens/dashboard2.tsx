@@ -1,110 +1,160 @@
-import * as React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Image, Animated, BackHandler, ToastAndroid, Platform, Pressable, TextInput, ProgressBarAndroid } from "react-native";
-import { useEffect, useState } from 'react';
-import { BarChart, LineChart, PieChart,} from "react-native-chart-kit";
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Pressable, TextInput, ProgressBarAndroid, Platform } from "react-native";
+import { BarChart,} from "react-native-chart-kit";
 import Snackbar from 'react-native-snackbar';
-import axios from 'axios';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import DetailScreen from './detailProduct';
 import MainContainer from '../components/MainContainer';
-import SearchScreen from './searchScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { colorDB } from '../objects/colors';
-import { ImagesAssets } from '../objects/images';
-import LoginScreen from './loginScreen';
 import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
-import { URLAccess } from '../objects/URLAccess';
-import { css, datepickerCSS, dropdownCSS } from '../objects/commonCSS';
-import { CircleColorText, ProductData, PieData, BarData, currencyFormat } from '../objects/objects';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { css, datepickerCSS } from '../objects/commonCSS';
+import { BarData, currencyFormat, showData } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
-import { Dropdown } from 'react-native-searchable-dropdown-kj';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-const DashboardScreen2 = () => {
+const DashboardScreen2 = ({route}: {route: any}) => {
     const navigation = useNavigation();
 
     const getDate = new Date;
     const [todayDate, setTodayDate] = useState<string | "">(getDate.toISOString().split('T')[0]+" 00:00:00"); // for API
-    const [showDate, setShowDate] = useState<string | "">(getDate.toISOString().split('T')[0]); // For show Text only
 
     // DatePicker
     const [showPicker, setShowPicker] = useState(false);
     const [selectedDate, setSelectedDate] = useState(getDate.toDateString());
     const [selectedIOSDate, setSelectedIOSDate] = useState(new Date());
 
-    const [fetchedListData, setFetchedListData] = useState<ProductData[]>([]); // Flatlist with Pie
-    const [PieData, setPieData] = useState<PieData[]>([]);
-    const [fetchedBarData, setFetchedBarData] = useState<ProductData[]>([]); // Flatlist with Bar
+    // IOS Date picker modal setup
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const hideIOSDatePicker = () => {
+        setDatePickerVisible(false);
+    };
+    // END IOS Date Picker modal setup
+
+    const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist with Pie
     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
     const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
 
     const [dataProcess, setDataProcess] = useState(false); // check when loading data
-    let colorSelected = 0; // set color use
 
-    const [chooseType, setChooseType] = useState("Overall");
-
-    // when clicking pie / bar chart use
-    const [chooseChart, setChooseChart] = useState("pie");
-    const [isHidden, setIsHidden] = useState(true);
-    const [ bounceValue, setBounceValue ] = useState(new Animated.Value(300));
-
-    const [value, setValue] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
+    const [stayPage, setStayPage] = useState("product");
+    const [itemID, setItemID] = useState("");
+    const [itemName, setItemName] = useState("");
 
     useEffect(()=> { // when starting the page
         (async()=> {
             setDataProcess(true);
-            setFetchedListData([]);
-            setPieData([]);
-            setFetchedBarData([]);
+            setFetchedData([]);
             setBarData({ labels: [], datasets: [{ data: [] }] });
-            
-            if(await AsyncStorage.getItem('fromDate')!=""){
-                setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-                setShowDate(await AsyncStorage.getItem('fromDate') ?? "");
-                setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-                await fetchDataApi(await AsyncStorage.getItem('fromDate'));
-            }else{
-                await fetchDataApi(todayDate);
+
+            if(route.params.stayPage=="product"){
+                const productCode = await AsyncStorage.getItem('productCode');
+                if(productCode!="" && productCode!=null){
+                    setItemID(productCode);
+                    setStayPage("product");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "product", true, productCode);
+
+                }else{
+                    setStayPage("product");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "product", false, "");
+                }
+    
+            }else if(route.params.stayPage=="customer"){
+                const accode = await AsyncStorage.getItem('accode');
+                if(accode!="" && accode!=null){
+                    setItemID(accode);
+                    setStayPage("customer");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "customer", true, accode);
+                    
+                }else{
+                    setStayPage("customer");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "customer", false, "");
+                }
+
+            }else if(route.params.stayPage=="salesman"){
+                const salesmancode = await AsyncStorage.getItem('salesmancode');
+                if(salesmancode!="" && salesmancode!=null){
+                    // setItemID(salesmancode);
+                    // setStayPage("salesman");
+                    // setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    // setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    // await fetchSalesmanDetailDataApi(salesmancode, todayDate);
+                    
+                }else{
+                    setStayPage("salesman");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "salesman", false, "");
+                }
             }
         })();
-    }, [])
+    }, []);
 
-    // get data from database
-    const fetchDataApi = async(todayDate: any) => {
+    const fetchDataApi = async(theDate: any, type: any, detail: any, code: any) => {
+        let params;
+        setFetchedData([]);
+        setBarData({ labels: [], datasets: [{ data: [] }] });
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-        
-        // await axios.post("https://"+getIPaddress+"/senghiap/mobile/report.php", 
-        //     { "read":"1", "todayDate":todayDate, })
-        // .then(async response => {
+
+        if(type=="product"){
+            if(detail==false){
+                params={
+                    "read":"1", 
+                    "todayDate":theDate
+                };
+            }else{
+                params={
+                    "readDetail":"1", 
+                    "fromDate":theDate,
+                    "toDate":theDate,
+                    "productCode":code
+                };
+            }
+            
+        }else if(type=="customer"){
+            if(detail==false){
+                params={
+                    "readCustomer":"1", 
+                    "todayDate":theDate
+                };
+            }else{
+                params={
+                    "readCustomerDetail":"1", 
+                    "fromDate":theDate,
+                    "toDate":theDate,
+                    "accode":code
+                };
+            }
+            
+        }else if(type=="salesman"){
+            if(detail==false){
+                params={
+                    "readSalesman":"1", 
+                    "todayDate":theDate
+                };
+            }
+        }
+
         await RNFetchBlob.config({
             trusty: true
-        })
-        .fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
+        }).fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
                 "Content-Type": "application/json",  
-            }, JSON.stringify({
-                "read":"1", "todayDate":"2023-10-11 00:00:00",
-            }),
-        ).then((response) => {
-            if(response.json().status=="1"){
-                setFetchedListData(response.json().data.map((item: { totalWeight: string; key: any; name: any; }) => ({
+            }, JSON.stringify(params),
+        ).then(async (response) => {
+            // console.log("Today: "+theDate+" TW: "+response.json().totalWeight);
+            if(await response.json().status=="1"){
+                setFetchedData(response.json().data.map((item: { weight: string; key: any; name: any; }) => ({
                     key: item.key,
-                    name: item.name,
-                    totalWeight: item.totalWeight,
-                    color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
+                    name: item.name==null ? "Others" : item.name,
+                    weight: item.weight,
                 })));
-
-                colorSelected=0;
-                setPieData(response.json().pieData.map(
-                    (item: { value: number; key: any; totalWeight: any;}) => ({
-                        value: Math.round(item.totalWeight/response.json().totalWeight*100*100)/100,
-                        name: "%",
-                        totalWeight: item.totalWeight,
-                        percentage: item.totalWeight/response.json().totalWeight*100,
-                        color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
-                    })
-                ));
 
                 const convertedData: BarData = {
                     labels: response.json().barData.map((item: { days: any; }) => item.days),
@@ -114,14 +164,6 @@ const DashboardScreen2 = () => {
                 };
                 setBarData(convertedData);
 
-                setFetchedBarData(response.json().barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any }) => ({
-                    key: item.key,
-                    name: item.days,
-                    value: item.dateValue,
-                    totalWeight: item.dayTotalWeight,
-                    color: "",
-                })));
-
                 setTotalWeight(response.json().totalWeight);
                 setDataProcess(false);
             }else{
@@ -130,9 +172,7 @@ const DashboardScreen2 = () => {
                     duration: Snackbar.LENGTH_SHORT,
                 });
             }
-        })
-        .catch(error => {
-            console.log(error.message);
+        }).catch(error => {
             Snackbar.show({
                 text: error.message,
                 duration: Snackbar.LENGTH_SHORT,
@@ -140,49 +180,87 @@ const DashboardScreen2 = () => {
         });
     };
 
-    const data = [
-        { label: 'All', value: 'all' },
-        { label: 'Product 1', value: '1' },
-        { label: 'Product 2', value: '2' },
-        { label: 'Product 3', value: '3' },
-        { label: 'Product 4', value: '4' },
-        { label: 'Product 5', value: '5' },
-        { label: 'Product 6', value: '6' },
-        { label: 'Product 7', value: '7' },
-        { label: 'Product 8', value: '8' },
-      ];
-
-    const pieChartItem = ({ item }: { item: ProductData }) => {
+    const FlatListItem = ({ item }: { item: showData }) => {
         return (
-            <TouchableOpacity onPress={() => {
-                setIsHidden(!isHidden);
-                AsyncStorage.setItem('productCode', item.key);
-                AsyncStorage.setItem('productName', item.name);
-                AsyncStorage.setItem('fromDate', todayDate ?? "");
-                AsyncStorage.setItem('toDate', todayDate ?? "");
-                navigation.navigate(DetailScreen as never);
+            <TouchableOpacity onPress={async () => {
+
+                if(stayPage=="product" && itemID!=""){
+                    await AsyncStorage.setItem('productCode', "");
+                    await AsyncStorage.setItem('accode', item.key);
+                    navigation.navigate('Customer' as never);
+                }else if(stayPage=="customer" && itemID!=""){
+                    await AsyncStorage.setItem('accode', "");
+                    await AsyncStorage.setItem('productCode', item.key);
+                    navigation.navigate('Product' as never);
+                }else if(stayPage=="salesman" && itemID!=""){
+                    
+                    
+                }else{
+                    if(stayPage=="product"){
+                        setDataProcess(true);
+                        setItemName(item.name);
+                        setItemID(item.key);
+                        await AsyncStorage.setItem('productCode', item.key);
+                        await AsyncStorage.setItem('accode', "");
+                        
+                        await fetchDataApi(todayDate,"product",true,item.key);
+                    }else if(stayPage=="customer"){
+                        setDataProcess(true);
+                        setItemName(item.name);
+                        setItemID(item.key);
+                        await AsyncStorage.setItem('accode', item.key);
+                        await AsyncStorage.setItem('productCode', "");
+                        
+                        await fetchDataApi(todayDate, "customer",true,item.key);
+                    }
+                }
             }}>
                 <View style={css.listItem} key={parseInt(item.key)}>
                     <View style={[css.cardBody]}>
                         <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
                             <View style={{flexDirection: 'row',}}>
-                                <Text style={css.textHeader}>Product: {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
+                                <Text style={css.textHeader}>
+                                { stayPage=="salesman"
+                                ? ("Salesman: ")
+                                : stayPage=="product" 
+                                    ? itemID=="" 
+                                        ? ("Product: ") 
+                                        : ("Customer: ") 
+                                    : itemID=="" 
+                                        ? ("Customer: ")
+                                        : ("Product: ")
+                                } 
+                                {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
                                 <Text style={css.textDescription}>
-                                    Weight: {currencyFormat(parseInt(item.totalWeight))}
+                                    Weight: {currencyFormat(parseInt(item.weight))}
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'row',}}>
-                                <ProgressBarAndroid
-                                    style={{width:"70%"}}
-                                    styleAttr="Horizontal"
-                                    indeterminate={false}
-                                    progress={Math.round(parseInt(item.totalWeight)/totalWeight*100)/100}
-                                />
-                                <Text style={[css.textDescription,{width:"30%", textAlign:"center"}]}>
-                                    {Math.round(parseInt(item.totalWeight)/totalWeight*100)}%
+                                {Platform.OS === 'android' && (
+                                    item.weight==null ? (
+                                    <ProgressBarAndroid
+                                        style={{width:"70%"}}
+                                        styleAttr="Horizontal"
+                                        indeterminate={false}
+                                        progress={0}
+                                    />
+                                    ) : (
+                                    <ProgressBarAndroid
+                                        style={{width:"70%"}}
+                                        styleAttr="Horizontal"
+                                        indeterminate={false}
+                                        progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                    />
+                                    )
+                                )}
+                                <Text style={[css.textDescription,{textAlign:"center"}]}>
+                                    { item.weight==null ? (
+                                        0
+                                    ) : (
+                                        Math.round(parseInt(item.weight)/totalWeight*100)
+                                    )}%
                                 </Text>
                             </View>
-                            {/* <Text style={css.textHeader}></Text> */}
                         </View>
                     </View>
                 </View>
@@ -190,177 +268,146 @@ const DashboardScreen2 = () => {
         );
     };
 
+    // Date Picker
+    const onChangeDate = async ({type}: any, selectedDate: any) => {
+        setShowPicker(false);
+        if(type=="set"){
+            const currentDate=selectedDate;
+            setSelectedIOSDate(currentDate);
+            if(Platform.OS==="android"){
+                setSelectedDate(currentDate);
+                setTodayDate(currentDate);
+                setDataProcess(true);
+                if(route.params.stayPage=="product"){
+                    if(itemID==""){
+                        await fetchDataApi(currentDate,"product",false,"");
+                    }else{
+                        await fetchDataApi(currentDate,"product",true,itemID);
+                    }
+                    
+                }else{
+                    if(itemID==""){
+                        await fetchDataApi(currentDate,"customer",false,"");
+                    }else{
+                        await fetchDataApi(currentDate,"customer",true,itemID);
+                    }
+                }
+            }
+        }
+    }
+
+    const confirmIOSDate = async() => {
+        const currentDate=selectedIOSDate;
+        console.log(currentDate);
+        setTodayDate(currentDate.toISOString().split('T')[0]);
+        setSelectedDate(currentDate.toISOString().split('T')[0]);
+        setDataProcess(true);
+        setDatePickerVisible(false);
+        if(route.params.stayPage=="product"){
+            if(itemID==""){
+                await fetchDataApi(currentDate,"product",false,"");
+            }else{
+                await fetchDataApi(currentDate,"product",true,itemID);
+            }
+            
+        }else{
+            if(itemID==""){
+                await fetchDataApi(currentDate,"customer",false,"");
+            }else{
+                await fetchDataApi(currentDate,"customer",true,itemID);
+            }
+        }
+    }
+    const tonggleDatePicker = () => {
+        if (Platform.OS === 'android') {
+            setShowPicker(!showPicker);
+        }
+        else if (Platform.OS === 'ios') {
+            setDatePickerVisible(true);
+        }
+    }
+    // End Date Picker
+
     return (
         <MainContainer>
             {/* <KeyboardAvoidWrapper> */}
-            <View style={[dash.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
-                <View style={dash.HeaderView}>
-                    <Text style={dash.PageName}>Dashboard (Daily Receiving)</Text>
-                </View>
-                <View style={{flexDirection: 'row',}}>
-                    <View style={dash.listThing}>
-                        <Ionicons name="search-circle-sharp" size={32} color="#FFF" onPress={()=>navigation.navigate(SearchScreen as never)} />
-                    </View>
-                    <View style={dash.listThing}>
-                        <Ionicons name="log-out-outline" size={32} color="#FFF" onPress={()=>{[navigation.navigate(LoginScreen as never)]}} />
-                    </View>
-                </View>
-            </View>
             {dataProcess== true ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
                 <View>
-                    
-                    <View style={dash.row}>    
-                        <Pressable style={dash.pressableCSS}>
-                        <TextInput
-                            style={{
-                                color: "#000", 
-                                textAlign: "center", 
-                                fontSize:14, 
-                                fontWeight:"bold", 
-                                height:20,
-                                padding:0,
-                            }}
-                            placeholder="Select Date"
-                            value={selectedDate.toString().substring(0,10)}
-                            onChangeText={setTodayDate}
-                            placeholderTextColor="#11182744"
-                            editable={false}
-                        />
+                    {/* Set Date */}
+                    <View style={css.row}>
+                        {showPicker && Platform.OS === 'android' && <DateTimePicker 
+                            mode="date"
+                            display="calendar"
+                            value={getDate}
+                            onChange={onChangeDate}
+                            style={datepickerCSS.datePicker}
+                        />}        
+                        <Pressable style={css.pressableCSS} onPress={tonggleDatePicker} >
+                            <TextInput
+                                style={datepickerCSS.textInput}
+                                placeholder="Select Date"
+                                value={selectedDate.toString().substring(0,10)}
+                                onChangeText={setTodayDate}
+                                placeholderTextColor="#11182744"
+                                editable={false}
+                            />
                         </Pressable>
-                    </View>  
+                    </View>    
+                    {Platform.OS === "ios" && (<DateTimePickerModal
+                        date={selectedIOSDate}
+                        isVisible={datePickerVisible}
+                        mode="date"
+                        display='inline'
+                        onConfirm={confirmIOSDate}
+                        onCancel={hideIOSDatePicker}
+                    />)}
+                    {/* End Set Date */}
 
-                    <View style={dash.row}>    
-                        <Dropdown
-                            style={[dropdownCSS.dropdown,{height:35,margin:5,width:"60%"}]}
-                            activeColor={"#E5E4E2"}
-                            placeholderStyle={dropdownCSS.placeholderStyle}
-                            selectedTextStyle={dropdownCSS.selectedTextStyle}
-                            inputSearchStyle={dropdownCSS.inputSearchStyle}
-                            iconStyle={dropdownCSS.iconStyle}
-                            search
-                            data={data}
-                            labelField="label"
-                            valueField="value"
-                            placeholder="All Product"
-                            searchPlaceholder="Search..."
-                            value={value}
-                            onChange={item => {
-                                setValue(item.value);
-                                setIsFocus(false);
-                            }}
-                            renderLeftIcon={() => (
-                                <Ionicons
-                                    style={{marginRight: 5,}}
-                                    color={"blue"}
-                                    name="person-circle-outline"
-                                    size={20}
-                                />
-                            )}
-                        /> 
+                    <View style={[{marginTop:5,marginBottom:5}]}>
+                        <Text style={[{fontSize:8,color:"red",textAlign:"center",marginBottom:-10}]}>Click to reset*</Text>
+                        <TouchableOpacity style={[css.row,{margin:0}]} onPress={async () => {
+                            setDataProcess(true);
+                            await AsyncStorage.setItem('accode', "");
+                            await AsyncStorage.setItem('productCode', "");
+                            setItemName("");
+                            setItemID("");
+
+                            if(stayPage=="product"){
+                                setStayPage("product");
+                                await fetchDataApi(todayDate,"product",false,"");
+                            }else if(stayPage=="customer"){
+                                setStayPage("customer");
+                                await fetchDataApi(todayDate,"customer",false,"");
+                            }else if(stayPage=="salesman"){
+                                setStayPage("salesman");
+                                await fetchDataApi(todayDate,"salesman",false,"");
+                            }
+                        }}>
+                            <Text style={[css.pressableCSS,{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic",}]}>
+                                {stayPage=="product" 
+                                ? itemID=="" 
+                                    ? ("All Product") 
+                                    : (itemID) 
+                                : stayPage=="customer"
+                                ? itemID==""
+                                    ? ("All Customer")
+                                    : itemName=="" ? (itemID) : (itemName)
+                                : itemID==""
+                                    ? ("All Salesman")
+                                    : itemName=="" ? (itemID) : (itemName)
+                                }
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
-                    {/* {chooseType=="Overall" ? (
-                    <View style={[dash.row,{marginLeft:10,marginRight:10,marginTop:5}]}>              
-                        <View style={[dash.selectType, {flex: 1, backgroundColor:"#c8c8dc"}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Overall");}}>
-                                <Text style={dash.selectText}>Overall</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[dash.selectType, {flex: 1}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Product");}}>
-                                <Text style={dash.selectText}>Product</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[dash.selectType, {flex: 1}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Customer");}}>
-                                <Text style={dash.selectText}>Customer</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[dash.selectType, {flex: 1}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Salesman");}}>
-                                <Text style={dash.selectText}>Salesman</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    ) : chooseType=="Product" ? (
-                    <View style={[dash.row,{marginLeft:10,marginRight:10,marginTop:5}]}>              
-                        <View style={[dash.selectType, {flex: 1}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Overall");}}>
-                                <Text style={dash.selectText}>Overall</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[dash.selectType, {flex: 1, backgroundColor:"#c8c8dc"}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Product");}}>
-                                <Text style={dash.selectText}>Product</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[dash.selectType, {flex: 1}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Customer");}}>
-                                <Text style={dash.selectText}>Customer</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[dash.selectType, {flex: 1}]}>
-                            <TouchableOpacity onPress={() => {setChooseType("Salesman");}}>
-                                <Text style={dash.selectText}>Salesman</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    ) : chooseType=="Customer" ? (
-                        <View style={[dash.row,{marginLeft:10,marginRight:10,marginTop:5}]}>              
-                            <View style={[dash.selectType, {flex: 1}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Overall");}}>
-                                    <Text style={dash.selectText}>Overall</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={[dash.selectType, {flex: 1}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Product");}}>
-                                    <Text style={dash.selectText}>Product</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={[dash.selectType, {flex: 1, backgroundColor:"#c8c8dc"}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Customer");}}>
-                                    <Text style={dash.selectText}>Customer</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={[dash.selectType, {flex: 1}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Salesman");}}>
-                                    <Text style={dash.selectText}>Salesman</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    ) : ( // Salesman
-                        <View style={[dash.row,{marginLeft:10,marginRight:10,marginTop:5}]}>              
-                            <View style={[dash.selectType, {flex: 1}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Overall");}}>
-                                    <Text style={dash.selectText}>Overall</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={[dash.selectType, {flex: 1}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Product");}}>
-                                    <Text style={dash.selectText}>Product</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={[dash.selectType, {flex: 1}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Customer");}}>
-                                    <Text style={dash.selectText}>Customer</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={[dash.selectType, {flex: 1, backgroundColor:"#c8c8dc"}]}>
-                                <TouchableOpacity onPress={() => {setChooseType("Salesman");}}>
-                                    <Text style={dash.selectText}>Salesman</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    )} */}
-
-                    <View style={{alignItems: 'center',justifyContent: 'center'}}>
+                    <View style={[css.row]}>
                         <BarChart
                             data={BarData}
-                            width={Dimensions.get("window").width}
+                            width={Dimensions.get("window").width/100*90}
                             height={160}
                             yAxisSuffix=""
                             yAxisLabel=""
@@ -376,96 +423,32 @@ const DashboardScreen2 = () => {
                             }}
                             style={{
                                 marginVertical: 8,
-                                borderRadius: 16,
+                                borderRadius: 16, 
                             }}
                         />
                     </View>
 
-                    {/* <View style={dash.row}>
-                        <View style={[dash.selectType,{flexDirection:"row",}]}>
-                            <Text>Overall</Text>
-                            <Text>Product</Text>
-                            <Text>Customer</Text>
-                            <Text>Salesman</Text>
-                        </View>
-                    </View> */}
-
-                    <View style={dash.row}>
-                        <Text style={{fontSize:16,fontWeight:'bold',textAlign:"center"}}>
-                            Total Weight: {totalWeight}
+                    <View style={[css.row,{marginTop:5,marginBottom:5}]}>
+                        <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
+                            Total Weight: {currencyFormat(totalWeight)}
                         </Text>
                     </View>
                     
-                    <View style={{alignItems: 'center',justifyContent: 'center',backgroundColor:"gray"}}>
-                        <View style={{height:Dimensions.get("screen").height/100*43}}>
+                    <View style={{alignItems: 'center',justifyContent: 'center',}}>
+                        {/* <View> */}
+                        <View style={{height:Dimensions.get("screen").height/100*39}}>
                             <FlatList
-                                data={fetchedListData}
-                                renderItem={pieChartItem}
+                                data={fetchedData}
+                                renderItem={FlatListItem}
                                 keyExtractor={(item) => item.key}
                             />
                         </View>
                     </View>
-                    
                 </View>
             )}
             {/* </KeyboardAvoidWrapper> */}
         </MainContainer>
     );
 }
-
-export const dash = StyleSheet.create({
-    mainView:{
-        width: '100%',
-        height: 60, 
-        flexDirection: 'row',
-        alignItems: 'center', 
-        backgroundColor: "#666699",
-    },
-    HeaderView :{
-        flex: 1, 
-        padding: 10,
-        gap: 4, 
-        justifyContent: 'flex-start', 
-        alignItems: 'flex-start', 
-        marginHorizontal: 4,
-    },
-    PageName: {
-        color: "#FFFFFF",
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    listThing: {
-        width: 30,
-        height: 40, 
-        backgroundColor: '#666699', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        borderRadius: 20,
-        margin: 10,
-    },
-    row: {
-        flexDirection: "row",
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    pressableCSS: {
-        width: '40%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        marginTop: 5,
-    },
-    selectType: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 25,
-        margin: 3,
-    },
-    selectText: {
-        textAlign: "center",
-        padding: 5,
-    },
-});
 
 export default DashboardScreen2;

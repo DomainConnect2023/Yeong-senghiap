@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colorDB } from '../objects/colors';
 import DetailCustomerScreen from './detailCustomer';
 import { css } from '../objects/commonCSS';
-import { CircleColorText, CustomerData, PieData, currencyFormat } from '../objects/objects';
+import { CircleColorText, showData, PieData, currencyFormat } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const SerachProductDetail = () => {
@@ -22,7 +22,7 @@ const SerachProductDetail = () => {
     const [fromDate, setFromDate] = useState<string|null>("");
     const [toDate, setToDate] = useState<string|null>("");
 
-    const [fetchedData, setFetchedData] = useState<CustomerData[]>([]);
+    const [fetchedData, setFetchedData] = useState<showData[]>([]);
     const [PieData, setPieData] = useState<PieData[]>([]);
     const [dataProcess, setDataProcess] = useState(false);
     const [totalWeight, setTotalWeight] = useState<number>(0);
@@ -85,7 +85,7 @@ const SerachProductDetail = () => {
         ).then((response) => {
             if(response.json().status=="1"){
                 setFetchedData(response.json().data.map((item: { weight: string; accode: any; customer: any; }) => ({
-                    accode: item.accode,
+                    key: item.accode,
                     value: parseInt(item.weight, 10),
                     name: item.customer,
                     weight: item.weight,
@@ -117,18 +117,18 @@ const SerachProductDetail = () => {
         });
     };
 
-    const pieChartItem = ({ item }: { item: CustomerData }) => {
+    const pieChartItem = ({ item }: { item: showData }) => {
         return (
             <TouchableOpacity onPress={() => {
-                AsyncStorage.setItem('accode', item.accode);
+                AsyncStorage.setItem('accode', item.key);
                 AsyncStorage.setItem('customerName', item.name);
                 navigation.navigate(DetailCustomerScreen as never);
             }}>
-                <View style={css.listItem} key={parseInt(item.accode)}>
+                <View style={css.listItem} key={parseInt(item.key)}>
                     <View style={[css.cardBody,{flexDirection: 'row',paddingHorizontal: 0,}]}>
                         <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
                             <View style={{flexDirection: 'row',}}>
-                                <Text style={css.textHeader}>Name: {item.name}</Text>
+                                <Text style={[css.textHeader,{width:"70%"}]}>Name: {item.name}</Text>
                                 <Text style={css.textDescription}>
                                     <CircleColorText color={item.color} />
                                 </Text>
@@ -146,7 +146,7 @@ const SerachProductDetail = () => {
             <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
             <View style={{flexDirection: 'row',}}>
                     <View style={css.listThing}>
-                        <Ionicons name="arrow-back-circle-outline" size={40} color="#FFF" onPress={()=>navigation.goBack()} />
+                        <Ionicons name="arrow-back-circle-outline" size={30} color="#FFF" onPress={()=>navigation.goBack()} />
                     </View>
                 </View>
                 <View style={css.HeaderView}>
@@ -156,10 +156,10 @@ const SerachProductDetail = () => {
 
             <View style={{alignItems: 'center',justifyContent: 'center', width:Dimensions.get("screen").width}}>
                 <View style={{flexDirection: "row",margin:10,alignItems: 'center',justifyContent: 'center'}}>
-                    <Text style={{fontSize:18,fontWeight:'bold'}}>From </Text>
-                    <Text style={{fontSize:18,fontWeight:'bold',color:"darkred"}}>{fromDate} </Text>
-                    <Text style={{fontSize:18,fontWeight:'bold'}}>To </Text>
-                    <Text style={{fontSize:18,fontWeight:'bold',color:"darkred"}}>{toDate}</Text>
+                    <Text style={{fontSize:14,fontWeight:'bold'}}>From </Text>
+                    <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{fromDate} </Text>
+                    <Text style={{fontSize:14,fontWeight:'bold'}}>To </Text>
+                    <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{toDate}</Text>
                 </View>
             </View>
             {dataProcess== true ? (
@@ -210,7 +210,7 @@ const SerachProductDetail = () => {
                         <FlatList
                             data={fetchedData}
                             renderItem={pieChartItem}
-                            keyExtractor={(item) => item.accode}
+                            keyExtractor={(item) => item.key}
                         />
                     </View>
                 </View>

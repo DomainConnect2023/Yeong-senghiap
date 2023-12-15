@@ -13,7 +13,7 @@ import { colorDB } from '../objects/colors';
 import DetailCustomerScreen from './detailCustomer';
 import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
 import { css, datepickerCSS } from '../objects/commonCSS';
-import { CircleColorText, CustomerData, BarData, PieData, currencyFormat } from '../objects/objects';
+import { CircleColorText, showData, BarData, PieData, currencyFormat } from '../objects/objects';
 import { ImagesAssets } from '../objects/images';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DashboardScreen from './dashboard';
@@ -35,8 +35,8 @@ const DetailScreen = () => {
     const [productName, setProductName] = useState<string | null>("");
     const [totalWeight, setTotalWeight] = useState<number>(0);
 
-    const [fetchedData, setFetchedData] = useState<CustomerData[]>([]); // Flatlist with Pie
-    const [fetchedBarData, setFetchedBarData] = useState<CustomerData[]>([]); // Flatlist with Bar
+    const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist with Pie
+    const [fetchedBarData, setFetchedBarData] = useState<showData[]>([]); // Flatlist with Bar
     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
     const [PieData, setPieData] = useState<PieData[]>([]);
 
@@ -140,7 +140,7 @@ const DetailScreen = () => {
         ).then((response) => {
             if(response.json().status=="1"){
                 setFetchedData(response.json().data.map((item: { weight: string; accode: any; customer: any; }) => ({
-                    accode: item.accode,
+                    key: item.accode,
                     value: parseInt(item.weight, 10),
                     name: item.customer,
                     weight: item.weight,
@@ -164,7 +164,7 @@ const DetailScreen = () => {
                 setBarData(convertedData);
 
                 setFetchedBarData(response.json().barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any }) => ({
-                    accode: item.key,
+                    key: item.key,
                     value: item.dateValue,
                     name: item.days,
                     weight: item.dayTotalWeight,
@@ -188,17 +188,17 @@ const DetailScreen = () => {
         });
     };
 
-    const pieChartItem = ({ item }: { item: CustomerData }) => {
+    const pieChartItem = ({ item }: { item: showData }) => {
         return ( 
             <TouchableOpacity onPress={() => {
                 setIsHidden(!isHidden);
-                AsyncStorage.setItem('accode', item.accode);
+                AsyncStorage.setItem('accode', item.key);
                 AsyncStorage.setItem('customerName', item.name);
                 AsyncStorage.setItem('fromDate', todayDate ?? "");
                 AsyncStorage.setItem('toDate', todayDate ?? "");
                 navigation.navigate(DetailCustomerScreen as never);
             }}>
-                <View style={css.listItem} key={parseInt(item.accode)}>
+                <View style={css.listItem} key={parseInt(item.key)}>
                     <View style={[css.cardBody,{flexDirection: 'row',paddingHorizontal: 0,}]}>
                         <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
                             <View style={{flexDirection: 'row',}}>
@@ -215,7 +215,7 @@ const DetailScreen = () => {
         );
     };
 
-    const barChartItem = ({ item }: { item: CustomerData }) => {
+    const barChartItem = ({ item }: { item: showData }) => {
         return (
             <TouchableOpacity onPress={() => {
                 if(item.value!="0"){
@@ -233,7 +233,7 @@ const DetailScreen = () => {
                     });
                 }
             }}>
-                <View style={css.listItem} key={parseInt(item.accode)}>
+                <View style={css.listItem} key={parseInt(item.key)}>
                     <View style={[css.cardBody]}>
                         <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
                             <View style={{flexDirection: 'row',}}>
@@ -497,7 +497,7 @@ const DetailScreen = () => {
                             <FlatList
                                 data={fetchedData}
                                 renderItem={pieChartItem}
-                                keyExtractor={(item) => item.accode}
+                                keyExtractor={(item) => item.key}
                             />
                         </View>
                     </View>
@@ -512,7 +512,7 @@ const DetailScreen = () => {
                             <FlatList
                                 data={fetchedBarData}
                                 renderItem={barChartItem}
-                                keyExtractor={(item) => item.accode}
+                                keyExtractor={(item) => item.key}
                             />
                         </View>
                     </View>

@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colorDB } from '../objects/colors';
 import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
 import { css, datepickerCSS } from '../objects/commonCSS';
-import { CircleColorText, ProductData, BarData, PieData, currencyFormat } from '../objects/objects';
+import { CircleColorText, showData, BarData, PieData, currencyFormat } from '../objects/objects';
 import { ImagesAssets } from '../objects/images';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -32,8 +32,8 @@ const DetailCustomerScreen = () => {
     const [customerName, setCustomerName] = useState<string | null>("");
     const [totalWeight, setTotalWeight] = useState<number>(0);
 
-    const [fetchedData, setFetchedData] = useState<ProductData[]>([]); // Flatlist with Pie
-    const [fetchedBarData, setFetchedBarData] = useState<ProductData[]>([]); // Flatlist with Bar
+    const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist with Pie
+    const [fetchedBarData, setFetchedBarData] = useState<showData[]>([]); // Flatlist with Bar
     const [PieData, setPieData] = useState<PieData[]>([]); 
     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
 
@@ -138,7 +138,7 @@ const DetailCustomerScreen = () => {
                     value: parseInt(item.weight, 10),
                     key: item.productCode,
                     name: item.productName,
-                    totalWeight: item.weight,
+                    weight: item.weight,
                     color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
                 })));
                 
@@ -161,7 +161,7 @@ const DetailCustomerScreen = () => {
                 setBarData(convertedData);
 
                 setFetchedBarData(response.json().barData.map((item: { days: any; key: any; dayTotalWeight: any; dateValue: any}) => ({
-                    accode: item.key,
+                    key: item.key,
                     value: item.dateValue,
                     name: item.days,
                     totalWeight: item.dayTotalWeight,
@@ -185,7 +185,7 @@ const DetailCustomerScreen = () => {
         });
     };
 
-    const pieChartItem = ({ item }: { item: ProductData }) => {
+    const pieChartItem = ({ item }: { item: showData }) => {
         return (
             <TouchableOpacity onPress={() => {
                 console.log("productCode: "+item.key);
@@ -199,7 +199,7 @@ const DetailCustomerScreen = () => {
                                     <CircleColorText color={item.color} />
                                 </Text>
                             </View>
-                            <Text style={css.textHeader}>Weight: {currencyFormat(parseInt(item.totalWeight))}</Text>
+                            <Text style={css.textHeader}>Weight: {currencyFormat(parseInt(item.weight))}</Text>
                         </View>
                     </View>
                 </View>
@@ -207,7 +207,7 @@ const DetailCustomerScreen = () => {
         );
     };
 
-    const barChartItem = ({ item }: { item: ProductData }) => {
+    const barChartItem = ({ item }: { item: showData }) => {
         return (
             <TouchableOpacity onPress={() => {
                 // if(item.value!="0"){
@@ -231,7 +231,7 @@ const DetailCustomerScreen = () => {
                             <View style={{flexDirection: 'row',}}>
                                 <Text style={css.textHeader}>{item.name}</Text>
                             </View>
-                            <Text style={css.textHeader}>Day of Total Weight: {currencyFormat(parseInt(item.totalWeight))}</Text>
+                            <Text style={css.textHeader}>Day of Total Weight: {currencyFormat(parseInt(item.weight))}</Text>
                         </View>
                     </View>
                 </View>

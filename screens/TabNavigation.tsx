@@ -20,12 +20,12 @@ const TabNavigation = () => {
               iconName = focused ? 'cash' : 'cash-outline';
             } else if (route.name === 'Profile') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
-            } else if (route.name === 'Planning') {
-                iconName = focused ? 'planet' : 'planet-outline';
-            } else if (route.name === 'Dashboard2') {
-              iconName = focused ? 'snow' : 'snow-outline';
-            } else if (route.name === 'Dashboard3') {
-              iconName = focused ? 'snow' : 'snow-outline';
+            } else if (route.name === 'Salesman') {
+              iconName = focused ? 'person-circle-sharp' : 'person-circle-outline';
+            } else if (route.name === 'Product') {
+              iconName = focused ? 'bag-add' : 'bag-add-outline';
+            } else if (route.name === 'Customer') {
+              iconName = focused ? 'diamond' : 'diamond-outline';
             } 
 
             return <Ionicons  name={iconName ?? ""} size={size} color={color} />;
@@ -35,11 +35,10 @@ const TabNavigation = () => {
           headerShown: false
         })}
       >
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Dashboard" component={DashboardScreen} />
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Dashboard2" component={DashboardScreen2} />
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Dashboard3" component={DashboardScreen3} />
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Planning" component={PlanningScreen} />
-        {/* <Tab.Screen options={{ unmountOnBlur: true, }} name="Profile" component={ProfileScreen} /> */}
+
+        <Tab.Screen options={{ unmountOnBlur: true, }} name="Product" component={DashboardScreen2} initialParams={{stayPage: "product"}} />
+        <Tab.Screen options={{ unmountOnBlur: true, }} name="Customer" component={DashboardScreen2} initialParams={{stayPage: "customer"}} />
+        <Tab.Screen options={{ unmountOnBlur: true, }} name="Salesman" component={DashboardScreen2} initialParams={{stayPage: "salesman"}} />
       </Tab.Navigator>
   );
 }

@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colorDB } from '../objects/colors';
 import { css } from '../objects/commonCSS';
 
-import { ProductData, PieData, CircleColorText, currencyFormat } from '../objects/objects';
+import { showData, PieData, CircleColorText, currencyFormat } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const SearchCustomerDetail = () => {
@@ -25,7 +25,7 @@ const SearchCustomerDetail = () => {
     const [dummyfromDate, setDummyFromDate] = useState<string|null>("");
     const [dummytoDate, setDummyToDate] = useState<string|null>("");
 
-    const [fetchedData, setFetchedData] = useState<ProductData[]>([]);
+    const [fetchedData, setFetchedData] = useState<showData[]>([]);
     const [PieData, setPieData] = useState<PieData[]>([]);
     const [dataProcess, setDataProcess] = useState(false);
     const [totalWeight, setTotalWeight] = useState<number>(0);
@@ -83,7 +83,7 @@ const SearchCustomerDetail = () => {
                     value: parseInt(item.weight, 10),
                     key: item.productCode,
                     name: item.productName,
-                    totalWeight: item.weight,
+                    weight: item.weight,
                     color: colorDB.colors[colorSelected<5 ? colorSelected+=1 : colorSelected]["hex"],
                 })));
                 
@@ -112,7 +112,7 @@ const SearchCustomerDetail = () => {
         });
     };
 
-    const pieChartItem = ({ item }: { item: ProductData }) => {
+    const pieChartItem = ({ item }: { item: showData }) => {
         return (
             <TouchableOpacity onPress={() => {
                 AsyncStorage.setItem('productCode', item.key);
@@ -120,15 +120,15 @@ const SearchCustomerDetail = () => {
                 navigation.navigate(DetailScreen as never);
             }}>
                 <View style={css.listItem} key={parseInt(item.key)}>
-                    <View style={[css.cardBody]}>
+                    <View style={[css.cardBody,{height:70}]}>
                         <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
                             <View style={{flexDirection: 'row',}}>
-                                <Text style={css.textHeader}>Product: {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
+                                <Text style={[css.textHeader,{width:"70%"}]}>Product: {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
                                 <Text style={css.textDescription}>
                                     <CircleColorText color={item.color} />
                                 </Text>
                             </View>
-                            <Text style={css.textHeader}>Weight: {currencyFormat(parseInt(item.totalWeight))}</Text>
+                            <Text style={css.textHeader}>Weight: {currencyFormat(parseInt(item.weight))}</Text>
                         </View>
                     </View>
                 </View>
@@ -141,7 +141,7 @@ const SearchCustomerDetail = () => {
             <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
             <View style={{flexDirection: 'row',}}>
                     <View style={css.listThing}>
-                        <Ionicons name="arrow-back-circle-outline" size={40} color="#FFF" onPress={()=>navigation.goBack()} />
+                        <Ionicons name="arrow-back-circle-outline" size={30} color="#FFF" onPress={()=>navigation.goBack()} />
                     </View>
                 </View>
                 <View style={css.HeaderView}>
@@ -150,10 +150,10 @@ const SearchCustomerDetail = () => {
             </View>
 
             <View style={{flexDirection: "row",margin:10,alignItems: 'center',justifyContent: 'center'}}>
-                <Text style={{fontSize:18,}}>From </Text>
-                <Text style={{fontSize:20,fontWeight:'bold',color:"darkred"}}>{fromDate} </Text>
-                <Text style={{fontSize:18,}}>To </Text>
-                <Text style={{fontSize:20,fontWeight:'bold',color:"darkred"}}>{toDate}</Text>
+                <Text style={{fontSize:14,}}>From </Text>
+                <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{fromDate} </Text>
+                <Text style={{fontSize:14,}}>To </Text>
+                <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{toDate}</Text>
             </View>
             {dataProcess== true ? (
                 <View style={[css.container]}>

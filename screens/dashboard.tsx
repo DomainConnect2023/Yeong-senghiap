@@ -126,6 +126,7 @@ const DashboardScreen = () => {
         await fetchDataApi(currentDate.toISOString().split('T')[0]);
     }
     const tonggleDatePicker = () => {
+        console.log("pressing")
         if (Platform.OS === 'android') {
             setShowPicker(!showPicker);
         }

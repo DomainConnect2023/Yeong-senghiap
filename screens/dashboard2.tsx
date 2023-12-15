@@ -11,6 +11,7 @@ import { BarData, currencyFormat, showData } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { ProgressBar, MD3Colors } from 'react-native-paper';
 
 const DashboardScreen2 = ({route}: {route: any}) => {
     const navigation = useNavigation();
@@ -235,22 +236,39 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                     Weight: {currencyFormat(parseInt(item.weight))}
                                 </Text>
                             </View>
-                            <View style={{flexDirection: 'row',}}>
-                                {Platform.OS === 'android' && (
+                            <View style={{flexDirection: 'row', width: '100%'}}>
+                                {(
+                                    // item.weight==null ? (
+                                    // <ProgressBarAndroid
+                                    //     style={{width:"70%"}}
+                                    //     styleAttr="Horizontal"
+                                    //     indeterminate={false}
+                                    //     progress={0}
+                                    // />
+                                    // ) : (
+                                    // <ProgressBarAndroid
+                                    //     style={{width:"70%"}}
+                                    //     styleAttr="Horizontal"
+                                    //     indeterminate={false}
+                                    //     progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                    // />
                                     item.weight==null ? (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
-                                        progress={0}
-                                    />
-                                    ) : (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
-                                        progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
-                                    />
+                                        <ProgressBar
+                                            style={{width:250, height: 10}}
+                                            // styleAttr="Horizontal"
+                                            // indeterminate={false}
+                                            progress={0}
+                                            color={"#8561c5"}
+                                        />
+                                        ) : (
+                                        <ProgressBar
+                                            style={{width:250, height: 10}}
+                                            // styleAttr="Horizontal"
+                                            // indeterminate={false}
+                                            progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                            color={"#8561c5"}
+                                        />
+
                                     )
                                 )}
                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
@@ -296,9 +314,8 @@ const DashboardScreen2 = ({route}: {route: any}) => {
         }
     }
 
-    const confirmIOSDate = async() => {
-        const currentDate=selectedIOSDate;
-        console.log(currentDate);
+    const confirmIOSDate = async(date: any) => {
+        const currentDate=date;
         setTodayDate(currentDate.toISOString().split('T')[0]);
         setSelectedDate(currentDate.toISOString().split('T')[0]);
         setDataProcess(true);
@@ -354,6 +371,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 onChangeText={setTodayDate}
                                 placeholderTextColor="#11182744"
                                 editable={false}
+                                onPressIn={tonggleDatePicker}
                             />
                         </Pressable>
                     </View>    
@@ -436,7 +454,8 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                     
                     <View style={{alignItems: 'center',justifyContent: 'center',}}>
                         {/* <View> */}
-                        <View style={{height:Dimensions.get("screen").height/100*39}}>
+                        <View style={{height:Dimensions.get("screen").height/100*50}}>
+                            {/* TODO: review this on responsive part */}
                             <FlatList
                                 data={fetchedData}
                                 renderItem={FlatListItem}

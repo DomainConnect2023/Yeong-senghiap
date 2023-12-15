@@ -5,7 +5,7 @@ import SettingScreen from '../../screens/setting';
 import DashboardScreen from '../../screens/dashboard';
 import PlanningScreen from '../../screens/planning';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SearchScreen from '../../screens/searchScreen';
 import DashboardScreen2 from '../../screens/dashboard2';
@@ -47,15 +47,18 @@ export function CustomDrawer() {
           </View>
         ),
       }} />
-      <Drawer.Screen name="Grading" component={GradingScreen} options={{
-        headerTitle: 'Grading',
-        headerRight: () => (
-          <View style={css.row}>
-            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchScreen as never)} />
-            <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} />
-          </View>
-        ),
-      }} />
+      {Platform.OS === 'android' &&
+        (<Drawer.Screen name="Grading" component={GradingScreen} options={{
+          headerTitle: 'Grading',
+          headerRight: () => (
+            <View style={css.row}>
+              <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 5 }} onPress={() => navigation.navigate(SearchScreen as never)} />
+              <Ionicons name="log-out-outline" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 10 }} onPress={() => setIsSignedIn(false)} />
+            </View>
+          ),
+        }} />)
+      }
+      
       {/* <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Setting" component={SettingScreen} />
       <Drawer.Screen name="Planning" component={PlanningScreen} />

@@ -320,18 +320,19 @@ const DashboardScreen2 = ({route}: {route: any}) => {
         setSelectedDate(currentDate.toISOString().split('T')[0]);
         setDataProcess(true);
         setDatePickerVisible(false);
+        console.log(currentDate);
         if(route.params.stayPage=="product"){
             if(itemID==""){
-                await fetchDataApi(currentDate,"product",false,"");
+                await fetchDataApi(todayDate,"product",false,"");
             }else{
-                await fetchDataApi(currentDate,"product",true,itemID);
+                await fetchDataApi(todayDate,"product",true,itemID);
             }
             
         }else{
             if(itemID==""){
-                await fetchDataApi(currentDate,"customer",false,"");
+                await fetchDataApi(todayDate,"customer",false,"");
             }else{
-                await fetchDataApi(currentDate,"customer",true,itemID);
+                await fetchDataApi(todayDate,"customer",true,itemID);
             }
         }
     }

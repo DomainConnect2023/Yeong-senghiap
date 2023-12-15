@@ -1,37 +1,31 @@
-import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Button } from "react-native";
+import { View, ActivityIndicator, Button, ScrollView, RefreshControl } from "react-native";
 import Snackbar from 'react-native-snackbar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MainContainer from '../components/MainContainer';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import LoginScreen from './loginScreen';
 import { css } from '../objects/commonCSS';
 import RNFetchBlob from 'rn-fetch-blob';
 import { WebView } from 'react-native-webview';
 
 const GradingScreen = () => {
-    const navigation = useNavigation();
-
     const [showURL, setShowURL] = useState('');
     const [dataProcess, setDataProcess] = useState(false); // check when loading data
 
     useEffect(()=> {
         (async()=> {
-            setDataProcess(true);
             await postAPI();
         })();
     }, [])
 
-    const postAPI = async() =>
-    {
+    const postAPI = async() => {
+        setDataProcess(true);
+        
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
         var userCode=await AsyncStorage.getItem('userCode');
         var password=await AsyncStorage.getItem('password');
         var loginGradingURL, loadGradingPageURL: any;
 
-        // console.log(getIPaddress);
         if(getIPaddress=="domainconnect.my/domain_app" || getIPaddress=="192.168.1.121:8080"){
             loginGradingURL="https://192.168.1.123:43210/App/LoginGrading";
             loadGradingPageURL="https://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true";
@@ -50,11 +44,11 @@ const GradingScreen = () => {
                 "Password": password,
             }),
         ).then(async (response) => {
-            // console.log(response.json());
             if(response.json().isSuccess==true){
-                // console.log(loadGradingPageURL);
                 setShowURL(loadGradingPageURL);
+                setDataProcess(false);
             }else{
+                setDataProcess(false);
                 Snackbar.show({
                     text: response.json().message,
                     duration: Snackbar.LENGTH_SHORT,
@@ -64,10 +58,6 @@ const GradingScreen = () => {
             setShowURL("https://senghiap.com/")
             setDataProcess(false);
             console.error(error);
-            // Snackbar.show({
-            //     text: error.message,
-            //     duration: Snackbar.LENGTH_SHORT,
-            // });
         });
 
         // setShowURL("https://senghiap.com/")
@@ -76,17 +66,28 @@ const GradingScreen = () => {
 
     return (
         <MainContainer>
-            {(dataProcess==true && showURL=="") ? (
+            {(dataProcess==true || showURL=="") ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-                <WebView
-                    source={{ uri: showURL }}
-                    style={{ flex: 1 }}
-                />
+                <View style={{ flex: 1 }}>
+                    <ScrollView
+                        contentContainerStyle={{flexGrow:1}}
+                        refreshControl={
+                            <RefreshControl
+                            refreshing={dataProcess}
+                            onRefresh={postAPI}
+                        />}
+                    >
+                    {/* <Button title='Reload Page' onPress={async ()=>{[setDataProcess(true),await postAPI()]}} /> */}
+                    <WebView
+                        source={{ uri: showURL }}
+                        style={{ flex: 1 }}
+                    />
+                    </ScrollView>
+                </View>
             )}
-            
         </MainContainer>
     );
 }

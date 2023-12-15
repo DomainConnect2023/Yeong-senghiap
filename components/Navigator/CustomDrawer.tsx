@@ -16,6 +16,7 @@ import GradingScreen from '../../screens/grading';
 import { css } from '../../objects/commonCSS';
 import LoginScreen from '../../screens/loginScreen';
 import { useAuth } from '../Auth_Provider/Auth_Context';
+import { useState } from 'react';
 
 const Drawer = createDrawerNavigator();
 
@@ -23,6 +24,8 @@ export function CustomDrawer() {
 
   const navigation = useNavigation();
   const { setIsSignedIn } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(0);
+  
   return (
     <Drawer.Navigator initialRouteName="Dashboard" screenOptions={{
       headerShown: true,
@@ -48,7 +51,6 @@ export function CustomDrawer() {
         headerTitle: 'Grading',
         headerRight: () => (
           <View style={css.row}>
-            {/* <Ionicons name="refresh-circle-sharp" size={30} color="#FFF" onPress={() => {}} /> */}
             <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchScreen as never)} />
             <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} />
           </View>

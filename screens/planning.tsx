@@ -1,99 +1,426 @@
-import { useNavigation } from '@react-navigation/native';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Pressable, TextInput, ProgressBarAndroid, Platform } from "react-native";
+import { BarChart,} from "react-native-chart-kit";
 import Snackbar from 'react-native-snackbar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import MainContainer from '../components/MainContainer';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import LoginScreen from './loginScreen';
-import { css } from '../objects/commonCSS';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
+import { css, datepickerCSS } from '../objects/commonCSS';
+import { BarData, currencyFormat, showData } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
-import { WebView } from 'react-native-webview';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { BarChartReport, TotalWeightContainer } from '../components/reportContainer';
 
-const PlanningScreen = () => {
+const PlanningScreen = ({route}: {route: any}) => {
     const navigation = useNavigation();
 
-    const [showURL, setShowURL] = useState('');
+    const getDate = new Date;
+    const [todayDate, setTodayDate] = useState<string | "">(getDate.toISOString().split('T')[0]+" 00:00:00"); // for API
+
+    // DatePicker
+    const [showPicker, setShowPicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(getDate.toDateString());
+    const [selectedIOSDate, setSelectedIOSDate] = useState(new Date());
+
+    // IOS Date picker modal setup
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const hideIOSDatePicker = () => {
+        setDatePickerVisible(false);
+    };
+    // END IOS Date Picker modal setup
+
+    const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist with Pie
+    const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
+    const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
+
     const [dataProcess, setDataProcess] = useState(false); // check when loading data
 
-    useEffect(()=> {
+    const [stayPage, setStayPage] = useState("product");
+    const [itemID, setItemID] = useState("");
+    const [itemName, setItemName] = useState("");
+
+    useEffect(()=> { // when starting the page
         (async()=> {
             setDataProcess(true);
-            await postAPI();
+            setFetchedData([]);
+            setBarData({ labels: [], datasets: [{ data: [] }] });
+
+            if(route.params.stayPage=="product"){
+                const productCode = await AsyncStorage.getItem('productCode');
+                if(productCode!="" && productCode!=null){
+                    setItemID(productCode);
+                    setStayPage("product");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "product", true, productCode);
+
+                }else{
+                    setStayPage("product");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "product", false, "");
+                }
+    
+            }else if(route.params.stayPage=="customer"){
+                const accode = await AsyncStorage.getItem('accode');
+                if(accode!="" && accode!=null){
+                    setItemID(accode);
+                    setStayPage("customer");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "customer", true, accode);
+                    
+                }else{
+                    setStayPage("customer");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "customer", false, "");
+                }
+
+            }else if(route.params.stayPage=="salesman"){
+                const salesmancode = await AsyncStorage.getItem('salesmancode');
+                if(salesmancode!="" && salesmancode!=null){
+                    // setItemID(salesmancode);
+                    // setStayPage("salesman");
+                    // setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    // setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    // await fetchSalesmanDetailDataApi(salesmancode, todayDate);
+                    
+                }else{
+                    setStayPage("salesman");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    await fetchDataApi(todayDate, "salesman", false, "");
+                }
+            }
         })();
-    }, [])
+    }, []);
 
-    const postAPI = async() =>
-    {
+    const fetchDataApi = async(theDate: any, type: any, detail: any, code: any) => {
+        let params;
+        setFetchedData([]);
+        setBarData({ labels: [], datasets: [{ data: [] }] });
         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-        var userCode=await AsyncStorage.getItem('userCode');
-        var password=await AsyncStorage.getItem('password');
-        var loginGradingURL, loadGradingPageURL: any;
 
-        // console.log(getIPaddress);
-        if(getIPaddress="domainconnect.my/domain_app"){
-            loginGradingURL="https://192.168.1.123:43210/App/LoginGrading";
-            loadGradingPageURL="https://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true";
-        }else{
-            loginGradingURL="https://"+getIPaddress+"/App/LoginGrading";
-            loadGradingPageURL="https://"+getIPaddress+"/Receive/Index?OnlyPendingApprove=true";
+        if(type=="product"){
+            if(detail==false){
+                params={
+                    "read":"1", 
+                    "todayDate":theDate
+                };
+            }else{
+                params={
+                    "readDetail":"1", 
+                    "fromDate":theDate,
+                    "toDate":theDate,
+                    "productCode":code
+                };
+            }
+            
+        }else if(type=="customer"){
+            if(detail==false){
+                params={
+                    "readCustomer":"1", 
+                    "todayDate":theDate
+                };
+            }else{
+                params={
+                    "readCustomerDetail":"1", 
+                    "fromDate":theDate,
+                    "toDate":theDate,
+                    "accode":code
+                };
+            }
+            
+        }else if(type=="salesman"){
+            if(detail==false){
+                params={
+                    "readSalesman":"1", 
+                    "todayDate":theDate
+                };
+            }
         }
 
         await RNFetchBlob.config({
             trusty: true
-            }).fetch('POST', loginGradingURL,{
-                "Content-Type": "application/json",
-            },
-            JSON.stringify({
-                "Code": userCode,
-                "Password": password,
-            }),
-        )
-        .then(async (response) => {
-            if(response.json().isSuccess==true){
-                // console.log("done load url");
-                setShowURL(loadGradingPageURL);
+        }).fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
+                "Content-Type": "application/json",  
+            }, JSON.stringify(params),
+        ).then(async (response) => {
+            if(await response.json().status=="1"){
+                setFetchedData(response.json().data.map((item: { weight: string; key: any; name: any; }) => ({
+                    key: item.key,
+                    name: item.name==null ? "Others" : item.name,
+                    weight: item.weight,
+                })));
+
+                const convertedData: BarData = {
+                    labels: response.json().barData.map((item: { days: any; }) => item.days),
+                    datasets: [{
+                        data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
+                    },],
+                };
+                setBarData(convertedData);
+
+                setTotalWeight(response.json().totalWeight);
+                setDataProcess(false);
             }else{
                 Snackbar.show({
-                    text: 'Wrong!',
+                    text: 'Something is wrong. Can not get the data from server!',
                     duration: Snackbar.LENGTH_SHORT,
                 });
             }
-        })
-        .catch(error => {
-            console.error(error);
+        }).catch(error => {
             Snackbar.show({
                 text: error.message,
                 duration: Snackbar.LENGTH_SHORT,
             });
         });
-        setDataProcess(false);
+    };
+
+    const FlatListItem = ({ item }: { item: showData }) => {
+        return (
+            <TouchableOpacity onPress={async () => {
+
+                if(stayPage=="product" && itemID!=""){
+                    await AsyncStorage.setItem('productCode', "");
+                    await AsyncStorage.setItem('accode', item.key);
+                    navigation.navigate('Customer' as never);
+                }else if(stayPage=="customer" && itemID!=""){
+                    await AsyncStorage.setItem('accode', "");
+                    await AsyncStorage.setItem('productCode', item.key);
+                    navigation.navigate('Product' as never);
+                }else if(stayPage=="salesman" && itemID!=""){
+                    
+                    
+                }else{
+                    if(stayPage=="product"){
+                        setDataProcess(true);
+                        setItemName(item.name);
+                        setItemID(item.key);
+                        await AsyncStorage.setItem('productCode', item.key);
+                        await AsyncStorage.setItem('accode', "");
+                        
+                        await fetchDataApi(todayDate,"product",true,item.key);
+                    }else if(stayPage=="customer"){
+                        setDataProcess(true);
+                        setItemName(item.name);
+                        setItemID(item.key);
+                        await AsyncStorage.setItem('accode', item.key);
+                        await AsyncStorage.setItem('productCode', "");
+                        
+                        await fetchDataApi(todayDate, "customer",true,item.key);
+                    }
+                }
+            }}>
+                <View style={css.listItem} key={parseInt(item.key)}>
+                    <View style={[css.cardBody]}>
+                        <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
+                            <View style={{flexDirection: 'row',}}>
+                                <Text style={css.textHeader}>
+                                { stayPage=="salesman"
+                                ? ("Salesman: ")
+                                : stayPage=="product" 
+                                    ? itemID=="" 
+                                        ? ("Product: ") 
+                                        : ("Customer: ") 
+                                    : itemID=="" 
+                                        ? ("Customer: ")
+                                        : ("Product: ")
+                                } 
+                                {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
+                                <Text style={css.textDescription}>
+                                    Weight: {currencyFormat(parseInt(item.weight))}
+                                </Text>
+                            </View>
+                            <View style={{flexDirection: 'row',}}>
+                                {Platform.OS === 'android' && (
+                                    item.weight==null ? (
+                                    <ProgressBarAndroid
+                                        style={{width:"70%"}}
+                                        styleAttr="Horizontal"
+                                        indeterminate={false}
+                                        progress={0}
+                                    />
+                                    ) : (
+                                    <ProgressBarAndroid
+                                        style={{width:"70%"}}
+                                        styleAttr="Horizontal"
+                                        indeterminate={false}
+                                        progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                    />
+                                    )
+                                )}
+                                <Text style={[css.textDescription,{textAlign:"center"}]}>
+                                    { item.weight==null ? (
+                                        0
+                                    ) : (
+                                        Math.round(parseInt(item.weight)/totalWeight*100)
+                                    )}%
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    };
+
+    // Date Picker
+    const onChangeDate = async ({type}: any, selectedDate: any) => {
+        setShowPicker(false);
+        if(type=="set"){
+            const currentDate=selectedDate;
+            setSelectedIOSDate(currentDate);
+            if(Platform.OS==="android"){
+                setSelectedDate(currentDate);
+                setTodayDate(currentDate);
+                setDataProcess(true);
+                if(route.params.stayPage=="product"){
+                    if(itemID==""){
+                        await fetchDataApi(currentDate,"product",false,"");
+                    }else{
+                        await fetchDataApi(currentDate,"product",true,itemID);
+                    }
+                    
+                }else{
+                    if(itemID==""){
+                        await fetchDataApi(currentDate,"customer",false,"");
+                    }else{
+                        await fetchDataApi(currentDate,"customer",true,itemID);
+                    }
+                }
+            }
+        }
     }
+
+    const confirmIOSDate = async() => {
+        const currentDate=selectedIOSDate;
+        setTodayDate(currentDate.toISOString().split('T')[0]);
+        setSelectedDate(currentDate.toISOString().split('T')[0]);
+        setDataProcess(true);
+        setDatePickerVisible(false);
+        if(route.params.stayPage=="product"){
+            if(itemID==""){
+                await fetchDataApi(currentDate,"product",false,"");
+            }else{
+                await fetchDataApi(currentDate,"product",true,itemID);
+            }
+            
+        }else{
+            if(itemID==""){
+                await fetchDataApi(currentDate,"customer",false,"");
+            }else{
+                await fetchDataApi(currentDate,"customer",true,itemID);
+            }
+        }
+    }
+    const tonggleDatePicker = () => {
+        if (Platform.OS === 'android') {
+            setShowPicker(!showPicker);
+        }
+        else if (Platform.OS === 'ios') {
+            setDatePickerVisible(true);
+        }
+    }
+    // End Date Picker
 
     return (
         <MainContainer>
-            <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
-                <View style={css.HeaderView}>
-                    <Text style={css.PageName}>Planing</Text>
-                </View>
-                <View style={{flexDirection: 'row',}}>
-                    <View style={css.listThing}>
-                        <Ionicons name="log-out-outline" size={40} color="#FFF" onPress={()=>{[navigation.navigate(LoginScreen as never)]}} />
-                    </View>
-                </View>
-            </View>
-            {(dataProcess==true && showURL=="") ? (
+            {/* <KeyboardAvoidWrapper> */}
+            {dataProcess== true ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-                <WebView
-                    source={{ uri: showURL }}
-                    style={{ flex: 1 }}
-                />
+                <View>
+                    {/* Set Date */}
+                    <View style={css.row}>
+                        {showPicker && Platform.OS === 'android' && <DateTimePicker 
+                            mode="date"
+                            display="calendar"
+                            value={getDate}
+                            onChange={onChangeDate}
+                            style={datepickerCSS.datePicker}
+                        />}        
+                        <Pressable style={css.pressableCSS} onPress={tonggleDatePicker} >
+                            <TextInput
+                                style={datepickerCSS.textInput}
+                                placeholder="Select Date"
+                                value={selectedDate.toString().substring(0,10)}
+                                onChangeText={setTodayDate}
+                                placeholderTextColor="#11182744"
+                                editable={false}
+                            />
+                        </Pressable>
+                    </View>    
+                    {Platform.OS === "ios" && (<DateTimePickerModal
+                        date={selectedIOSDate}
+                        isVisible={datePickerVisible}
+                        mode="date"
+                        display='inline'
+                        onConfirm={confirmIOSDate}
+                        onCancel={hideIOSDatePicker}
+                    />)}
+                    {/* End Set Date */}
+
+
+                    <View style={[{marginTop:5,marginBottom:5}]}>
+                        <Text style={[{fontSize:8,color:"red",textAlign:"center",marginBottom:-10}]}>Click to reset*</Text>
+                        <TouchableOpacity style={[css.row,{margin:0}]} onPress={async () => {
+                            setDataProcess(true);
+                            await AsyncStorage.setItem('accode', "");
+                            await AsyncStorage.setItem('productCode', "");
+                            setItemName("");
+                            setItemID("");
+
+                            if(stayPage=="product"){
+                                setStayPage("product");
+                                await fetchDataApi(todayDate,"product",false,"");
+                            }else if(stayPage=="customer"){
+                                setStayPage("customer");
+                                await fetchDataApi(todayDate,"customer",false,"");
+                            }else if(stayPage=="salesman"){
+                                setStayPage("salesman");
+                                await fetchDataApi(todayDate,"salesman",false,"");
+                            }
+                        }}>
+                            <Text style={[css.pressableCSS,{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic",}]}>
+                                {stayPage=="product" 
+                                ? itemID=="" 
+                                    ? ("All Product") 
+                                    : (itemID) 
+                                : stayPage=="customer"
+                                ? itemID==""
+                                    ? ("All Customer")
+                                    : itemName=="" ? (itemID) : (itemName)
+                                : itemID==""
+                                    ? ("All Salesman")
+                                    : itemName=="" ? (itemID) : (itemName)
+                                }
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                    <BarChartReport barData={BarData} />
+
+                    <TotalWeightContainer totalWeight={totalWeight}/>
+                    
+                    <View style={{alignItems: 'center',justifyContent: 'center',}}>
+                        {/* <View> */}
+                        <View style={{height:Dimensions.get("screen").height/100*39}}>
+                            <FlatList
+                                data={fetchedData}
+                                renderItem={FlatListItem}
+                                keyExtractor={(item) => item.key}
+                            />
+                        </View>
+                    </View>
+                </View>
             )}
-            
+            {/* </KeyboardAvoidWrapper> */}
         </MainContainer>
     );
 }

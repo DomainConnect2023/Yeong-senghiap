@@ -11,6 +11,7 @@ import { BarData, currencyFormat, showData } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { ProgressBar, MD3Colors } from 'react-native-paper';
 
 const DashboardScreen2 = ({route}: {route: any}) => {
     const navigation = useNavigation();
@@ -30,7 +31,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
     };
     // END IOS Date Picker modal setup
 
-    const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist with Pie
+    const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist
     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
     const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
 
@@ -236,22 +237,22 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'row',}}>
-                                {Platform.OS === 'android' && (
-                                    item.weight==null ? (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
-                                        progress={0}
-                                    />
-                                    ) : (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
+                                {item.weight==null ? (
+                                    <ProgressBar
+                                    style={{width:250, height: 10}}
+                                    // styleAttr="Horizontal"
+                                    // indeterminate={false}
+                                    progress={0}
+                                    color={"#8561c5"}
+                                />
+                                ) : (
+                                    <ProgressBar
+                                        style={{width:250, height: 10}}
+                                        // styleAttr="Horizontal"
+                                        // indeterminate={false}
                                         progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                        color={"#8561c5"}
                                     />
-                                    )
                                 )}
                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
                                     { item.weight==null ? (
@@ -272,7 +273,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
     const onChangeDate = async ({type}: any, selectedDate: any) => {
         setShowPicker(false);
         if(type=="set"){
-            const currentDate=selectedDate;
+            const currentDate=selectedDate.toISOString().split('T')[0];
             setSelectedIOSDate(currentDate);
             if(Platform.OS==="android"){
                 setSelectedDate(currentDate);
@@ -297,10 +298,9 @@ const DashboardScreen2 = ({route}: {route: any}) => {
     }
 
     const confirmIOSDate = async() => {
-        const currentDate=selectedIOSDate;
-        console.log(currentDate);
-        setTodayDate(currentDate.toISOString().split('T')[0]);
-        setSelectedDate(currentDate.toISOString().split('T')[0]);
+        const currentDate=selectedIOSDate.toISOString().split('T')[0];
+        setTodayDate(currentDate);
+        setSelectedDate(currentDate);
         setDataProcess(true);
         setDatePickerVisible(false);
         if(route.params.stayPage=="product"){

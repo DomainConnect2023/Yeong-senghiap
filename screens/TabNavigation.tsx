@@ -5,7 +5,6 @@ import ProfileScreen from './profile';
 import DashboardScreen from './dashboard';
 import PlanningScreen from './planning';
 import DashboardScreen2 from './dashboard2';
-import DashboardScreen3 from './dashboard3';
 
 const Tab = createBottomTabNavigator();
 

@@ -9,7 +9,6 @@ import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SearchScreen from '../../screens/searchScreen';
 import DashboardScreen2 from '../../screens/dashboard2';
-import DashboardScreen3 from '../../screens/dashboard3';
 import TabNavigation from '../../screens/TabNavigation';
 import DetailScreen from '../../screens/detailProduct';
 import GradingScreen from '../../screens/grading';
@@ -17,6 +16,7 @@ import { css } from '../../objects/commonCSS';
 import LoginScreen from '../../screens/loginScreen';
 import { useAuth } from '../Auth_Provider/Auth_Context';
 import { useState } from 'react';
+import SearchReportScreen from '../../screens/searchReportScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -42,7 +42,7 @@ export function CustomDrawer() {
         headerTitle: 'Dashboard',
         headerRight: () => (
           <View style={css.row}>
-            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchScreen as never)} />
+            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchReportScreen as never)} />
             <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} />
           </View>
         ),
@@ -51,16 +51,15 @@ export function CustomDrawer() {
         headerTitle: 'Grading',
         headerRight: () => (
           <View style={css.row}>
-            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchScreen as never)} />
+            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchReportScreen as never)} />
             <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} />
           </View>
         ),
       }} />
+      <Drawer.Screen name="Planning" component={PlanningScreen} initialParams={{stayPage: "product"}} />
+
       {/* <Drawer.Screen name="Profile" component={ProfileScreen} />
-      <Drawer.Screen name="Setting" component={SettingScreen} />
-      <Drawer.Screen name="Planning" component={PlanningScreen} />
-      <Drawer.Screen name="Dashboard2" component={DashboardScreen2} />
-      <Drawer.Screen name="ProductDetail" component={DetailScreen} /> */}
+      <Drawer.Screen name="Setting" component={SettingScreen} /> */}
       {/* <Drawer.Screen name="PreviosDashboard" component={DashboardScreen} options={{
         headerTitle: 'Dashboard',
         headerRight: () => (

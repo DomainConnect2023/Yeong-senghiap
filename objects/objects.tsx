@@ -17,6 +17,11 @@ export interface showData {
 //     color: string;
 // }
 
+export interface SelectBarData {
+    label: string;
+    value: string;
+}
+
 export interface PieData {
     name: string;
     value: number;

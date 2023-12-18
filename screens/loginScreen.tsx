@@ -39,8 +39,8 @@ const LoginScreen = () => {
     const getDate = new Date;
     const [todayDate, setTodayDate] = useState<string | "">(getDate.toISOString().split('T')[0]+" 00:00:00");
         
-    const [username, setUserName] = useState('lai');
-    const [password, setPassword] = useState('0907');
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
 
     const inputRef = React.createRef<TextInput>();
     const [industrial, setIndustrial] = useState("");

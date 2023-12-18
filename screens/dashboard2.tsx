@@ -237,22 +237,22 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'row',}}>
-                                {item.weight==null ? (
-                                    <ProgressBar
-                                    style={{width:250, height: 10}}
-                                    // styleAttr="Horizontal"
-                                    // indeterminate={false}
-                                    progress={0}
-                                    color={"#8561c5"}
-                                />
-                                ) : (
-                                    <ProgressBar
-                                        style={{width:250, height: 10}}
-                                        // styleAttr="Horizontal"
-                                        // indeterminate={false}
-                                        progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
-                                        color={"#8561c5"}
+                                {Platform.OS === 'android' && (
+                                    item.weight==null ? (
+                                    <ProgressBarAndroid
+                                        style={{width:"70%"}}
+                                        styleAttr="Horizontal"
+                                        indeterminate={false}
+                                        progress={0}
                                     />
+                                    ) : (
+                                    <ProgressBarAndroid
+                                        style={{width:"70%"}}
+                                        styleAttr="Horizontal"
+                                        indeterminate={false}
+                                        progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                    />
+                                    )
                                 )}
                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
                                     { item.weight==null ? (
@@ -298,23 +298,25 @@ const DashboardScreen2 = ({route}: {route: any}) => {
     }
 
     const confirmIOSDate = async() => {
-        const currentDate=selectedIOSDate.toISOString().split('T')[0];
-        setTodayDate(currentDate);
-        setSelectedDate(currentDate);
+        const currentDate=selectedIOSDate;
+        console.log(currentDate);
+        setTodayDate(currentDate.toISOString().split('T')[0]);
+        setSelectedDate(currentDate.toISOString().split('T')[0]);
         setDataProcess(true);
         setDatePickerVisible(false);
+        console.log(currentDate);
         if(route.params.stayPage=="product"){
             if(itemID==""){
-                await fetchDataApi(currentDate,"product",false,"");
+                await fetchDataApi(todayDate,"product",false,"");
             }else{
-                await fetchDataApi(currentDate,"product",true,itemID);
+                await fetchDataApi(todayDate,"product",true,itemID);
             }
             
         }else{
             if(itemID==""){
-                await fetchDataApi(currentDate,"customer",false,"");
+                await fetchDataApi(todayDate,"customer",false,"");
             }else{
-                await fetchDataApi(currentDate,"customer",true,itemID);
+                await fetchDataApi(todayDate,"customer",true,itemID);
             }
         }
     }
@@ -354,6 +356,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 onChangeText={setTodayDate}
                                 placeholderTextColor="#11182744"
                                 editable={false}
+                                onPressIn={tonggleDatePicker}
                             />
                         </Pressable>
                     </View>    
@@ -436,7 +439,8 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                     
                     <View style={{alignItems: 'center',justifyContent: 'center',}}>
                         {/* <View> */}
-                        <View style={{height:Dimensions.get("screen").height/100*39}}>
+                        <View style={{height:Dimensions.get("screen").height/100*50}}>
+                            {/* TODO: review this on responsive part */}
                             <FlatList
                                 data={fetchedData}
                                 renderItem={FlatListItem}

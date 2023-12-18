@@ -237,25 +237,25 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'row',}}>
-                                {Platform.OS === 'android' && (
-                                    item.weight==null ? (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
-                                        progress={0}
-                                    />
-                                    ) : (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
-                                        progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
-                                    />
-                                    )
-                                )}
-                                <Text style={[css.textDescription,{textAlign:"center"}]}>
-                                    { item.weight==null ? (
+                            {item.weight==null ? (
+                                     <ProgressBar
+                                     style={{width:250, height: 10}}
+                                     // styleAttr="Horizontal"
+                                     // indeterminate={false}
+                                     progress={0}
+                                     color={"#8561c5"}
+                                 />
+                                 ) : (
+                                     <ProgressBar
+                                         style={{width:250, height: 10}}
+                                         // styleAttr="Horizontal"
+                                         // indeterminate={false}
+                                         progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                         color={"#8561c5"}
+                                     />
+                                 )}
+                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
+                                     { item.weight==null ? (
                                         0
                                     ) : (
                                         Math.round(parseInt(item.weight)/totalWeight*100)

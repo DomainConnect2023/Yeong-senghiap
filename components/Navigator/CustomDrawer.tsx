@@ -47,7 +47,8 @@ export function CustomDrawer() {
           </View>
         ),
       }} />
-      {Platform.OS === 'android' &&
+      {
+      // Platform.OS === 'android' &&
         (<Drawer.Screen name="Grading" component={GradingScreen} options={{
           headerTitle: 'Grading',
           headerRight: () => (

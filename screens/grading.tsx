@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MainContainer from '../components/MainContainer';
 import { css } from '../objects/commonCSS';
 import RNFetchBlob from 'rn-fetch-blob';
-import { WebView } from 'react-native-webview';
+import { WebView } from 'react-native-webview-domain';
 
 const GradingScreen = () => {
     const [showURL, setShowURL] = useState('');
@@ -45,8 +45,10 @@ const GradingScreen = () => {
             }),
         ).then(async (response) => {
             if(response.json().isSuccess==true){
-                setShowURL(loadGradingPageURL);
+                setShowURL(loadGradingPageURL);    
                 setDataProcess(false);
+
+
             }else{
                 setDataProcess(false);
                 Snackbar.show({
@@ -66,11 +68,13 @@ const GradingScreen = () => {
 
     return (
         <MainContainer>
-            {(dataProcess==true || showURL=="") ? (
+            {
+            (dataProcess==true || showURL=="") ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
                 </View>
-            ) : (
+            ) : 
+            (
                 <View style={{ flex: 1 }}>
                     <ScrollView
                         contentContainerStyle={{flexGrow:1}}
@@ -84,6 +88,7 @@ const GradingScreen = () => {
                     <WebView
                         source={{ uri: showURL }}
                         style={{ flex: 1 }}
+                        sharedCookiesEnabled = {true}
                     />
                     </ScrollView>
                 </View>

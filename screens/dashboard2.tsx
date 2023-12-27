@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Pressable, TextInput, ProgressBarAndroid, Platform } from "react-native";
-import { BarChart,} from "react-native-chart-kit";
+import { BarChart, LineChart,} from "react-native-chart-kit";
 import Snackbar from 'react-native-snackbar';
 import { useNavigation } from '@react-navigation/native';
 import MainContainer from '../components/MainContainer';
@@ -32,7 +32,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
     // END IOS Date Picker modal setup
 
     const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist
-    const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
+    const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [0] }] });
     const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
 
     const [dataProcess, setDataProcess] = useState(false); // check when loading data
@@ -157,14 +157,22 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                     weight: item.weight,
                 })));
 
+                const WeightArray=(response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight));
+                const MaxWeight = Math.max.apply(Math, WeightArray);
+                const MaxWeight_Rounded = Math.ceil(MaxWeight/100000) * 100000;
                 const convertedData: BarData = {
                     labels: response.json().barData.map((item: { days: any; }) => item.days),
-                    datasets: [{
-                        data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
-                    },],
+                    datasets: [
+                        {
+                            data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
+                        },
+                        {
+                            data: [MaxWeight_Rounded],
+                            withDots: false,
+                        },
+                    ],
                 };
                 setBarData(convertedData);
-
                 setTotalWeight(response.json().totalWeight);
                 setDataProcess(false);
             }else{
@@ -240,16 +248,12 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                             {item.weight==null ? (
                                      <ProgressBar
                                      style={{width:250, height: 10}}
-                                     // styleAttr="Horizontal"
-                                     // indeterminate={false}
                                      progress={0}
                                      color={"#8561c5"}
                                  />
                                  ) : (
                                      <ProgressBar
                                          style={{width:250, height: 10}}
-                                         // styleAttr="Horizontal"
-                                         // indeterminate={false}
                                          progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
                                          color={"#8561c5"}
                                      />
@@ -274,7 +278,6 @@ const DashboardScreen2 = ({route}: {route: any}) => {
         setShowPicker(false);
         if(type=="set"){
             const currentDate=selectedDate.toISOString().split('T')[0];
-            setSelectedIOSDate(currentDate);
             if(Platform.OS==="android"){
                 setSelectedDate(currentDate);
                 setTodayDate(currentDate);
@@ -297,28 +300,18 @@ const DashboardScreen2 = ({route}: {route: any}) => {
         }
     }
 
-    const confirmIOSDate = async() => {
-        const currentDate=selectedIOSDate;
-        console.log(currentDate);
+    const confirmIOSDate = async(date: any) => {
+        const currentDate=date;
         setTodayDate(currentDate.toISOString().split('T')[0]);
         setSelectedDate(currentDate.toISOString().split('T')[0]);
         setDataProcess(true);
         setDatePickerVisible(false);
-        console.log(currentDate);
-        if(route.params.stayPage=="product"){
-            if(itemID==""){
-                await fetchDataApi(todayDate,"product",false,"");
-            }else{
-                await fetchDataApi(todayDate,"product",true,itemID);
-            }
-            
-        }else{
-            if(itemID==""){
-                await fetchDataApi(todayDate,"customer",false,"");
-            }else{
-                await fetchDataApi(todayDate,"customer",true,itemID);
-            }
+        let isDetail= true;
+        if(itemID=="")
+        {
+            isDetail = false;
         }
+        await fetchDataApi(todayDate,route.params.stayPage,isDetail,itemID);
     }
     const tonggleDatePicker = () => {
         if (Platform.OS === 'android') {
@@ -408,7 +401,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                     </View>
 
                     <View style={[css.row]}>
-                        <BarChart
+                        <LineChart
                             data={BarData}
                             width={Dimensions.get("window").width/100*90}
                             height={160}

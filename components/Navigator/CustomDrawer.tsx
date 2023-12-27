@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from '@react-navigation/drawer';
 import ProfileScreen from '../../screens/profile';
 import SettingScreen from '../../screens/setting';
 import DashboardScreen from '../../screens/dashboard';
@@ -19,11 +19,19 @@ import { useState } from 'react';
 import SearchReportScreen from '../../screens/searchReportScreen';
 
 const Drawer = createDrawerNavigator();
+const { setIsSignedIn } = useAuth();
+
+function CustomDrawerContent(props: any) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem label="Logout" onPress={() => setIsSignedIn(false)} />
+    </DrawerContentScrollView>
+  );
+}
 
 export function CustomDrawer() {
-
   const navigation = useNavigation();
-  const { setIsSignedIn } = useAuth();
   const [refreshKey, setRefreshKey] = useState(0);
   
   return (
@@ -37,9 +45,10 @@ export function CustomDrawer() {
       headerTintColor: '#fff', 
       headerTitleAlign: 'center',
     }}
+    drawerContent={props => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Dashboard" component={TabNavigation} options={{
-        headerTitle: 'Dashboard',
+        headerTitle: 'Receiving',
         headerRight: () => (
           <View style={css.row}>
             <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchReportScreen as never)} />
@@ -47,18 +56,17 @@ export function CustomDrawer() {
           </View>
         ),
       }} />
-      {
-      // Platform.OS === 'android' &&
-        (<Drawer.Screen name="Grading" component={GradingScreen} options={{
-          headerTitle: 'Grading',
-          headerRight: () => (
-            <View style={css.row}>
-              <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 5 }} onPress={() => navigation.navigate(SearchScreen as never)} />
-              <Ionicons name="log-out-outline" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 10 }} onPress={() => setIsSignedIn(false)} />
-            </View>
-          ),
-        }} />)
-      }
+      
+
+      <Drawer.Screen name="Grading" component={GradingScreen} options={{
+        headerTitle: 'Grading',
+        headerRight: () => (
+          <View style={css.row}>
+            <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 5 }} onPress={() => navigation.navigate(SearchScreen as never)} />
+            <Ionicons name="log-out-outline" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 10 }} onPress={() => setIsSignedIn(false)} />
+          </View>
+        ),
+      }} />
       
       {/* <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Setting" component={SettingScreen} /> */}

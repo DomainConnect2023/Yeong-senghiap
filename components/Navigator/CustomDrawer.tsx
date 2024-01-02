@@ -48,11 +48,11 @@ export function CustomDrawer() {
     drawerContent={props => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Dashboard" component={TabNavigation} options={{
-        headerTitle: 'Receiving',
+        headerTitle: 'Dashboard',
         headerRight: () => (
           <View style={css.row}>
             <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{marginLeft:5,marginRight:5}} onPress={() => navigation.navigate(SearchReportScreen as never)} />
-            <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} />
+            {/* <Ionicons name="log-out-outline" size={35} color="#FFF" style={{marginLeft:5,marginRight:10}} onPress={() => setIsSignedIn(false)} /> */}
           </View>
         ),
       }} />
@@ -63,7 +63,7 @@ export function CustomDrawer() {
         headerRight: () => (
           <View style={css.row}>
             <Ionicons name="search-circle-sharp" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 5 }} onPress={() => navigation.navigate(SearchScreen as never)} />
-            <Ionicons name="log-out-outline" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 10 }} onPress={() => setIsSignedIn(false)} />
+            {/* <Ionicons name="log-out-outline" size={35} color="#FFF" style={{ marginLeft: 5, marginRight: 10 }} onPress={() => setIsSignedIn(false)} /> */}
           </View>
         ),
       }} />

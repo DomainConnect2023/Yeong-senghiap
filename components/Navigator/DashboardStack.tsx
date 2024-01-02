@@ -28,7 +28,7 @@ import SearchReportScreen from '../../screens/searchReportScreen';
       <Stack.Navigator initialRouteName="CustomDrawer" screenOptions={{headerShown: false}}>
       <Stack.Screen name = "CustomDrawer" component={CustomDrawer}/>
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="DetailScreen" component={DetailScreen} />
+      <Stack.Screen name="Detail" component={DetailScreen} />
       <Stack.Screen name="DetailCustomerScreen" component={DetailCustomerScreen} />
       <Stack.Screen name="Setting" component={SettingScreen} />
       <Stack.Screen name="Planning" component={PlanningScreen} />

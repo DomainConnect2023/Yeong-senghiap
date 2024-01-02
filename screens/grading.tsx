@@ -27,8 +27,8 @@ const GradingScreen = () => {
         var loginGradingURL, loadGradingPageURL: any;
 
         if(getIPaddress=="domainconnect.my/domain_app" || getIPaddress=="192.168.1.121:8080"){
-            loginGradingURL="https://192.168.1.123:43210/App/LoginGrading";
-            loadGradingPageURL="https://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true";
+            loginGradingURL="https://192.168.1.144:43210/App/LoginGrading";
+            loadGradingPageURL="https://192.168.1.144:43210/Receive/Index?OnlyPendingApprove=true";
         }else{
             loginGradingURL="https://"+getIPaddress+"/App/LoginGrading";
             loadGradingPageURL="https://"+getIPaddress+"/Receive/Index?OnlyPendingApprove=true";

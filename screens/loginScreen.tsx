@@ -15,12 +15,6 @@ import { Dropdown } from 'react-native-searchable-dropdown-kj';
 import RNFetchBlob from 'rn-fetch-blob';
 import { useAuth } from '../components/Auth_Provider/Auth_Context';
 
-type UserData = {
-    username: string;
-    password: string;
-    [key: string]: string;
-};
-
 type VPNData = {
     type: string;
     [key: string]: string;
@@ -41,6 +35,8 @@ const LoginScreen = () => {
         
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    // nst [username, setUserName] = useState('lai');
+    // const [password, setPassword] = useState('0907');
 
     const inputRef = React.createRef<TextInput>();
     const [industrial, setIndustrial] = useState("");

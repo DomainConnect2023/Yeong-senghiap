@@ -34,6 +34,7 @@ export interface BarData {
     labels: string[];
     datasets: {
         data: number[];
+        withDots?: boolean;
     }[];
 } 
 

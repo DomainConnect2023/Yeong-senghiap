@@ -12,6 +12,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
+import DetailScreen from './detailProduct';
 
 const DashboardScreen2 = ({route}: {route: any}) => {
     const navigation = useNavigation();
@@ -52,14 +53,14 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                 if(productCode!="" && productCode!=null){
                     setItemID(productCode);
                     setStayPage("product");
-                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
                     await fetchDataApi(todayDate, "product", true, productCode);
 
                 }else{
                     setStayPage("product");
-                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
                     await fetchDataApi(todayDate, "product", false, "");
                 }
     
@@ -68,8 +69,8 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                 if(accode!="" && accode!=null){
                     setItemID(accode);
                     setStayPage("customer");
-                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
                     await fetchDataApi(todayDate, "customer", true, accode);
                     
                 }else{
@@ -82,16 +83,15 @@ const DashboardScreen2 = ({route}: {route: any}) => {
             }else if(route.params.stayPage=="salesman"){
                 const salesmancode = await AsyncStorage.getItem('salesmancode');
                 if(salesmancode!="" && salesmancode!=null){
-                    // setItemID(salesmancode);
-                    // setStayPage("salesman");
-                    // setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-                    // setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-                    // await fetchSalesmanDetailDataApi(salesmancode, todayDate);
+                    setStayPage("salesman");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
+                    await fetchDataApi(todayDate, "salesman", false, "");
                     
                 }else{
                     setStayPage("salesman");
-                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
+                    setTodayDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
+                    setSelectedDate(await AsyncStorage.getItem('fromDate') ?? getDate.toISOString().split('T')[0]+" 00:00:00");
                     await fetchDataApi(todayDate, "salesman", false, "");
                 }
             }
@@ -201,9 +201,14 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                     await AsyncStorage.setItem('accode', "");
                     await AsyncStorage.setItem('productCode', item.key);
                     navigation.navigate('Product' as never);
-                }else if(stayPage=="salesman" && itemID!=""){
-                    
-                    
+                }else if(stayPage=="salesman"){
+                    if(item.key==null){
+                        await AsyncStorage.setItem('salesmancode', "null");
+                    }else{
+                        await AsyncStorage.setItem('salesmancode', item.key);
+                    }
+                    await AsyncStorage.setItem('fromDate', todayDate);
+                    navigation.navigate("Detail" as never);
                 }else{
                     if(stayPage=="product"){
                         setDataProcess(true);
@@ -219,8 +224,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                         setItemID(item.key);
                         await AsyncStorage.setItem('accode', item.key);
                         await AsyncStorage.setItem('productCode', "");
-                        
-                        await fetchDataApi(todayDate, "customer",true,item.key);
+                        await fetchDataApi(todayDate,"customer",true,item.key);
                     }
                 }
             }}>
@@ -239,13 +243,13 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                         ? ("Customer: ")
                                         : ("Product: ")
                                 } 
-                                {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
+                                {item.name!="" ? item.name : item.key}</Text>
                                 <Text style={css.textDescription}>
                                     Weight: {currencyFormat(parseInt(item.weight))}
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'row',}}>
-                            {item.weight==null ? (
+                                {item.weight==null ? (
                                      <ProgressBar
                                      style={{width:250, height: 10}}
                                      progress={0}
@@ -289,12 +293,14 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                         await fetchDataApi(currentDate,"product",true,itemID);
                     }
                     
-                }else{
+                }else if(route.params.stayPage=="customer"){
                     if(itemID==""){
                         await fetchDataApi(currentDate,"customer",false,"");
                     }else{
                         await fetchDataApi(currentDate,"customer",true,itemID);
                     }
+                }else if(route.params.stayPage=="salesman"){
+                    await fetchDataApi(todayDate, "salesman", false, "");
                 }
             }
         }

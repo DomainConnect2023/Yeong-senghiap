@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigationScreen from '../../screens/TabNavigation';
 import ProfileScreen from '../../screens/profile';
-import DetailScreen from '../../screens/detailProduct';
+import DetailScreen from '../../screens/detailScreen';
 import SettingScreen from '../../screens/setting';
 import DashboardScreen from '../../screens/dashboard';
 import PlanningScreen from '../../screens/planning';

@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.senghiapmanagement"
+    namespace "com.allyfood"
     defaultConfig {
-        applicationId "com.senghiapmanagement"
+        applicationId "com.allyfood"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 9

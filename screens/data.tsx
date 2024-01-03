@@ -1,27 +1,100 @@
-// const testdata = {
-//     labels: ["Test1", "Test2"],
-//     legend: ["L1", "L2", "L3"],
-//     data: [
-//       [60, 60, 60],
-//       [30, 30, 60]
-//     ],
-//     barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"]
-// };
+export const testbardata = {
+  labels: ["Today", "Yesterday", "-3Days", "-4Days", "-5Days"],
+  datasets: [
+    {
+      data: [20, 45, 28, 80, 99],
+    },
+    // {
+    //   data: [50],
+    // },
+    // {
+    //   data: [100],
+    // },
+  ]
+};
 
-export const testdata = [
+export const testflatdata = [
     {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'Product',
+      key: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      value: 'Product',
+      name: 'Product',
+      amount: '1103',
+      color: 'yellow'
     },
     {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Customer',
+      key: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      value: 'Customer',
+      name: 'Customer',
+      amount: '25923',
+      color: 'yellow'
     },
     {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Salesman',
+      key: '58694a0f-3da1-471f-bd96-145571efsdf2',
+      value: 'Salesman',
+      name: 'Salesman',
+      amount: '123',
+      color: 'yellow'
     },
-  ];
+    {
+      key: '58694a0f-3da1-471f-bd96-14dfshsd9d72',
+      value: 'AAAA',
+      name: 'AAAA',
+      amount: '12331',
+      color: 'yellow'
+    },
+    {
+      key: '58694a0f-3da1-471f-bddfhd72',
+      value: 'BBBB',
+      name: 'BBBB',
+      amount: '2353',
+      color: 'yellow'
+    },
+    {
+      key: '58694a0f-3da1-471f-bd9dfhsdfhsdf1e29d72',
+      value: 'CCCC',
+      name: 'CCCC',
+      amount: '6122',
+      color: 'yellow'
+    },
+    {
+      key: '58694a0f-3da1-471f-bd96-1dfhdfhsdfh29d72',
+      value: 'DDDD',
+      name: 'DDDD',
+      amount: '1623',
+      color: 'yellow'
+    },
+];
+
+
+
+// POST data:
+// {
+//   "readDashboard": "1",
+//   "todayDate": "2023-09-11 00:00:00", // editable
+//   "type": "overrall/receiving/outgoing",
+
+// }
+
+
+// Return Data: 
+// {
+//   "barData":[
+//     {"days/number":"Today", "dayTotalAmount":85396, "dateValue":"2023-09-11 00:00:00"},
+//     {"days/number":"Yesterday", "dayTotalAmount":0, "dateValue":"2023-09-10 00:00:00"},
+//     {"days/number":"Saturday","dayTotalAmount":28168,"dateValue":"2023-09-09 00:00:00"},
+//     {"days/number":"Friday","dayTotalAmount":127415,"dateValue":"2023-09-08 00:00:00"},
+//     {"days/number":"Thursday","dayTotalAmount":36328,"dateValue":"2023-09-07 00:00:00"}
+//   ],
+//   "data":[
+//     {"key":"primaryKey","name":"WEIGHT RENTING","weight/amount":24230},
+//     {"key":"primaryKey","name":"FORTUNE NEWSTAR SDN BHD","weight/amount":10960},
+//     {"key":"primaryKey","name":"YHC PAPER TRADING S\/B (GST:000622850048","weight/amount":10960}
+//   ],
+//   "isSuccess":true,
+//   "totalWeight/totalAmount":85396,
+// }
+
+
 
 
 

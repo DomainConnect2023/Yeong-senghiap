@@ -233,32 +233,28 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 } 
                                 {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
                                 <Text style={css.textDescription}>
-                                    Weight: {currencyFormat(parseInt(item.weight))}
+                                    Weight: {currencyFormat(parseInt(item.amount))}
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'row',}}>
-                                {Platform.OS === 'android' && (
-                                    item.weight==null ? (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
+                                {item.amount==null ? (
+                                    <ProgressBar
+                                        style={{width:250, height: 10}}
                                         progress={0}
+                                        color={"#8561c5"}
                                     />
-                                    ) : (
-                                    <ProgressBarAndroid
-                                        style={{width:"70%"}}
-                                        styleAttr="Horizontal"
-                                        indeterminate={false}
-                                        progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                ) : (
+                                    <ProgressBar
+                                        style={{width:250, height: 10}}
+                                        progress={Math.round(parseInt(item.amount)/totalWeight*100)/100}
+                                        color={"#8561c5"}
                                     />
-                                    )
                                 )}
                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
-                                    { item.weight==null ? (
+                                    { item.amount==null ? (
                                         0
                                     ) : (
-                                        Math.round(parseInt(item.weight)/totalWeight*100)
+                                        Math.round(parseInt(item.amount)/totalWeight*100)
                                     )}%
                                 </Text>
                             </View>

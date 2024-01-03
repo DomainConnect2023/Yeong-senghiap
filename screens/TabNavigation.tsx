@@ -10,35 +10,31 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
   return (
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
 
-            if (route.name === 'Dashboard') {
-              iconName = focused ? 'cash' : 'cash-outline';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'person-circle' : 'person-circle-outline';
-            } else if (route.name === 'Salesman') {
-              iconName = focused ? 'person-circle-sharp' : 'person-circle-outline';
-            } else if (route.name === 'Product') {
-              iconName = focused ? 'bag-add' : 'bag-add-outline';
-            } else if (route.name === 'Customer') {
-              iconName = focused ? 'diamond' : 'diamond-outline';
-            } 
+          if (route.name === 'Receiving') {
+            iconName = focused ? 'receipt' : 'receipt-outline';
+          } else if (route.name === 'Outgoing') {
+            iconName = focused ? 'return-down-forward' : 'return-down-forward-outline';
+          } else if (route.name === 'Overall') {
+            iconName = focused ? 'home' : 'home-outline';
+          } 
 
-            return <Ionicons  name={iconName ?? ""} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: 'blue',
-          tabBarInactiveTintColor: 'gray',
-          headerShown: false
-        })}
-      >
+          return <Ionicons  name={iconName ?? ""} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'blue',
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      })}
+    >
 
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Product" component={DashboardScreen2} initialParams={{stayPage: "product"}} />
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Customer" component={DashboardScreen2} initialParams={{stayPage: "customer"}} />
-        <Tab.Screen options={{ unmountOnBlur: true, }} name="Salesman" component={DashboardScreen2} initialParams={{stayPage: "salesman"}} />
-      </Tab.Navigator>
+      <Tab.Screen options={{ unmountOnBlur: true, }} name="Overall" component={DashboardScreen} initialParams={{stayPage: "Overall"}} />
+      <Tab.Screen options={{ unmountOnBlur: true, }} name="Receiving" component={DashboardScreen} initialParams={{stayPage: "Receiving"}} />
+      <Tab.Screen options={{ unmountOnBlur: true, }} name="Outgoing" component={DashboardScreen} initialParams={{stayPage: "Outgoing"}} />
+    </Tab.Navigator>
   );
 }
 

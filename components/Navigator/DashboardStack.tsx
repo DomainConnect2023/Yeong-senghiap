@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigationScreen from '../../screens/TabNavigation';
 import ProfileScreen from '../../screens/profile';
-import DetailScreen from '../../screens/detailProduct';
+import DetailScreen from '../../screens/detailScreen';
 import SettingScreen from '../../screens/setting';
 import DashboardScreen from '../../screens/dashboard';
 import PlanningScreen from '../../screens/planning';
@@ -17,6 +17,7 @@ import { CustomDrawer } from './CustomDrawer';
 import GradingScreen from '../../screens/grading';
 import SearchReport from '../../screens/searchReport';
 import SearchReportScreen from '../../screens/searchReportScreen';
+import DetailOverallScreen from '../../screens/detailOverallScreen';
 
   const Drawer = createDrawerNavigator();
 
@@ -29,6 +30,7 @@ import SearchReportScreen from '../../screens/searchReportScreen';
       <Stack.Screen name = "CustomDrawer" component={CustomDrawer}/>
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="DetailScreen" component={DetailScreen} />
+      <Stack.Screen name="DetailOverallScreen" component={DetailOverallScreen} />
       <Stack.Screen name="DetailCustomerScreen" component={DetailCustomerScreen} />
       <Stack.Screen name="Setting" component={SettingScreen} />
       <Stack.Screen name="Planning" component={PlanningScreen} />

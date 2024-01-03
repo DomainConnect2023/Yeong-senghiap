@@ -7,7 +7,7 @@ import { URLAccess } from '../objects/URLAccess';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import DetailScreen from './detailProduct';
+import DetailScreen from './detailScreen';
 import MainContainer from '../components/MainContainer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colorDB } from '../objects/colors';

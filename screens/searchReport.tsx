@@ -13,7 +13,7 @@ import { ProgressBar } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colorDB } from '../objects/colors';
 import DetailCustomerScreen from './detailCustomer';
-import DetailScreen from './detailProduct';
+import DetailScreen from './detailScreen';
 
 const SearchReport = () => {
     const navigation = useNavigation();

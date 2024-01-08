@@ -1,22 +1,13 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Animated, Image, Platform, TextInput, Pressable } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Pressable } from "react-native";
 import MainContainer from '../components/MainContainer';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-import { URLAccess } from '../objects/URLAccess';
 import Snackbar from 'react-native-snackbar';
-import { BarChart, PieChart, } from "react-native-chart-kit";
-import { colorDB } from '../objects/colors';
-import DetailCustomerScreen from './detailCustomer';
-import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
-import { css, datepickerCSS } from '../objects/commonCSS';
-import { CircleColorText, showData, BarData, PieData, currencyFormat } from '../objects/objects';
-import { ImagesAssets } from '../objects/images';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import DashboardScreen from './dashboard';
+import { css } from '../objects/commonCSS';
+import { showData, currencyFormat } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 import { ProgressBar } from 'react-native-paper';
 

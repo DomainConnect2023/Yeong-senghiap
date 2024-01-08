@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Pressable, TextInput, ProgressBarAndroid, Platform } from "react-native";
-import { BarChart, LineChart,} from "react-native-chart-kit";
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Dimensions, Pressable, TextInput, Platform } from "react-native";
+import { LineChart,} from "react-native-chart-kit";
 import Snackbar from 'react-native-snackbar';
 import { useNavigation } from '@react-navigation/native';
 import MainContainer from '../components/MainContainer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
 import { css, datepickerCSS } from '../objects/commonCSS';
 import { BarData, currencyFormat, showData } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { ProgressBar, MD3Colors } from 'react-native-paper';
+import { ProgressBar } from 'react-native-paper';
 
 const DashboardScreen2 = ({route}: {route: any}) => {
     const navigation = useNavigation();

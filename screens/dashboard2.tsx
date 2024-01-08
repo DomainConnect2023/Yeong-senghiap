@@ -349,7 +349,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                 </View>
             ) : (
                 <View>
-                    <View style={{height:Dimensions.get("screen").height/100*10}}>
+                    <View style={{height:Dimensions.get("screen").height/100*12}}>
                         <View style={css.row}>
                             {showPicker && Platform.OS === 'android' && <DateTimePicker 
                                 mode="date"
@@ -400,7 +400,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                     await fetchDataApi(todayDate,"salesman",false,"");
                                 }
                             }}>
-                                <Text style={[css.pressableCSS,{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic",}]}>
+                                <Text style={[css.pressableCSS,{fontSize:16,fontWeight:'bold',textAlign:"center",fontStyle:"italic",width:Dimensions.get("screen").width/100*80}]}>
                                     {stayPage=="product" 
                                     ? itemID=="" 
                                         ? ("All Product") 
@@ -442,7 +442,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                         />
                     </View>
 
-                    <View style={{height:Dimensions.get("screen").height/100*40}}>
+                    <View style={{height:Dimensions.get("screen").height/100*38}}>
                         <View style={[css.row,{marginTop:5,marginBottom:5}]}>
                             <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
                                 Total Weight: {currencyFormat(totalWeight)}

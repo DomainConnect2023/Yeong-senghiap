@@ -48,8 +48,10 @@ const GradingScreen = () => {
         ).then(async (response) => {
             // console.log(response.json());
             if(response.json().isSuccess==true){
-                setShowURL(loadGradingPageURL);
+                setShowURL(loadGradingPageURL);    
                 setDataProcess(false);
+
+
             }else{
                 setDataProcess(false);
                 Snackbar.show({
@@ -69,11 +71,13 @@ const GradingScreen = () => {
 
     return (
         <MainContainer>
-            {(dataProcess==true || showURL=="") ? (
+            {
+            (dataProcess==true || showURL=="") ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
                 </View>
-            ) : (
+            ) : 
+            (
                 <View style={{ flex: 1 }}>
                     <ScrollView
                         contentContainerStyle={{flexGrow:1}}

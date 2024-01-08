@@ -12,7 +12,6 @@ const MainContainer: React.FC<IProps> = ({ children }) => {
 const styles = StyleSheet.create({
   setMainContainer: {
     flex: 1,
-    // backgroundColor: '#201520',
   }
 })
 

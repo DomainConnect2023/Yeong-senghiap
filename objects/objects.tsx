@@ -3,22 +3,19 @@ import { css } from "./commonCSS";
 
 export interface showData {
     key: string;
+    value: string;
     name: string;
-    amount: string;
+    weight: string;
     color: string;
 }
 
-export interface dataDetail {
-    key: string;
-    name: string;
-    amount: number;
-    chargesAmount: number;
-    electricityCharges: number;
-    parkingCharges: number;
-    overtimeCharges: number;
-    loadingAmount: number;
-    transportFee: number;
-}
+// export interface CustomerData {
+//     key: string; //accode
+//     value: string;
+//     name: string;
+//     weight: string;
+//     color: string;
+// }
 
 export interface SelectBarData {
     label: string;
@@ -28,7 +25,7 @@ export interface SelectBarData {
 export interface PieData {
     name: string;
     value: number;
-    totalAmount: number;
+    totalWeight: number;
     color: string;
     legendFontSize: number;
 }

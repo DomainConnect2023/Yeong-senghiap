@@ -12,7 +12,7 @@ export const css = StyleSheet.create({
         height: 60, 
         flexDirection: 'row',
         alignItems: 'center', 
-        backgroundColor: "#112A08",
+        backgroundColor: "#666699",
     },
     HeaderView :{
         flex: 1, 
@@ -30,7 +30,7 @@ export const css = StyleSheet.create({
     listThing: {
         width: 30,
         height: 40, 
-        backgroundColor: '#112A08', 
+        backgroundColor: '#666699', 
         justifyContent: 'center', 
         alignItems: 'center',
         borderRadius: 20,

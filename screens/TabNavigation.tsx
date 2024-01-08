@@ -5,6 +5,7 @@ import ProfileScreen from './profile';
 import DashboardScreen from './dashboard';
 import PlanningScreen from './planning';
 import DashboardScreen2 from './dashboard2';
+import { Dimensions } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,12 +16,16 @@ const TabNavigation = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Receiving') {
-            iconName = focused ? 'receipt' : 'receipt-outline';
-          } else if (route.name === 'Outgoing') {
-            iconName = focused ? 'return-down-forward' : 'return-down-forward-outline';
-          } else if (route.name === 'Overall') {
-            iconName = focused ? 'home' : 'home-outline';
+          if (route.name === 'Dashboard') {
+            iconName = focused ? 'cash' : 'cash-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person-circle' : 'person-circle-outline';
+          } else if (route.name === 'Salesman') {
+            iconName = focused ? 'person-circle-sharp' : 'person-circle-outline';
+          } else if (route.name === 'Product') {
+            iconName = focused ? 'bag-add' : 'bag-add-outline';
+          } else if (route.name === 'Customer') {
+            iconName = focused ? 'diamond' : 'diamond-outline';
           } 
 
           return <Ionicons  name={iconName ?? ""} size={size} color={color} />;
@@ -28,12 +33,18 @@ const TabNavigation = () => {
         tabBarActiveTintColor: 'blue',
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
+        tabBarStyle: { 
+          // position: "absolute",
+          // backgroundColor: 'transparent',
+          height: Dimensions.get("screen").height/100*5,
+        },
+        
       })}
     >
 
-      <Tab.Screen options={{ unmountOnBlur: true, }} name="Overall" component={DashboardScreen} initialParams={{stayPage: "Overall"}} />
-      <Tab.Screen options={{ unmountOnBlur: true, }} name="Receiving" component={DashboardScreen} initialParams={{stayPage: "Receiving"}} />
-      <Tab.Screen options={{ unmountOnBlur: true, }} name="Outgoing" component={DashboardScreen} initialParams={{stayPage: "Outgoing"}} />
+      <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Product" component={DashboardScreen2} initialParams={{stayPage: "product"}} />
+      <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Customer" component={DashboardScreen2} initialParams={{stayPage: "customer"}} />
+      <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Salesman" component={DashboardScreen2} initialParams={{stayPage: "salesman"}} />
     </Tab.Navigator>
   );
 }

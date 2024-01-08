@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Button, ScrollView, RefreshControl } from "react-native";
+import { View, ActivityIndicator, Button, ScrollView, RefreshControl, Linking } from "react-native";
 import Snackbar from 'react-native-snackbar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MainContainer from '../components/MainContainer';
 import { css } from '../objects/commonCSS';
 import RNFetchBlob from 'rn-fetch-blob';
-import { WebView } from 'react-native-webview';
+import { WebView } from 'react-native-webview-domain';
 
 const GradingScreen = () => {
     const [showURL, setShowURL] = useState('');
@@ -26,9 +26,11 @@ const GradingScreen = () => {
         var password=await AsyncStorage.getItem('password');
         var loginGradingURL, loadGradingPageURL: any;
 
+        // console.log(getIPaddress+" "+userCode+" "+password);
+
         if(getIPaddress=="domainconnect.my/domain_app" || getIPaddress=="192.168.1.121:8080"){
-            loginGradingURL="https://192.168.1.123:43210/App/LoginGrading";
-            loadGradingPageURL="https://192.168.1.123:43210/Receive/Index?OnlyPendingApprove=true";
+            loginGradingURL="https://192.168.1.165:12345/App/LoginGrading";
+            loadGradingPageURL="https://192.168.1.165:12345/Receive/Index?OnlyPendingApprove=true";
         }else{
             loginGradingURL="https://"+getIPaddress+"/App/LoginGrading";
             loadGradingPageURL="https://"+getIPaddress+"/Receive/Index?OnlyPendingApprove=true";
@@ -44,6 +46,7 @@ const GradingScreen = () => {
                 "Password": password,
             }),
         ).then(async (response) => {
+            // console.log(response.json());
             if(response.json().isSuccess==true){
                 setShowURL(loadGradingPageURL);
                 setDataProcess(false);
@@ -76,14 +79,23 @@ const GradingScreen = () => {
                         contentContainerStyle={{flexGrow:1}}
                         refreshControl={
                             <RefreshControl
-                            refreshing={dataProcess}
-                            onRefresh={postAPI}
-                        />}
+                                refreshing={dataProcess}
+                                onRefresh={postAPI}
+                            />}
                     >
-                    {/* <Button title='Reload Page' onPress={async ()=>{[setDataProcess(true),await postAPI()]}} /> */}
                     <WebView
                         source={{ uri: showURL }}
                         style={{ flex: 1 }}
+                        sharedCookiesEnabled = {true}
+                        setSupportMultipleWindows={true}
+                        onShouldStartLoadWithRequest={(request) => {
+                            if (request.url !== showURL) {
+                              Linking.openURL(request.url);
+                              return false;
+                            }
+                      
+                            return true;
+                        }}
                     />
                     </ScrollView>
                 </View>

@@ -45,7 +45,6 @@ export const css = StyleSheet.create({
         borderRadius: 10,
         marginVertical: 2,
         marginHorizontal: 5,
-        height: 80,
     },
     cardBody: {
         flexGrow: 1,
@@ -59,13 +58,11 @@ export const css = StyleSheet.create({
         color: '#000000',
         fontWeight: 'bold',
         marginBottom: 4,
-        width: "60%",
     },
     textDescription: {
         fontStyle: "italic",
         fontSize: 12,
         marginBottom: 6,
-        width: "30%",
         textAlign: "center",
     },
     circle: {
@@ -151,6 +148,16 @@ export const css = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 8,
         marginTop: 10,
+    },
+    basicTextHeader: {
+        fontStyle: "italic",
+        fontSize: 14,
+        color: '#000000',
+        fontWeight: 'bold',
+    },
+    basicTextDiscription: {
+        fontStyle: "italic",
+        fontSize: 12,
     },
 });
 

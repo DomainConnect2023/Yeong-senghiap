@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Dimensions, Pressable, TextInput, Platform } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Dimensions, Pressable, TextInput, Platform, StyleSheet } from "react-native";
 import { LineChart,} from "react-native-chart-kit";
 import Snackbar from 'react-native-snackbar';
 import { useNavigation } from '@react-navigation/native';
@@ -11,6 +11,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { ProgressBar } from 'react-native-paper';
+import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
 
 const DashboardScreen2 = ({route}: {route: any}) => {
     const navigation = useNavigation();
@@ -163,7 +164,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                 const MaxWeight = Math.max.apply(Math, WeightArray);
                 const MaxWeight_Rounded = Math.ceil(MaxWeight/100000) * 100000;
                 const convertedData: BarData = {
-                    labels: response.json().barData.map((item: { days: any; }) => item.days),
+                    labels: response.json().barData.map((item: { dateValue: any; }) => item.dateValue.substring(0,9)),
                     datasets: [
                         {
                             data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
@@ -236,45 +237,47 @@ const DashboardScreen2 = ({route}: {route: any}) => {
             }}>
                 <View style={css.listItem} key={parseInt(item.key)}>
                     <View style={[css.cardBody]}>
-                        <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
+                        <View style={{alignItems: 'flex-start',justifyContent: 'center'}}>
                             <View style={{flexDirection: 'row',}}>
-                                <Text style={css.textHeader}>
-                                { stayPage=="salesman"
-                                ? ("Salesman: ")
-                                : stayPage=="product" 
-                                    ? itemID=="" 
-                                        ? ("Product: ") 
-                                        : ("Customer: ") 
-                                    : itemID=="" 
-                                        ? ("Customer: ")
-                                        : ("Product: ")
-                                } 
-                                {item.name!="" ? item.name : item.key}</Text>
-                                <Text style={css.textDescription}>
-                                    Weight: {currencyFormat(parseInt(item.weight))}
-                                </Text>
-                            </View>
-                            <View style={{flexDirection: 'row',}}>
-                                {item.weight==null ? (
-                                     <ProgressBar
-                                     style={{width:250, height: 10}}
-                                     progress={0}
-                                     color={"#8561c5"}
-                                 />
-                                 ) : (
-                                     <ProgressBar
-                                         style={{width:250, height: 10}}
-                                         progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
-                                         color={"#8561c5"}
-                                     />
-                                 )}
-                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
-                                     { item.weight==null ? (
-                                        0
+                                <View style={{flexDirection:'column',width:"70%"}}>
+                                    <Text style={css.basicTextHeader} numberOfLines={2}>
+                                    { stayPage=="salesman"
+                                    ? ("Salesman: ")
+                                    : stayPage=="product" 
+                                        ? itemID=="" 
+                                            ? ("Product: ") 
+                                            : ("Customer: ") 
+                                        : itemID=="" 
+                                            ? ("Customer: ")
+                                            : ("Product: ")
+                                    } 
+                                    {item.name!="" ? item.name : item.key}</Text>
+                                    {item.weight==null ? (
+                                        <ProgressBar
+                                        style={{width:"100%", height: 10}}
+                                        progress={0}
+                                        color={"#8561c5"}
+                                    />
                                     ) : (
-                                        Math.round(parseInt(item.weight)/totalWeight*100)
-                                    )}%
-                                </Text>
+                                        <ProgressBar
+                                            style={{width:"100%", height: 10}}
+                                            progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                            color={"#8561c5"}
+                                        />
+                                    )}
+                                </View>
+                                <View style={{flexDirection:'column',width:"30%"}}>
+                                    <Text style={[css.basicTextDiscription,{verticalAlign:"middle",textAlign:"right"}]}>
+                                            Weight: {currencyFormat(parseInt(item.weight))}
+                                    </Text>
+                                    <Text style={[css.basicTextDiscription,{textAlign:"right"}]}>
+                                        { item.weight==null ? (
+                                            0
+                                        ) : (
+                                            Math.round(parseInt(item.weight)/totalWeight*100)
+                                        )}%
+                                    </Text>
+                                </View>
                             </View>
                         </View>
                     </View>
@@ -342,14 +345,13 @@ const DashboardScreen2 = ({route}: {route: any}) => {
 
     return (
         <MainContainer>
-            {/* <KeyboardAvoidWrapper> */}
             {dataProcess== true ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-                <View>
-                    <View style={{height:Dimensions.get("screen").height/100*12}}>
+                <View style={{height:Dimensions.get("screen").height/100*76}}>
+                    <View style={styles.firstContainer}>
                         <View style={css.row}>
                             {showPicker && Platform.OS === 'android' && <DateTimePicker 
                                 mode="date"
@@ -400,7 +402,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                     await fetchDataApi(todayDate,"salesman",false,"");
                                 }
                             }}>
-                                <Text style={[css.pressableCSS,{fontSize:16,fontWeight:'bold',textAlign:"center",fontStyle:"italic",width:Dimensions.get("screen").width/100*80}]}>
+                                <Text style={[css.pressableCSS,{fontSize:16,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}]} numberOfLines={2}>
                                     {stayPage=="product" 
                                     ? itemID=="" 
                                         ? ("All Product") 
@@ -418,11 +420,11 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                         </View>
                     </View>
 
-                    <View style={[css.row,{height:Dimensions.get("screen").height/100*23}]}>
+                    <View style={styles.secondContainer}>
                         <LineChart
                             data={BarData}
                             width={Dimensions.get("window").width/100*95}
-                            height={160}
+                            height={180}
                             yAxisSuffix=""
                             yAxisLabel=""
                             chartConfig={{
@@ -434,34 +436,45 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 style: {
                                     borderRadius: 16,
                                 },
+                                propsForLabels:{
+                                    fontFamily:'MontserratBold',
+                                    fontSize:10,
+                                },
                             }}
                             style={{
                                 marginVertical: 8,
                                 borderRadius: 16, 
                             }}
                         />
-                    </View>
-
-                    <View style={{height:Dimensions.get("screen").height/100*38}}>
                         <View style={[css.row,{marginTop:5,marginBottom:5}]}>
                             <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
                                 Total Weight: {currencyFormat(totalWeight)}
                             </Text>
                         </View>
-                        <View style={{alignItems: 'center',justifyContent: 'center', height: "auto"}}>
-                        {/* <View style={{alignItems: 'center',justifyContent: 'center',height:"50%"}}> */}
-                            <FlatList
-                                data={fetchedData}
-                                renderItem={FlatListItem}
-                                keyExtractor={(item) => item.key}
-                            />
-                        </View>
                     </View>
+
+                    <FlatList
+                        data={fetchedData}
+                        renderItem={FlatListItem}
+                        keyExtractor={(item) => item.key}
+                    />
                 </View>
             )}
-            {/* </KeyboardAvoidWrapper> */}
         </MainContainer>
     );
 }
+
+const styles = StyleSheet.create({
+    firstContainer: {
+        height: '15%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    secondContainer: {
+        height: '40%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
 
 export default DashboardScreen2;

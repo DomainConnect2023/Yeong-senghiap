@@ -6,28 +6,28 @@ export const colorDB = {
         },
 
         {
-            "color": "green",
-            "hex": "#26a69a"
+            "color": "color1",
+            "hex": "#fd7f6f"
         },
 
         {
-            "color": "yellow",
-            "hex": "#ffea00"
+            "color": "color2",
+            "hex": "#7eb0d5"
         },
       
         {
-            "color": "red",
-            "hex": "#f50057"
+            "color": "color3",
+            "hex": "#b2e061"
         },
 
         {
-            "color": "blue",
-            "hex": "#3f51b5"
+            "color": "color4",
+            "hex": "#bd7ebe"
         },
 
         {
-            "color": "cloudy blue",
-            "hex": "#acc2d9"
+            "color": "color5",
+            "hex": "#ffee65"
         },
 
         {

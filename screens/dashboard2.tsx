@@ -161,10 +161,12 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                 })));
 
                 const WeightArray=(response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight));
-                const MaxWeight = Math.max.apply(Math, WeightArray);
-                const MaxWeight_Rounded = Math.ceil(MaxWeight/100000) * 100000;
+                const MaxWeight = Math.max.apply(Math, WeightArray); // 127415 最高
+                const MaxWeight_Rounded = Math.ceil(MaxWeight / (4 * 5 * 1000)) * (4 * 5 * 1000);
+                // const MaxWeight_Rounded = Math.ceil(MaxWeight/100000) * 100000; // 200000 
+                
                 const convertedData: BarData = {
-                    labels: response.json().barData.map((item: { dateValue: any; }) => item.dateValue.substring(0,9)),
+                    labels: response.json().barData.map((item: { dateValue: any; }) => item.dateValue.substring(2,10)),
                     datasets: [
                         {
                             data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
@@ -274,7 +276,8 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                         { item.weight==null ? (
                                             0
                                         ) : (
-                                            Math.round(parseInt(item.weight)/totalWeight*100)
+                                            (parseInt(item.weight)/totalWeight*100).toFixed(2)
+                                            // Math.round(parseInt(item.weight)/totalWeight*100)
                                         )}%
                                     </Text>
                                 </View>
@@ -402,7 +405,16 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                     await fetchDataApi(todayDate,"salesman",false,"");
                                 }
                             }}>
-                                <Text style={[css.pressableCSS,{fontSize:16,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}]} numberOfLines={2}>
+                                <Text style={[
+                                    css.pressableCSS,{
+                                        fontSize:16,
+                                        fontWeight:'bold',
+                                        textAlign:"center",
+                                        fontStyle:"italic",
+                                        width:Dimensions.get("screen").width/100*50,
+                                        padding:5
+                                    }]} 
+                                numberOfLines={2}>
                                     {stayPage=="product" 
                                     ? itemID=="" 
                                         ? ("All Product") 
@@ -438,7 +450,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 },
                                 propsForLabels:{
                                     fontFamily:'MontserratBold',
-                                    fontSize:10,
+                                    fontSize:12,
                                 },
                             }}
                             style={{

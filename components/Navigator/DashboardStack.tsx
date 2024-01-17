@@ -16,7 +16,9 @@ import { CustomDrawer } from './CustomDrawer';
 import GradingScreen from '../../screens/grading';
 import SearchReport from '../../screens/searchReport';
 import SearchReportScreen from '../../screens/searchReportScreen';
-import DetailScreen from '../../screens/detailProduct';
+import DetailScreen from '../../screens/detailSalesman';
+import HighlightedRange from '../../screens/testscreen';
+import ScrollingChartWithPointer from '../../screens/testingscreen';
 
   const Drawer = createDrawerNavigator();
 
@@ -38,6 +40,8 @@ import DetailScreen from '../../screens/detailProduct';
       <Stack.Screen name="Grading" component={GradingScreen} />
       <Stack.Screen name="SearchReport" component={SearchReport} />
       <Stack.Screen name="SearchReportScreen" component={SearchReportScreen} />
+      <Stack.Screen name="Testing" component={HighlightedRange} />
+      <Stack.Screen name="Testinga" component={ScrollingChartWithPointer} />
     </Stack.Navigator>
     );
   }

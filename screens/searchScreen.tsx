@@ -17,6 +17,7 @@ import { css, dropdownCSS, datepickerCSS } from '../objects/commonCSS';
 import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import SerachReport from './searchReport';
+import { colorThemeDB } from '../objects/colors';
 
 interface CustomerData {
     label: string;
@@ -414,7 +415,7 @@ const SearchScreen = () => {
                                         <View style={{ width: "60%" }}>
                                             <MultiSelect
                                                 style={dropdownCSS.dropdown}
-                                                activeColor={"#E5E4E2"}
+                                                activeColor={colorThemeDB.colors.primaryContainer}
                                                 placeholderStyle={dropdownCSS.placeholderStyle}
                                                 selectedTextStyle={dropdownCSS.selectedTextStyle}
                                                 inputSearchStyle={dropdownCSS.inputSearchStyle}

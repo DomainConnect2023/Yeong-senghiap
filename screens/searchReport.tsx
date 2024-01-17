@@ -121,8 +121,8 @@ const SearchReport = () => {
 
     return (
         <MainContainer>
-            <View style={[css.mainView,{alignItems: 'center',justifyContent: 'center'}]}>
-            <View style={{flexDirection: 'row',}}>
+            <View style={css.mainView}>
+                <View style={{flexDirection: 'row',}}>
                     <View style={css.listThing}>
                         <Ionicons name="arrow-back-circle-outline" size={30} color="#FFF" onPress={()=>navigation.goBack()} />
                     </View>
@@ -131,74 +131,77 @@ const SearchReport = () => {
                     <Text numberOfLines={2} style={css.PageName}>Receiving Report</Text>
                 </View>
             </View>
-
-            <View style={{alignItems: 'center',justifyContent: 'center', width:Dimensions.get("screen").width}}>
-                <View style={{flexDirection: "row",margin:10,alignItems: 'center',justifyContent: 'center'}}>
-                    <Text style={{fontSize:14,fontWeight:'bold'}}>From </Text>
-                    <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{fromDate} </Text>
-                    <Text style={{fontSize:14,fontWeight:'bold'}}>To </Text>
-                    <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{toDate}</Text>
-                </View>
-            </View>
-            {/* <KeyboardAvoidWrapper> */}
             {dataProcess== true ? (
                 <View style={[css.container]}>
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-                <View>
-                    <View style={[css.row]}>
-                    <PieChart
-                        data={PieData}
-                        width={Dimensions.get("window").width}
-                        height={160}
-                        accessor={"value"}
-                        backgroundColor={"transparent"}
-                        paddingLeft={"15"}
-                        center={[5, 0]}
-                        absolute
-                        chartConfig={{
-                            backgroundColor: "#e26a00",
-                            backgroundGradientFrom: "#fb8c00",
-                            backgroundGradientTo: "#ffa726",
-                            decimalPlaces: 0,
-                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            style: {
-                                borderRadius: 16,
-                                width: Dimensions.get("window").width
-                            },
-                            propsForDots: {
-                                r: "6",
-                                strokeWidth: "2",
-                                stroke: "#ffa726"
-                            }
-                        }}
-                    />
-                    </View>
-
-                    <View style={[css.row,{marginTop:5,marginBottom:5}]}>
-                        <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
-                            Total Weight: {currencyFormat(totalWeight)}
-                        </Text>
-                    </View>
-                    
-                    <View style={{alignItems: 'center',justifyContent: 'center',}}>
-                        {/* <View> */}
-                        <View style={{height:Dimensions.get("screen").height/100*53}}>
-                            <FlatList
-                                data={fetchedData}
-                                renderItem={FlatListItem}
-                                keyExtractor={(item) => item.key}
-                            />
+                <View style={{height:Dimensions.get("screen").height/100*80}}>
+                    <View style={styles.firstContainer}>
+                        <View style={css.row}>
+                            <Text style={{fontSize:14,fontWeight:'bold'}}>From </Text>
+                            <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{fromDate} </Text>
+                            <Text style={{fontSize:14,fontWeight:'bold'}}>To </Text>
+                            <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{toDate}</Text>
                         </View>
                     </View>
+                    <View style={styles.secondContainer}>
+                        <PieChart
+                            data={PieData}
+                            width={Dimensions.get("window").width}
+                            height={160}
+                            accessor={"value"}
+                            backgroundColor={"transparent"}
+                            paddingLeft={"15"}
+                            center={[5, 0]}
+                            absolute
+                            chartConfig={{
+                                backgroundColor: "#e26a00",
+                                backgroundGradientFrom: "#fb8c00",
+                                backgroundGradientTo: "#ffa726",
+                                decimalPlaces: 0,
+                                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                style: {
+                                    borderRadius: 16,
+                                    width: Dimensions.get("window").width
+                                },
+                                propsForDots: {
+                                    r: "6",
+                                    strokeWidth: "2",
+                                    stroke: "#ffa726"
+                                }
+                            }}
+                        />
+                        <View style={[css.row,{marginTop:5,marginBottom:5}]}>
+                            <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
+                                Total Weight: {currencyFormat(totalWeight)}
+                            </Text>
+                        </View>
+                    </View>
+                    
+                    <FlatList
+                        data={fetchedData}
+                        renderItem={FlatListItem}
+                        keyExtractor={(item) => item.key}
+                    />
                 </View>
             )}
-            {/* </KeyboardAvoidWrapper> */}
         </MainContainer>
     );
-    
 }
+
+const styles = StyleSheet.create({
+    firstContainer: {
+        marginTop: -10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    secondContainer: {
+        height: '30%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
 
 export default SearchReport;

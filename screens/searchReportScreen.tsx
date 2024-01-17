@@ -16,6 +16,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { SelectBarData } from '../objects/objects';
 import SearchReport from './searchReport';
+import { colorThemeDB } from '../objects/colors';
 
 const SearchReportScreen = () => {
     const navigation = useNavigation();
@@ -185,8 +186,8 @@ const SearchReportScreen = () => {
                 if (response.json().status == "1") {
                     setFetchedData([{ "label": "All Product", "value": "all" }]);
                     setFetchedData((prevData) => [...prevData, ...response.json().productData.map((item: { itemCode: string; product: any; }) => ({
-                        // label: item.product,
-                        label: item.itemCode,
+                        label: item.product,
+                        // label: item.itemCode,
                         value: item.itemCode,
                     }))]);
                     setNoDataList(false);
@@ -228,7 +229,7 @@ const SearchReportScreen = () => {
                         {typeCatch == "customer" ? (
                             <View style={[css.subTitle, css.row]}>
                                 <Pressable
-                                    style={[css.typeButton, { backgroundColor: "dimgray" }]}
+                                    style={[css.typeButton, { backgroundColor: colorThemeDB.colors.primaryContainer }]}
                                     onPress={async () => [setTypeCatch("customer"), await fetchDataApi("customer", keepFromDateData, keepToDateData)]}
                                 >
                                     <Text style={css.buttonText}>Customer</Text>
@@ -238,7 +239,7 @@ const SearchReportScreen = () => {
                                     style={[css.typeButton, { backgroundColor: "white" }]}
                                     onPress={async () => [setTypeCatch("product"), await fetchDataApi("product", keepFromDateData, keepToDateData)]}
                                 >
-                                    <Text style={[css.buttonText, { color: "black" }]}>Product</Text>
+                                    <Text style={[css.buttonText, { color: colorThemeDB.colors.primary }]}>Product</Text>
                                 </Pressable>
                             </View>
                         ) : (
@@ -247,14 +248,15 @@ const SearchReportScreen = () => {
                                     style={[css.typeButton, { backgroundColor: "white" }]}
                                     onPress={async () => [setTypeCatch("customer"), await fetchDataApi("customer", keepFromDateData, keepToDateData)]}
                                 >
-                                    <Text style={[css.buttonText, { color: "black" }]}>Customer</Text>
+                                    <Text style={[css.buttonText, { color: colorThemeDB.colors.primary }]}>Customer</Text>
                                 </Pressable>
 
                                 <Pressable
-                                    style={[css.typeButton, { backgroundColor: "dimgray" }]}
+                                    //backgroundColor: "dimgray"
+                                    style={[css.typeButton, { backgroundColor: colorThemeDB.colors.primaryContainer }]}
                                     onPress={async () => [setTypeCatch("product"), await fetchDataApi("product", keepFromDateData, keepToDateData)]}
                                 >
-                                    <Text style={[css.buttonText, { color: "white" }]}>Product</Text>
+                                    <Text style={css.buttonText}>Product</Text>
                                 </Pressable>
                             </View>
                         )}
@@ -372,7 +374,7 @@ const SearchReportScreen = () => {
                                     <View style={{ width: "60%" }}>
                                         <MultiSelect
                                             style={dropdownCSS.dropdown}
-                                            activeColor={"#E5E4E2"}
+                                            activeColor={colorThemeDB.colors.primaryContainer}
                                             placeholderStyle={dropdownCSS.placeholderStyle}
                                             selectedTextStyle={dropdownCSS.selectedTextStyle}
                                             inputSearchStyle={dropdownCSS.inputSearchStyle}
@@ -401,7 +403,7 @@ const SearchReportScreen = () => {
                                             renderLeftIcon={() => (
                                                 <Ionicons
                                                     style={{ marginRight: 5, }}
-                                                    color={isItemFocus=="customer" ? 'blue' : 'black'}
+                                                    color={'blue'}
                                                     name="person-circle-outline"
                                                     size={20}
                                                 />
@@ -428,13 +430,13 @@ const SearchReportScreen = () => {
                                         editable={false}
                                     />
                                 </View>
-                            )
-                                : (
+                            ) : (
                                     <View style={[css.row, { marginBottom: 10, }]}>
                                         <Text style={css.Title}>Product: </Text>
                                         <View style={{ width: "60%" }}>
                                             <MultiSelect
                                                 style={dropdownCSS.dropdown}
+                                                activeColor={colorThemeDB.colors.primaryContainer}
                                                 placeholderStyle={dropdownCSS.placeholderStyle}
                                                 selectedTextStyle={dropdownCSS.selectedTextStyle}
                                                 inputSearchStyle={dropdownCSS.inputSearchStyle}
@@ -463,7 +465,7 @@ const SearchReportScreen = () => {
                                                 renderLeftIcon={() => (
                                                     <Ionicons
                                                         style={{ marginRight: 5, }}
-                                                        color={isItemFocus=="product" ? 'blue' : 'black'}
+                                                        color={'blue'}
                                                         name="list-circle-sharp"
                                                         size={20}
                                                     />
@@ -480,7 +482,7 @@ const SearchReportScreen = () => {
                     {/* Submit Button */}
                     <View style={[css.row, { paddingTop: 20 }]}>
                         <Pressable
-                            style={css.button} onPress={async () => {
+                            style={[css.button,{backgroundColor:colorThemeDB.colors.primary}]} onPress={async () => {
                                 await AsyncStorage.setItem('fromDate', keepFromDateData);
                                 await AsyncStorage.setItem('toDate', keepToDateData);
                                 await AsyncStorage.setItem('type', typeCatch);
@@ -496,7 +498,7 @@ const SearchReportScreen = () => {
                                 )
                             }}
                         >
-                            <Text style={css.buttonText}>Generate</Text>
+                            <Text style={[css.buttonText,{color:"white"}]}>Generate</Text>
                         </Pressable>
                     </View>
                     {/* End Submit Button */}

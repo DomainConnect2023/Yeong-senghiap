@@ -16,13 +16,16 @@ import LoginScreen from '../../screens/loginScreen';
 import { useAuth } from '../Auth_Provider/Auth_Context';
 import { useState } from 'react';
 import SearchReportScreen from '../../screens/searchReportScreen';
+import { colorThemeDB } from '../../objects/colors';
 
 const Drawer = createDrawerNavigator();
 const { setIsSignedIn } = useAuth();
 
 function CustomDrawerContent(props: any) {
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} 
+    // style={{backgroundColor:colorThemeDB.colors.primaryContainer}}
+    >
       <DrawerItemList {...props} />
       <DrawerItem label="Logout" onPress={() => setIsSignedIn(false)} />
     </DrawerContentScrollView>
@@ -37,12 +40,14 @@ export function CustomDrawer() {
     <Drawer.Navigator initialRouteName="Dashboard" screenOptions={{
       headerShown: true,
       headerStyle: {
-        // backgroundColor: "#f44336"
-        backgroundColor: "#666699",
+        backgroundColor: colorThemeDB.colors.primary,
       },
       headerTitleStyle: {color: "#FFF"},
       headerTintColor: '#fff', 
       headerTitleAlign: 'center',
+      // drawerActiveBackgroundColor: "#FFF",
+      drawerActiveBackgroundColor: colorThemeDB.colors.primaryContainer,
+      
     }}
     drawerContent={props => <CustomDrawerContent {...props} />}
     >

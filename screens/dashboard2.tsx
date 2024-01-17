@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Dimensions, Pressable, TextInput, Platform, StyleSheet } from "react-native";
-import { LineChart,} from "react-native-chart-kit";
+// import { LineChart,} from "react-native-chart-kit";
 import Snackbar from 'react-native-snackbar';
 import { useNavigation } from '@react-navigation/native';
 import MainContainer from '../components/MainContainer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { css, datepickerCSS } from '../objects/commonCSS';
-import { BarData, currencyFormat, showData } from '../objects/objects';
+import { BarData, BarData2, currencyFormat, showData } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { ProgressBar } from 'react-native-paper';
-import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
+import { LineChart } from 'react-native-gifted-charts';
+import { colorThemeDB } from '../objects/colors';
 
 const DashboardScreen2 = ({route}: {route: any}) => {
     const navigation = useNavigation();
@@ -33,6 +34,8 @@ const DashboardScreen2 = ({route}: {route: any}) => {
 
     const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist
     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [0] }] });
+    const [BarData2, setBarData2] = useState<BarData2[]>([]);
+    const [maxChartValue, setMaxChartValue] = useState<number>(100);
     const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
 
     const [dataProcess, setDataProcess] = useState(false); // check when loading data
@@ -160,10 +163,19 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                     weight: item.weight,
                 })));
 
+                setBarData2(response.json().barData.map((item: { dayTotalWeight: any; dateValue: any; }) => ({
+                    label: item.dateValue.substring(5,10),
+                    value: item.dayTotalWeight,
+                    // textFontSize: 10
+                })));
+
                 const WeightArray=(response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight));
-                const MaxWeight = Math.max.apply(Math, WeightArray); // 127415 最高
-                const MaxWeight_Rounded = Math.ceil(MaxWeight / (4 * 5 * 1000)) * (4 * 5 * 1000);
+                const MaxWeight = Math.max.apply(Math, WeightArray); // 127415 
+                const MaxWeight_Rounded = Math.ceil(MaxWeight / (40)) * (40);
                 // const MaxWeight_Rounded = Math.ceil(MaxWeight/100000) * 100000; // 200000 
+
+                setMaxChartValue(MaxWeight_Rounded);
+                // console.log(MaxWeight_Rounded);
                 
                 const convertedData: BarData = {
                     labels: response.json().barData.map((item: { dateValue: any; }) => item.dateValue.substring(2,10)),
@@ -256,15 +268,15 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                     {item.name!="" ? item.name : item.key}</Text>
                                     {item.weight==null ? (
                                         <ProgressBar
-                                        style={{width:"100%", height: 10}}
+                                        style={{width:"100%", height: 10,}}
                                         progress={0}
-                                        color={"#8561c5"}
+                                        color={colorThemeDB.colors.primaryContainer}
                                     />
                                     ) : (
                                         <ProgressBar
                                             style={{width:"100%", height: 10}}
                                             progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
-                                            color={"#8561c5"}
+                                            color={colorThemeDB.colors.primary}
                                         />
                                     )}
                                 </View>
@@ -276,7 +288,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                         { item.weight==null ? (
                                             0
                                         ) : (
-                                            (parseInt(item.weight)/totalWeight*100).toFixed(2)
+                                            (Math.ceil(parseInt(item.weight))/totalWeight*100).toFixed(2)
                                             // Math.round(parseInt(item.weight)/totalWeight*100)
                                         )}%
                                     </Text>
@@ -369,7 +381,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                     placeholder="Select Date"
                                     value={selectedDate.toString().substring(0,10)}
                                     onChangeText={setTodayDate}
-                                    placeholderTextColor="#11182744"
+                                    placeholderTextColor={colorThemeDB.colors.primary}
                                     editable={false}
                                     onPressIn={tonggleDatePicker}
                                 />
@@ -408,7 +420,6 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 <Text style={[
                                     css.pressableCSS,{
                                         fontSize:16,
-                                        fontWeight:'bold',
                                         textAlign:"center",
                                         fontStyle:"italic",
                                         width:Dimensions.get("screen").width/100*50,
@@ -434,11 +445,39 @@ const DashboardScreen2 = ({route}: {route: any}) => {
 
                     <View style={styles.secondContainer}>
                         <LineChart
+                            data={BarData2}
+                            height={160}
+                            width={Dimensions.get("screen").width}
+                            noOfSections={2}
+                            maxValue={maxChartValue}
+                            areaChart
+                            startFillColor={colorThemeDB.colors.primary}
+                            showValuesAsDataPointsText
+                            spacing={65}
+                            initialSpacing={25}
+                            color1={colorThemeDB.colors.primary}
+                            textColor1="black"
+                            dataPointsHeight={4}
+                            dataPointsWidth={6}
+                            dataPointsColor1={colorThemeDB.colors.primary}
+                            textShiftY={0}
+                            textShiftX={10}
+                            textFontSize={10}
+                            adjustToWidth={true}
+                            // curved
+                            // showArrow1
+                            onPress={async (item: any) => {
+                                console.log(item);
+                                Snackbar.show({
+                                    text: item.label+": "+item.value.toString(),
+                                    duration: Snackbar.LENGTH_SHORT,
+                                });
+                            }}
+                        />
+                        {/* <LineChart
                             data={BarData}
                             width={Dimensions.get("window").width/100*95}
                             height={180}
-                            yAxisSuffix=""
-                            yAxisLabel=""
                             chartConfig={{
                                 backgroundColor: '#1cc910',
                                 backgroundGradientFrom: '#eff3ff',
@@ -457,7 +496,7 @@ const DashboardScreen2 = ({route}: {route: any}) => {
                                 marginVertical: 8,
                                 borderRadius: 16, 
                             }}
-                        />
+                        /> */}
                         <View style={[css.row,{marginTop:5,marginBottom:5}]}>
                             <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
                                 Total Weight: {currencyFormat(totalWeight)}

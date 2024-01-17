@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Pressable } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Pressable, StyleSheet } from "react-native";
 import MainContainer from '../components/MainContainer';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,7 @@ import { css } from '../objects/commonCSS';
 import { showData, currencyFormat } from '../objects/objects';
 import RNFetchBlob from 'rn-fetch-blob';
 import { ProgressBar } from 'react-native-paper';
+import { colorThemeDB } from '../objects/colors';
 
 const DetailScreen = () => {
     const navigation = useNavigation();
@@ -92,36 +93,40 @@ const DetailScreen = () => {
             }}>
                 <View style={css.listItem} key={parseInt(item.key)}>
                     <View style={[css.cardBody]}>
-                        <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
+                        <View style={{alignItems: 'flex-start',justifyContent: 'center'}}>
                             <View style={{flexDirection: 'row',}}>
-                                <Text style={css.textHeader}>
-                                {typeCatch=="product" ? "Product" : "Customer"}:
-                                {item.name!="" ? item.name : item.key}</Text>
-                                <Text style={css.textDescription}>
-                                    Weight: {currencyFormat(parseInt(item.weight))}
-                                </Text>
-                            </View>
-                            <View style={{flexDirection: 'row',}}>
-                                {item.weight==null ? (
-                                     <ProgressBar
-                                     style={{width:250, height: 10}}
-                                     progress={0}
-                                     color={"#8561c5"}
-                                 />
-                                 ) : (
-                                     <ProgressBar
-                                         style={{width:250, height: 10}}
-                                         progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
-                                         color={"#8561c5"}
-                                     />
-                                 )}
-                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
+                                <View style={{flexDirection:'column',width:"70%"}}>
+                                    
+                                    <Text style={css.basicTextHeader} numberOfLines={2}>
+                                    {typeCatch=="product" ? "Product" : "Customer"}:
+                                    {item.name!="" ? item.name : item.key}</Text>
+                                    {item.weight==null ? (
+                                        <ProgressBar
+                                        style={{width:"100%", height: 10}}
+                                        progress={0}
+                                        color={colorThemeDB.colors.primary}
+                                    />
+                                    ) : (
+                                        <ProgressBar
+                                            style={{width:"100%", height: 10}}
+                                            progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
+                                            color={colorThemeDB.colors.primary}
+                                        />
+                                    )}
+                                </View>
+                                <View style={{flexDirection:'column',width:"30%"}}>
+                                    <Text style={css.textDescription}>
+                                        Weight: {currencyFormat(parseInt(item.weight))}
+                                    </Text>
+                                    <Text style={[css.textDescription,{textAlign:"center"}]}>
                                      { item.weight==null ? (
                                         0
                                     ) : (
                                         Math.round(parseInt(item.weight)/totalWeight*100)
                                     )}%
                                 </Text>
+                                </View>
+                                
                             </View>
                         </View>
                     </View>
@@ -135,11 +140,7 @@ const DetailScreen = () => {
             <View style={css.mainView}>
                 <View style={{flexDirection: 'row',}}>
                     <View style={css.listThing}>
-                        <Ionicons 
-                        name="arrow-back-circle-outline" 
-                        size={30} 
-                        color="#FFF" 
-                        onPress={()=>[navigation.goBack()]} />
+                        <Ionicons name="arrow-back-circle-outline" size={30} color="#FFF" onPress={()=>[navigation.goBack()]} />
                     </View>
                 </View>
                 <View style={css.HeaderView}>
@@ -151,11 +152,11 @@ const DetailScreen = () => {
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-            <View>
-                <View style={{alignItems: 'center',justifyContent: 'center',height:Dimensions.get("screen").height/100*5,width:Dimensions.get("screen").width}}>
-                    <View style={{flexDirection: "row",margin:10,alignItems: 'center',justifyContent: 'center'}}>
+            <View style={{height:Dimensions.get("screen").height/100*80}}>
+                <View style={styles.firstContainer}>
+                    <View style={css.row}>
                         <Text style={{fontSize:14,fontWeight:'bold'}}>Date </Text>
-                        <Text style={{fontSize:14,fontWeight:'bold',color:"darkred"}}>{showDate.split(' ')[0]} </Text>
+                        <Text style={{fontSize:14,fontWeight:'bold',color:colorThemeDB.colors.primary}}>{showDate.split(' ')[0]} </Text>
                     </View>
                 </View>
                 <View style={[css.row,{height:Dimensions.get("screen").height/100*5}]}>
@@ -165,53 +166,61 @@ const DetailScreen = () => {
                                 style={[css.typeButton, { backgroundColor: "white" }]}
                                 onPress={async () => [setDataProcess(true), setTypeCatch("product"), await fetchDataApi("product")]}
                             >
-                                <Text style={[css.buttonText, { color: "black" }]}>Product</Text>
+                                <Text style={[css.buttonText, { color: colorThemeDB.colors.primary }]}>Product</Text>
                             </Pressable>
                             <Pressable
-                                style={[css.typeButton, { backgroundColor: "black" }]}
+                                style={[css.typeButton, { backgroundColor: colorThemeDB.colors.primaryContainer }]}
                                 onPress={async () => [setDataProcess(true), setTypeCatch("customer"), await fetchDataApi("customer")]}
                             >
-                                <Text style={css.buttonText}>Customer</Text>
+                                <Text style={[css.buttonText,{color:colorThemeDB.colors.primary}]}>Customer</Text>
                             </Pressable>
                         </View>
                     ) : (
                         <View style={[css.subTitle, css.row]}>
                             <Pressable
-                                style={[css.typeButton, { backgroundColor: "black" }]}
+                                style={[css.typeButton, { backgroundColor: colorThemeDB.colors.primaryContainer }]}
                                 onPress={async () => [setDataProcess(true), setTypeCatch("product"), await fetchDataApi("product")]}
                             >
-                                <Text style={[css.buttonText, { color: "white" }]}>Product</Text>
+                                <Text style={[css.buttonText, { color: colorThemeDB.colors.primary }]}>Product</Text>
                             </Pressable>
                             <Pressable
                                 style={[css.typeButton, { backgroundColor: "white" }]}
                                 onPress={async () => [setDataProcess(true), setTypeCatch("customer"), await fetchDataApi("customer")]}
                             >
-                                <Text style={[css.buttonText, { color: "black" }]}>Customer</Text>
+                                <Text style={[css.buttonText, { color: colorThemeDB.colors.primary }]}>Customer</Text>
                             </Pressable>
                         </View>
                     )}
                 </View>
-
-                <View style={{height:Dimensions.get("screen").height/100*68,marginTop:5}}>
-                    <View style={[css.row]}>
-                        <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
-                            Total Weight: {currencyFormat(totalWeight)}
-                        </Text>
-                    </View>
-                    <View style={{alignItems: 'center',justifyContent: 'center',}}>
-                        <View>
-                            <FlatList
-                                data={fetchedData}
-                                renderItem={FlatListItem}
-                                keyExtractor={(item) => item.key}
-                            />
-                        </View>
-                    </View>
+                <View style={[css.row]}>
+                    <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
+                        Total Weight: {currencyFormat(totalWeight)}
+                    </Text>
                 </View>
+
+                <FlatList
+                    data={fetchedData}
+                    renderItem={FlatListItem}
+                    keyExtractor={(item) => item.key}
+                    style={{margin:10}}
+                />
             </View>
             )}
         </MainContainer>
     );
 }
+
+const styles = StyleSheet.create({
+    firstContainer: {
+        marginTop: -10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    // secondContainer: {
+    //     height: '40%',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    // },
+});
 
 export default DetailScreen;

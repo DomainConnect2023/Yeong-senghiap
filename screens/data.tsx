@@ -1,3 +1,7 @@
+import { ReactElement, JSXElementConstructor, ReactNode } from "react";
+import { Text, View } from "react-native";
+import { DataSet } from "react-native-gifted-charts/src/utils/types";
+
 export const testbardata = {
   labels: ["Today", "Yesterday", "-3Days", "-4Days", "-5Days"],
   datasets: [
@@ -12,6 +16,91 @@ export const testbardata = {
     // },
   ]
 };
+
+export const rundata = [
+  {value: 6},
+  {value: 6},
+  {value: 8},
+  {value: 5},
+  {value: 5},
+  {value: 8},
+  {value: 0},
+  {value: 8},
+  {value: 10},
+  {value: 10},
+  {value: 12},
+  {value: 15},
+  {value: 20},
+  {value: 22},
+  {value: 20},
+];
+
+export const ptData = [
+  {value: 160, date: '1 Apr 2022'},
+  {value: 180, date: '2 Apr 2022'},
+  {value: 190, date: '3 Apr 2022'},
+  {value: 180, date: '4 Apr 2022'},
+  {value: 140, date: '5 Apr 2022'},
+  {value: 145, date: '6 Apr 2022'},
+  {value: 160, date: '7 Apr 2022'},
+  {value: 200, date: '8 Apr 2022'},
+
+  {value: 220, date: '9 Apr 2022'},
+  {
+    value: 240,
+    date: '10 Apr 2022',
+    label: '10 Apr',
+    labelTextStyle: {color: 'lightgray', width: 60},
+  },
+  {value: 280, date: '11 Apr 2022'},
+  {value: 260, date: '12 Apr 2022'},
+  {value: 340, date: '13 Apr 2022'},
+  {value: 385, date: '14 Apr 2022'},
+  {value: 280, date: '15 Apr 2022'},
+  {value: 390, date: '16 Apr 2022'},
+
+  {value: 370, date: '17 Apr 2022'},
+  {value: 285, date: '18 Apr 2022'},
+  {value: 295, date: '19 Apr 2022'},
+  {
+    value: 300,
+    date: '20 Apr 2022',
+    label: '20 Apr',
+    labelTextStyle: {color: 'lightgray', width: 60},
+  },
+  {value: 280, date: '21 Apr 2022'},
+  {value: 295, date: '22 Apr 2022'},
+  {value: 260, date: '23 Apr 2022'},
+  {value: 255, date: '24 Apr 2022'},
+
+  {value: 190, date: '25 Apr 2022'},
+  {value: 220, date: '26 Apr 2022'},
+  {value: 205, date: '27 Apr 2022'},
+  {value: 230, date: '28 Apr 2022'},
+  {value: 210, date: '29 Apr 2022'},
+  {
+    value: 200,
+    date: '30 Apr 2022',
+    label: '30 Apr',
+    labelTextStyle: {color: 'lightgray', width: 60},
+  },
+  {value: 240, date: '1 May 2022'},
+  {value: 250, date: '2 May 2022'},
+  {value: 280, date: '3 May 2022'},
+  {value: 250, date: '4 May 2022'},
+  {value: 210, date: '5 May 2022'},
+];
+
+export const testdata = [
+  {value: 0},
+  {value: 20},
+  {value: 18},
+  {value: 40},
+  {value: 36},
+  {value: 60},
+  {value: 54},
+  {value: 85},
+];
 
 export const testflatdata = [
     {
@@ -65,682 +154,374 @@ export const testflatdata = [
     },
 ];
 
+export const dPoint = () => {
+  return (
+    <View
+      style={{
+        width: 14,
+        height: 14,
+        backgroundColor: 'white',
+        borderWidth: 3,
+        borderRadius: 7,
+        borderColor: '#07BAD1',
+      }}
+    />
+  );
+};
 
+export const lcomp = (v: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined) => (
+  <Text style={{width: 50, color: 'white', fontWeight: 'bold'}}>{v}</Text>
+);
 
-// POST data:
-// {
-//   "readDashboard": "1",
-//   "todayDate": "2023-09-11 00:00:00", // editable
-//   "type": "overrall/receiving/outgoing",
+export const latestData = [
+  {
+    value: 350,
+    labelComponent: () => lcomp('22 Nov'),
+    customDataPoint: dPoint,
+  },
+  {
+    value: 370,
+    hideDataPoint: true,
+  },
+  {
+    value: 460,
+    customDataPoint: dPoint,
+  },
+  {
+    value: 500,
+    hideDataPoint: true,
+  },
+  {
+    value: 570,
+    labelComponent: () => lcomp('24 Nov'),
+    customDataPoint: dPoint,
+  },
+  {
+    value: 560,
+    hideDataPoint: true,
+  },
+  {
+    value: 590,
+    customDataPoint: dPoint,
+  },
+  {
+    value: 490,
+    hideDataPoint: true,
+  },
+  {
+    value: 280,
+    labelComponent: () => lcomp('26 Nov'),
+    customDataPoint: dPoint,
+  },
+  {
+    value: 370,
+    hideDataPoint: true,
+  },
+  {
+    value: 350,
+    customDataPoint: dPoint,
+  },
+  {
+    value: 460,
+    hideDataPoint: true,
+  },
+  {
+    value: 520,
+    labelComponent: () => lcomp('28 Nov'),
+    customDataPoint: dPoint,
+  },
+  {
+    value: 490,
+    hideDataPoint: true,
+  },
+  {
+    value: 370,
+    hideDataPoint: true,
+  },
+  {
+    value: 350,
+    customDataPoint: dPoint,
+  },
+  {
+    value: 460,
+    labelComponent: () => lcomp('28 Nov'),
+    customDataPoint: dPoint,
+  },
+  {
+    value: 270,
+    hideDataPoint: true,
+  },
+  {
+    value: 350,
+    customDataPoint: dPoint,
+  },
+];
 
-// }
+export const testData1 = [
+    {value: 0},
+    {value: 20},
+    {value: 18},
+    {value: 40},
+    {value: 36},
+    {value: 60},
+    {value: 54},
+    {value: 85},
+];
 
+export const testData3 = [
+    {value: 0},
+    {value: 10},
+    {value: 8},
+    {value: 58},
+    {value: 56},
+    {value: 78},
+    {value: 74},
+    {value: 98},
+];
 
-// Return Data: 
-// {
-//   "barData":[
-//     {"days/number":"Today", "dayTotalAmount":85396, "dateValue":"2023-09-11 00:00:00"},
-//     {"days/number":"Yesterday", "dayTotalAmount":0, "dateValue":"2023-09-10 00:00:00"},
-//     {"days/number":"Saturday","dayTotalAmount":28168,"dateValue":"2023-09-09 00:00:00"},
-//     {"days/number":"Friday","dayTotalAmount":127415,"dateValue":"2023-09-08 00:00:00"},
-//     {"days/number":"Thursday","dayTotalAmount":36328,"dateValue":"2023-09-07 00:00:00"}
-//   ],
-//   "data":[
-//     {"key":"primaryKey","name":"WEIGHT RENTING","weight/amount":24230},
-//     {"key":"primaryKey","name":"FORTUNE NEWSTAR SDN BHD","weight/amount":10960},
-//     {"key":"primaryKey","name":"YHC PAPER TRADING S\/B (GST:000622850048","weight/amount":10960}
-//   ],
-//   "isSuccess":true,
-//   "totalWeight/totalAmount":85396,
-// }
+export const testData2 = [
+    {
+      value: 350,
+      labelComponent: () => lcomp('22 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 370,
+      hideDataPoint: true,
+    },
+    {
+      value: 460,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 500,
+      hideDataPoint: true,
+    },
+    {
+      value: 570,
+      labelComponent: () => lcomp('24 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 560,
+      hideDataPoint: true,
+    },
+    {
+      value: 590,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 490,
+      hideDataPoint: true,
+    },
+    {
+      value: 280,
+      labelComponent: () => lcomp('26 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 370,
+      hideDataPoint: true,
+    },
+    {
+      value: 350,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 460,
+      hideDataPoint: true,
+    },
+    {
+      value: 520,
+      labelComponent: () => lcomp('28 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 490,
+      hideDataPoint: true,
+    },
+    {
+      value: 370,
+      hideDataPoint: true,
+    },
+    {
+      value: 350,
+      customDataPoint: dPoint,
+    },
+    {
+      value: 460,
+      labelComponent: () => lcomp('28 Nov'),
+      customDataPoint: dPoint,
+    },
+    {
+      value: 270,
+      hideDataPoint: true,
+    },
+    {
+      value: 350,
+      customDataPoint: dPoint,
+    },
+];
 
+export const testData4 = [
+    {value: 0},
+    {value: 20},
+    {value: -18},
+    {value: 40},
+    {value: 36},
+    {value: -60},
+    {value: 54},
+    {value: 85},
+];
 
+export const testData5 = [
+    {value: 160, date: '1 Apr 2022'},
+    {value: 180, date: '2 Apr 2022'},
+    {value: 190, date: '3 Apr 2022'},
+    {value: 180, date: '4 Apr 2022'},
+    {value: 140, date: '5 Apr 2022'},
+    {value: 145, date: '6 Apr 2022'},
+    {value: 160, date: '7 Apr 2022'},
+    {value: 200, date: '8 Apr 2022'},
 
+    {value: 220, date: '9 Apr 2022'},
+    {
+      value: 240,
+      date: '10 Apr 2022',
+      label: '10 Apr',
+      labelTextStyle: {color: 'lightgray', width: 60},
+    },
+    {value: 280, date: '11 Apr 2022'},
+    {value: 260, date: '12 Apr 2022'},
+    {value: 340, date: '13 Apr 2022'},
+    {value: 385, date: '14 Apr 2022'},
+    {value: 280, date: '15 Apr 2022'},
+    {value: 390, date: '16 Apr 2022'},
 
+    {value: 370, date: '17 Apr 2022'},
+    {value: 285, date: '18 Apr 2022'},
+    {value: 295, date: '19 Apr 2022'},
+    {
+      value: 300,
+      date: '20 Apr 2022',
+      label: '20 Apr',
+      labelTextStyle: {color: 'lightgray', width: 60},
+    },
+    {value: 280, date: '21 Apr 2022'},
+    {value: 295, date: '22 Apr 2022'},
+    {value: 260, date: '23 Apr 2022'},
+    {value: 255, date: '24 Apr 2022'},
 
-{/* <PieChart
-data={PieData}
-textColor="black"
-radius={100}
-donut
-textSize={14}
-strokeWidth={2}
-strokeColor="black"
-innerCircleBorderWidth={2}
-innerCircleBorderColor="black"
-showText
-focusOnPress
-showValuesAsLabels
-showGradient
-showTextBackground
-textBackgroundRadius={10}
-onPress={(item:any) => [
-    AsyncStorage.setItem('productCode', item.key.toString()),
-    AsyncStorage.setItem('fromDate', todayDate.toString()),
-    AsyncStorage.setItem('toDate', todayDate.toString()),
-    navigation.navigate(DetailScreen as never),
-    // Snackbar.show({
-    //     text: item.value.toString(),
-    //     duration: Snackbar.LENGTH_SHORT,
-    // }),
-]}
-// onPress={(item:any) => console.log(item.key)}
-/> */}
+    {value: 190, date: '25 Apr 2022'},
+    {value: 220, date: '26 Apr 2022'},
+    {value: 205, date: '27 Apr 2022'},
+    {value: 230, date: '28 Apr 2022'},
+    {value: 210, date: '29 Apr 2022'},
+    {
+      value: 200,
+      date: '30 Apr 2022',
+      label: '30 Apr',
+      labelTextStyle: {color: 'lightgray', width: 60},
+    },
+    {value: 240, date: '1 May 2022'},
+    {value: 250, date: '2 May 2022'},
+    {value: 280, date: '3 May 2022'},
+    {value: 250, date: '4 May 2022'},
+    {value: 210, date: '5 May 2022'},
+];
 
+export const testData6 = [
+    {value: 0, dataPointText: '0'},
+    {value: 10, dataPointText: '10'},
+    {value: 8, dataPointText: '8'},
+    {value: 58, dataPointText: '58'},
+    {value: 56, dataPointText: '56'},
+    {value: 78, dataPointText: '78'},
+    {value: 74, dataPointText: '74'},
+    {value: 98, dataPointText: '98'},
+];
 
-// import React, { useEffect, useState } from 'react';
-// import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Pressable, TextInput, ProgressBarAndroid, Platform } from "react-native";
-// import { BarChart,} from "react-native-chart-kit";
-// import Snackbar from 'react-native-snackbar';
-// import { useNavigation } from '@react-navigation/native';
-// import MainContainer from '../components/MainContainer';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import KeyboardAvoidWrapper from '../components/KeyboardAvoidWrapper';
-// import { css, datepickerCSS } from '../objects/commonCSS';
-// import { BarData, currencyFormat, showData } from '../objects/objects';
-// import RNFetchBlob from 'rn-fetch-blob';
-// import DateTimePicker from '@react-native-community/datetimepicker';
-// import DateTimePickerModal from 'react-native-modal-datetime-picker';
+export const testData7 = [
+    {value: 0, dataPointText: '0'},
+    {value: 20, dataPointText: '20'},
+    {value: 18, dataPointText: '18'},
+    {value: 40, dataPointText: '40'},
+    {value: 36, dataPointText: '36'},
+    {value: 60, dataPointText: '60'},
+    {value: 54, dataPointText: '54'},
+    {value: 85, dataPointText: '85'},
+];
 
-// const DashboardScreen2 = ({route}: {route: any}) => {
-//     const navigation = useNavigation();
+export const dataSet: Array<DataSet> = [
+    {
+      data: testData6,
+      color: 'skyblue',
+      dataPointsColor: 'blue',
+      textColor: 'green',
+    },
+    {data: testData7, color: 'orange', dataPointsColor: 'red'},
+];
 
-//     const getDate = new Date;
-//     const [todayDate, setTodayDate] = useState<string | "">(getDate.toISOString().split('T')[0]+" 00:00:00"); // for API
+export const testData8 = [
+    {value: 170},
+    {value: 220},
+    {value: 170},
+    {value: 196},
+    {value: 176},
+    {value: 141},
+    {value: 172},
+];
 
-//     // DatePicker
-//     const [showPicker, setShowPicker] = useState(false);
-//     const [selectedDate, setSelectedDate] = useState(getDate.toDateString());
-//     const [selectedIOSDate, setSelectedIOSDate] = useState(new Date());
+export const testData9 = [
+    {left: 30, right: 40, midAxisLabel: '~115'},
+    {left: 40, right: 44, midAxisLabel: '~105'},
+    {left: 55, right: 57, midAxisLabel: '~95'},
+    {left: 94, right: 87, midAxisLabel: '~85'},
+    {left: 90, right: 88, midAxisLabel: '~75'},
+    {left: 88, right: 86, midAxisLabel: '~65'},
+];
 
-//     // IOS Date picker modal setup
-//     const [datePickerVisible, setDatePickerVisible] = useState(false);
-//     const hideIOSDatePicker = () => {
-//         setDatePickerVisible(false);
-//     };
-//     // END IOS Date Picker modal setup
+export const testData10 = [
+    {value: 110},
+    {value: 90},
+    {value: 100},
+    {value: 120},
+    {value: 100, label: '2005', showXAxisIndex: true},
+    {value: 80},
+    {value: 90},
+    {value: 110},
+    {value: 120},
+    {value: 100, label: '2010', showXAxisIndex: true},
+    {value: 90},
+    {value: 100},
+    {value: 88},
+    {value: 80},
+    {value: 120, label: '2015', showXAxisIndex: true},
+    {value: 76},
+    {value: 104},
+    {value: 112},
+];
 
-//     const [fetchedData, setFetchedData] = useState<showData[]>([]); // Flatlist with Pie
-//     const [BarData, setBarData] = useState<BarData>({ labels: [], datasets: [{ data: [] }] });
-//     const [totalWeight, setTotalWeight] = useState<number>(0); // total weight
+export const testData11 = [
+    0.055, 0.02, 0.1, 0.01, 0.05, 0.06, 0.08, 0.1, 0.08, 0.07, 0.06, 0.025,
+    0.04, 0.06, 0.045, 0.09, 0.06, 0.04,
+];
 
-//     const [dataProcess, setDataProcess] = useState(false); // check when loading data
-
-//     const [stayPage, setStayPage] = useState("product");
-//     const [itemID, setItemID] = useState("");
-//     const [itemName, setItemName] = useState("");
-
-//     useEffect(()=> { // when starting the page
-//         (async()=> {
-//             setDataProcess(true);
-//             setFetchedData([]);
-//             setBarData({ labels: [], datasets: [{ data: [] }] });
-
-//             if(route.params.stayPage=="product"){
-//                 const productCode = await AsyncStorage.getItem('productCode');
-//                 if(productCode!="" && productCode!=null){
-//                     // console.log("run here");
-//                     setItemID(productCode);
-//                     setStayPage("product");
-//                     setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     await fetchProductDetailDataApi(productCode, todayDate);
-
-//                 }else{
-//                     setStayPage("product");
-//                     setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     await fetchProductDataApi(todayDate);
-//                 }
-    
-//             }else if(route.params.stayPage=="customer"){
-//                 const accode = await AsyncStorage.getItem('accode');
-//                 if(accode!="" && accode!=null){
-//                     setItemID(accode);
-//                     setStayPage("customer");
-//                     setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     await fetchCustomerDetailDataApi(accode, todayDate);
-                    
-//                 }else{
-//                     setStayPage("customer");
-//                     setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     await fetchCustomerDataApi(todayDate);
-//                 }
-
-//             }else if(route.params.stayPage=="salesman"){
-//                 const salesmancode = await AsyncStorage.getItem('salesmancode');
-//                 if(salesmancode!="" && salesmancode!=null){
-//                     // setItemID(salesmancode);
-//                     // setStayPage("salesman");
-//                     // setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     // setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     // await fetchSalesmanDetailDataApi(salesmancode, todayDate);
-                    
-//                 }else{
-//                     setStayPage("salesman");
-//                     setTodayDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     setSelectedDate(await AsyncStorage.getItem('fromDate') ?? "");
-//                     await fetchSalesmanDataApi(todayDate);
-//                 }
-//             }
-//         })();
-//     }, []);
-
-//     const fetchProductDataApi = async(theDate: any) => {
-//         setFetchedData([]);
-//         setBarData({ labels: [], datasets: [{ data: [] }] });
-//         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-
-//         await RNFetchBlob.config({
-//             trusty: true
-//         }).fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
-//                 "Content-Type": "application/json",  
-//             }, JSON.stringify({
-//                 "read":"1", 
-//                 "todayDate":theDate
-//             }),
-//         ).then(async (response) => {
-//             if(await response.json().status=="1"){
-//                 setFetchedData(response.json().data.map((item: { totalWeight: string; key: any; name: any; }) => ({
-//                     key: item.key,
-//                     name: item.name,
-//                     weight: item.totalWeight,
-//                 })));
-
-//                 const convertedData: BarData = {
-//                     labels: response.json().barData.map((item: { days: any; }) => item.days),
-//                     datasets: [{
-//                         data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
-//                     },],
-//                 };
-//                 setBarData(convertedData);
-
-//                 setTotalWeight(response.json().totalWeight);
-//                 setDataProcess(false);
-//             }else{
-//                 Snackbar.show({
-//                     text: 'Something is wrong. Can not get the data from server!',
-//                     duration: Snackbar.LENGTH_SHORT,
-//                 });
-//             }
-//         }).catch(error => {
-//             console.log(error.message+" aaa");
-//             Snackbar.show({
-//                 text: error.message,
-//                 duration: Snackbar.LENGTH_SHORT,
-//             });
-//         });
-//     };
-
-//     const fetchCustomerDataApi = async(theDate: any) => {
-//         setFetchedData([]);
-//         setBarData({ labels: [], datasets: [{ data: [] }] });
-//         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-
-//         await RNFetchBlob.config({
-//             trusty: true
-//         }).fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
-//                 "Content-Type": "application/json",  
-//             }, JSON.stringify({
-//                 "readCustomer":"1", 
-//                 "todayDate":theDate
-//             }),
-//         ).then(async (response) => {
-//             if(await response.json().status=="1"){
-//                 setFetchedData(response.json().data.map((item: { totalWeight: string; key: any; name: any; }) => ({
-//                     key: item.key,
-//                     name: item.name,
-//                     weight: item.totalWeight,
-//                 })));
-
-//                 const convertedData: BarData = {
-//                     labels: response.json().barData.map((item: { days: any; }) => item.days),
-//                     datasets: [{
-//                         data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
-//                     },],
-//                 };
-//                 setBarData(convertedData);
-
-//                 setTotalWeight(response.json().totalWeight);
-//                 setDataProcess(false);
-//             }else{
-//                 Snackbar.show({
-//                     text: 'Something is wrong. Can not get the data from server!',
-//                     duration: Snackbar.LENGTH_SHORT,
-//                 });
-//             }
-//         }).catch(error => {
-//             console.log(error.message+" bbb")
-//             Snackbar.show({
-//                 text: error.message,
-//                 duration: Snackbar.LENGTH_SHORT,
-//             });
-//         });
-//     };
-
-//     const fetchSalesmanDataApi = async(theDate: any) => {
-//         setFetchedData([]);
-//         setBarData({ labels: [], datasets: [{ data: [] }] });
-//         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-
-//         await RNFetchBlob.config({
-//             trusty: true
-//         }).fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
-//                 "Content-Type": "application/json",  
-//             }, JSON.stringify({
-//                 "readSalesman":"1", 
-//                 "todayDate":theDate
-//             }),
-//         ).then(async (response) => {
-//             if(await response.json().status=="1"){
-//                 setFetchedData(response.json().data.map((item: { totalWeight: string; key: any; name: any; }) => ({
-//                     key: item.key,
-//                     name: item.name==null ? "Others" : item.name,
-//                     weight: item.totalWeight,
-//                 })));
-
-//                 const convertedData: BarData = {
-//                     labels: response.json().barData.map((item: { days: any; }) => item.days),
-//                     datasets: [{
-//                         data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
-//                     },],
-//                 };
-//                 setBarData(convertedData);
-
-//                 setTotalWeight(response.json().totalWeight);
-//                 setDataProcess(false);
-//             }else{
-//                 Snackbar.show({
-//                     text: 'Something is wrong. Can not get the data from server!',
-//                     duration: Snackbar.LENGTH_SHORT,
-//                 });
-//             }
-//         }).catch(error => {
-//             console.log(error.message+" bbb")
-//             Snackbar.show({
-//                 text: error.message,
-//                 duration: Snackbar.LENGTH_SHORT,
-//             });
-//         });
-//     };
-
-//     const fetchProductDetailDataApi = async(productCode: any, theDate: any) => {
-//         setFetchedData([]);
-//         setBarData({ labels: [], datasets: [{ data: [] }] });
-//         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-        
-//         await RNFetchBlob.config({
-//             trusty: true
-//         }).fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
-//                 "Content-Type": "application/json",  
-//             }, JSON.stringify({
-//                 "readDetail":"1", 
-//                 "fromDate":theDate,
-//                 "toDate":theDate,
-//                 "productCode":productCode,
-//             }),
-//         ).then(async (response) => {
-//             if(await response.json().status=="1"){
-//                 setFetchedData(response.json().data.map((item: { weight: string; accode: any; customer: any; }) => ({
-//                     key: item.accode,
-//                     value: parseInt(item.weight, 10),
-//                     name: item.customer,
-//                     weight: item.weight,
-//                 })));
-
-//                 const convertedData: BarData = {
-//                     labels: response.json().barData.map((item: { days: any; }) => item.days),
-//                     datasets: [{
-//                         data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
-//                     },],
-//                 };
-//                 setBarData(convertedData);
-
-//                 setTotalWeight(response.json().totalWeight);
-//                 setDataProcess(false);
-//             }else{
-//                 Snackbar.show({
-//                     text: 'Something is wrong. Can not get the data from server!',
-//                     duration: Snackbar.LENGTH_SHORT,
-//                 });
-//             }
-//         }).catch(error => {
-//             console.log(error.message+" ccc");
-//             Snackbar.show({
-//                 text: error.message,
-//                 duration: Snackbar.LENGTH_SHORT,
-//             });
-//         });
-//     };
-
-//     const fetchCustomerDetailDataApi = async(accode: any, theDate: any) => {
-//         setFetchedData([]);
-//         setBarData({ labels: [], datasets: [{ data: [] }] });
-//         var getIPaddress=await AsyncStorage.getItem('IPaddress');
-
-//         await RNFetchBlob.config({
-//             trusty: true
-//         }).fetch('POST', "https://"+getIPaddress+"/senghiap/mobile/report.php",{
-//                 "Content-Type": "application/json",  
-//             }, JSON.stringify({
-//                 "readCustomerDetail":"1", 
-//                 "fromDate":theDate,
-//                 "toDate":theDate,
-//                 "accode":accode,
-//             }),
-//         ).then(async (response) => {
-//             if(await response.json().status=="1"){
-//                 setFetchedData(response.json().data.map((item: { weight: string; productCode: any; productName: any;}) => ({
-//                     value: parseInt(item.weight, 10),
-//                     key: item.productCode,
-//                     name: item.productName,
-//                     weight: item.weight,
-//                 })));
-
-//                 const convertedData: BarData = {
-//                     labels: response.json().barData.map((item: { days: any; }) => item.days),
-//                     datasets: [
-//                         {
-//                         data: response.json().barData.map((item: { dayTotalWeight: any; }) => item.dayTotalWeight),
-//                         },
-//                     ],
-//                 };
-//                 setBarData(convertedData);
-
-//                 setTotalWeight(response.json().totalWeight);
-//                 setDataProcess(false);
-//             }else{
-//                 Snackbar.show({
-//                     text: 'Something is wrong. Can not get the data from server!',
-//                     duration: Snackbar.LENGTH_SHORT,
-//                 });
-//             }
-//         }).catch(error => {
-//             console.log(error.message+" ddd");
-//             Snackbar.show({
-//                 text: error.message,
-//                 duration: Snackbar.LENGTH_SHORT,
-//             });
-//         });
-//     };
-
-//     const FlatListItem = ({ item }: { item: showData }) => {
-//         return (
-//             <TouchableOpacity onPress={async () => {
-
-//                 if(stayPage=="product" && itemID!=""){
-                    
-//                     await AsyncStorage.setItem('productCode', "");
-//                     await AsyncStorage.setItem('accode', item.key);
-//                     navigation.navigate('Customer' as never);
-//                 }else if(stayPage=="customer" && itemID!=""){
-                    
-//                     await AsyncStorage.setItem('accode', "");
-//                     await AsyncStorage.setItem('productCode', item.key);
-//                     navigation.navigate('Product' as never);
-//                 }else if(stayPage=="salesman" && itemID!=""){
-                    
-                    
-//                 }else{
-//                     if(stayPage=="product"){
-//                         setDataProcess(true);
-//                         setItemName(item.name);
-//                         setItemID(item.key);
-//                         await AsyncStorage.setItem('productCode', item.key);
-//                         await AsyncStorage.setItem('accode', "");
-                        
-//                         await fetchProductDetailDataApi(item.key, todayDate);
-//                     }else if(stayPage=="customer"){
-//                         setDataProcess(true);
-//                         setItemName(item.name);
-//                         setItemID(item.key);
-//                         await AsyncStorage.setItem('accode', item.key);
-//                         await AsyncStorage.setItem('productCode', "");
-                        
-//                         await fetchCustomerDetailDataApi(item.key, todayDate);
-//                     }
-//                 }
-//             }}>
-//                 <View style={css.listItem} key={parseInt(item.key)}>
-//                     <View style={[css.cardBody]}>
-//                         <View style={{alignItems: 'flex-start',justifyContent: 'center',flex: 1,flexGrow: 1,}}>
-//                             <View style={{flexDirection: 'row',}}>
-//                                 <Text style={css.textHeader}>
-//                                 { stayPage=="salesman"
-//                                 ? ("Salesman: ")
-//                                 : stayPage=="product" 
-//                                     ? itemID=="" 
-//                                         ? ("Product: ") 
-//                                         : ("Customer: ") 
-//                                     : itemID=="" 
-//                                         ? ("Customer: ")
-//                                         : ("Product: ")
-//                                 } 
-//                                 {item.key} {item.name!="" ? "("+item.name+")" : ""}</Text>
-//                                 <Text style={css.textDescription}>
-//                                     Weight: {currencyFormat(parseInt(item.weight))}
-//                                 </Text>
-//                             </View>
-//                             <View style={{flexDirection: 'row',}}>
-//                                 {Platform.OS === 'android' && (
-//                                     item.weight==null ? (
-//                                     <ProgressBarAndroid
-//                                         style={{width:"70%"}}
-//                                         styleAttr="Horizontal"
-//                                         indeterminate={false}
-//                                         progress={0}
-//                                     />
-//                                     ) : (
-//                                     <ProgressBarAndroid
-//                                         style={{width:"70%"}}
-//                                         styleAttr="Horizontal"
-//                                         indeterminate={false}
-//                                         progress={Math.round(parseInt(item.weight)/totalWeight*100)/100}
-//                                     />
-//                                     )
-//                                 )}
-//                                 <Text style={[css.textDescription,{textAlign:"center"}]}>
-//                                     { item.weight==null ? (
-//                                         0
-//                                     ) : (
-//                                         Math.round(parseInt(item.weight)/totalWeight*100)
-//                                     )}%
-//                                 </Text>
-//                             </View>
-//                         </View>
-//                     </View>
-//                 </View>
-//             </TouchableOpacity>
-//         );
-//     };
-
-//     // Date Picker
-//     const onChangeDate = async ({type}: any, selectedDate: any) => {
-//         if(type=="set"){
-//             const currentDate=selectedDate;
-//             setSelectedIOSDate(currentDate);
-//             if(Platform.OS==="android"){
-//                 tonggleDatePicker();
-//                 setSelectedDate(currentDate);
-//                 setTodayDate(currentDate);
-//                 setShowPicker(false);
-//                 setDataProcess(true);
-//                 if(route.params.stayPage=="product"){
-//                     if(itemID==""){
-//                         await fetchProductDataApi(todayDate);
-//                     }else{
-//                         await fetchProductDetailDataApi(itemID, todayDate);
-//                     }
-                    
-//                 }else{
-//                     if(itemID==""){
-//                         await fetchCustomerDataApi(todayDate);
-//                     }else{
-//                         await fetchCustomerDetailDataApi(itemID, todayDate);
-//                     }
-//                 }
-//             }
-//         }else{
-//             tonggleDatePicker();
-//         }
-//     }
-
-//     const confirmIOSDate = async() => {
-//         const currentDate=selectedIOSDate;
-//         setTodayDate(currentDate.toISOString().split('T')[0]);
-//         setSelectedDate(currentDate.toISOString().split('T')[0]);
-//         AsyncStorage.setItem('fromDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
-//         AsyncStorage.setItem('toDate', currentDate.toISOString().split('T')[0]+" 00:00:00"),
-//         setDataProcess(true);
-//         setDatePickerVisible(false);
-//         if(route.params.stayPage=="product"){
-//             if(itemID==""){
-//                 await fetchProductDataApi(todayDate);
-//             }else{
-//                 await fetchProductDetailDataApi(itemID, todayDate);
-//             }
-            
-//         }else{
-//             if(itemID==""){
-//                 await fetchCustomerDataApi(todayDate);
-//             }else{
-//                 await fetchCustomerDetailDataApi(itemID, todayDate);
-//             }
-//         }
-//     }
-//     const tonggleDatePicker = () => {
-//         if (Platform.OS === 'android') {
-//             setShowPicker(!showPicker);
-//         }
-//         else if (Platform.OS === 'ios') {
-//             setDatePickerVisible(true);
-//         }
-//     }
-//     // End Date Picker
-
-//     return (
-//         <MainContainer>
-//             {/* <KeyboardAvoidWrapper> */}
-//             {dataProcess== true ? (
-//                 <View style={[css.container]}>
-//                     <ActivityIndicator size="large" />
-//                 </View>
-//             ) : (
-//                 <View>
-//                     {/* Set Date */}
-//                     <View style={css.row}>
-//                         {showPicker && Platform.OS === 'android' && <DateTimePicker 
-//                             mode="date"
-//                             display="calendar"
-//                             value={getDate}
-//                             onChange={onChangeDate}
-//                             style={datepickerCSS.datePicker}
-//                         />}        
-//                         <Pressable style={css.pressableCSS} onPress={tonggleDatePicker} >
-//                             <TextInput
-//                                 style={datepickerCSS.textInput}
-//                                 placeholder="Select Date"
-//                                 value={selectedDate.toString().substring(0,10)}
-//                                 onChangeText={setTodayDate}
-//                                 placeholderTextColor="#11182744"
-//                                 editable={false}
-//                             />
-//                         </Pressable>
-//                     </View>    
-//                     {Platform.OS === "ios" && (<DateTimePickerModal
-//                         date={selectedIOSDate}
-//                         isVisible={datePickerVisible}
-//                         mode="date"
-//                         display='inline'
-//                         onConfirm={confirmIOSDate}
-//                         onCancel={hideIOSDatePicker}
-//                     />)}
-//                     {/* End Set Date */}
-
-//                     <View style={[{marginTop:5,marginBottom:5}]}>
-//                         <Text style={[{fontSize:8,color:"red",textAlign:"center",marginBottom:-10}]}>Click to reset*</Text>
-//                         <TouchableOpacity style={[css.row,{margin:0}]} onPress={async () => {
-//                             setDataProcess(true);
-//                             await AsyncStorage.setItem('accode', "");
-//                             await AsyncStorage.setItem('productCode', "");
-//                             setItemName("");
-//                             setItemID("");
-
-//                             if(stayPage=="product"){
-//                                 setStayPage("product");
-//                                 await fetchProductDataApi(todayDate);
-//                             }else if(stayPage=="customer"){
-//                                 setStayPage("customer");
-//                                 await fetchCustomerDataApi(todayDate);
-//                             }else if(stayPage=="salesman"){
-//                                 setStayPage("salesman");
-//                                 await fetchSalesmanDataApi(todayDate);
-//                             }
-//                         }}>
-//                             <Text style={[css.pressableCSS,{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic",}]}>
-//                                 {stayPage=="product" 
-//                                 ? itemID=="" 
-//                                     ? ("All Product") 
-//                                     : (itemID) 
-//                                 : stayPage=="customer"
-//                                 ? itemID==""
-//                                     ? ("All Customer")
-//                                     : itemName=="" ? (itemID) : (itemName)
-//                                 : itemID==""
-//                                     ? ("All Salesman")
-//                                     : itemName=="" ? (itemID) : (itemName)
-//                                 }
-//                             </Text>
-//                         </TouchableOpacity>
-//                     </View>
-
-//                     <View style={[css.row]}>
-//                         <BarChart
-//                             data={BarData}
-//                             width={Dimensions.get("window").width/100*90}
-//                             height={160}
-//                             yAxisSuffix=""
-//                             yAxisLabel=""
-//                             chartConfig={{
-//                                 backgroundColor: '#1cc910',
-//                                 backgroundGradientFrom: '#eff3ff',
-//                                 backgroundGradientTo: '#efefef',
-//                                 decimalPlaces: 0,
-//                                 color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-//                                 style: {
-//                                     borderRadius: 16,
-//                                 },
-//                             }}
-//                             style={{
-//                                 marginVertical: 8,
-//                                 borderRadius: 16, 
-//                             }}
-//                         />
-//                     </View>
-
-//                     <View style={[css.row,{marginTop:5,marginBottom:5}]}>
-//                         <Text style={{fontSize:20,fontWeight:'bold',textAlign:"center",fontStyle:"italic"}}>
-//                             Total Weight: {currencyFormat(totalWeight)}
-//                         </Text>
-//                     </View>
-                    
-//                     <View style={{alignItems: 'center',justifyContent: 'center',}}>
-//                         {/* <View> */}
-//                         <View style={{height:Dimensions.get("screen").height/100*39}}>
-//                             <FlatList
-//                                 data={fetchedData}
-//                                 renderItem={FlatListItem}
-//                                 keyExtractor={(item) => item.key}
-//                             />
-//                         </View>
-//                     </View>
-//                 </View>
-//             )}
-//             {/* </KeyboardAvoidWrapper> */}
-//         </MainContainer>
-//     );
-// }
-
-// export default DashboardScreen2;
+export const dataSet2: Array<DataSet> = [
+    {
+      data: testData1,
+      color: 'skyblue',
+      dataPointsColor: 'blue',
+      textColor: 'green',
+      lineSegments: [{startIndex: 2, endIndex: 4, strokeDashArray: [3, 4]}],
+    },
+    {
+      data: testData3,
+      color: 'orange',
+      dataPointsColor: 'red',
+      lineSegments: [
+        {startIndex: 0, endIndex: 2, color: 'gray'},
+        {startIndex: 4, endIndex: 6, strokeDashArray: [3, 4], color: 'gray'},
+      ],
+    },
+];

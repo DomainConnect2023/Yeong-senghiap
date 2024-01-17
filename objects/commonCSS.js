@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
+import { colorThemeDB } from '../objects/colors';
 
 export const css = StyleSheet.create({
     container: {
@@ -12,7 +13,7 @@ export const css = StyleSheet.create({
         height: 60, 
         flexDirection: 'row',
         alignItems: 'center', 
-        backgroundColor: "#666699",
+        backgroundColor: colorThemeDB.colors.primary,
     },
     HeaderView :{
         flex: 1, 
@@ -30,7 +31,7 @@ export const css = StyleSheet.create({
     listThing: {
         width: 30,
         height: 40, 
-        backgroundColor: '#666699', 
+        backgroundColor: colorThemeDB.colors.primary,
         justifyContent: 'center', 
         alignItems: 'center',
         borderRadius: 20,
@@ -84,7 +85,7 @@ export const css = StyleSheet.create({
         paddingHorizontal: 32,
         borderRadius: 4,
         elevation: 3,
-        backgroundColor: 'black',
+        backgroundColor: colorThemeDB.colors.primaryContainer,
         marginTop: 10,
     },
     buttonText: {
@@ -92,7 +93,7 @@ export const css = StyleSheet.create({
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: 'white',
+        color: colorThemeDB.colors.primary,
     },
     typeButton: {
         margin:5,
@@ -143,6 +144,10 @@ export const css = StyleSheet.create({
         alignItems: 'center',
     },
     pressableCSS: {
+        // color: colorThemeDB.colors.primary,
+        // backgroundColor: colorThemeDB.colors.primaryContainer,
+        color: "black",
+        backgroundColor: "#FFF",
         width: '40%',
         borderWidth: 1,
         borderColor: '#ccc',
@@ -182,10 +187,11 @@ export const datepickerCSS = StyleSheet.create({
         marginTop: -10,
     },
     textInput: {
-        color: "#000", 
+        // color: colorThemeDB.colors.primary, 
+        // backgroundColor: colorThemeDB.colors.primaryContainer,
+        color: "black", 
         textAlign: "center", 
         fontSize:14, 
-        fontWeight:"bold", 
         height:25,
         padding:0,
     }
@@ -206,7 +212,7 @@ export const dropdownCSS = StyleSheet.create({
     },
     selectedTextStyle: {
         fontSize: 16,
-        color:"red",
+        color: colorThemeDB.colors.primary,
     },
     iconStyle: {
         width: 20,

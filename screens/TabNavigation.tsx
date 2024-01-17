@@ -6,6 +6,8 @@ import DashboardScreen from './dashboard';
 import PlanningScreen from './planning';
 import DashboardScreen2 from './dashboard2';
 import { Dimensions } from 'react-native';
+import HighlightedRange from './testscreen';
+import ScrollingChartWithPointer from './testingscreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +28,8 @@ const TabNavigation = () => {
             iconName = focused ? 'bag-add' : 'bag-add-outline';
           } else if (route.name === 'Customer') {
             iconName = focused ? 'diamond' : 'diamond-outline';
+          } else if (route.name === 'testing') {
+            iconName = focused ? 'diamond' : 'diamond-outline';
           } 
 
           return <Ionicons  name={iconName ?? ""} size={size} color={color} />;
@@ -45,7 +49,9 @@ const TabNavigation = () => {
       <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Product" component={DashboardScreen2} initialParams={{stayPage: "product"}} />
       <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Customer" component={DashboardScreen2} initialParams={{stayPage: "customer"}} />
       <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Salesman" component={DashboardScreen2} initialParams={{stayPage: "salesman"}} />
-      {/* <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Profile" component={ProfileScreen} /> */}
+      {/* <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="Productt" component={DashboardScreen} initialParams={{stayPage: "product"}} /> */}
+      <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="testing" component={HighlightedRange} />
+      {/* <Tab.Screen options={{ unmountOnBlur: true, headerStatusBarHeight: 40 }} name="testinga" component={ScrollingChartWithPointer} /> */}
     </Tab.Navigator>
   );
 }
